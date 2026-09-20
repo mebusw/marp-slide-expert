@@ -54,15 +54,31 @@ For full prep workflow, read [references/asset-prep.md](references/asset-prep.md
 
 ## CSS bootstrap
 
-A reusable style block for new decks is in [references/style-bootstrap.md](references/style-bootstrap.md). It covers:
+**所有优普丰 marp 课件统一使用 openclaw 配色**（红 + 深蓝黑主题）。完整样式块在 [references/style-bootstrap.md](references/style-bootstrap.md)。调色板与 `openclaw_lesson01.md` / `fde_lesson*.marp.md` 等保持一致。
 
-- CJK font stack (PingFang / Microsoft YaHei / Noto Sans CJK SC)
-- Cover gradient (dark blue → red, white text)
-- Divider (dark slate, centered)
-- Table styling (red header, alternating row backgrounds)
-- h1/h2/h3 color hierarchy
+包含：
+- CJK 字体栈（PingFang SC / Microsoft YaHei / Noto Sans CJK SC）
+- 封面渐变（深蓝黑 `#1a1a2e` → 红 `#c0392b`，白字）
+- 分隔页（深蓝灰 `#2c3e50` 底 + 红色 `#e74c3c` 标题）
+- 表格（红色 `#c0392b` 表头 + `#f5f5f5` 偶数行）
+- H1/H2/H3 色阶（红 / 深蓝灰 / 亮红）
+- code 块（深底 `#1a1a2e` + 绿字 `#2ecc71`）
 
-Copy the `style: |-` block into the frontmatter of any new deck.
+直接复制 `style: |-` 块到新 deck 的 frontmatter 即可。
+
+### 提示框写法（替代废弃的 div class）
+
+**不要**用 `<div class="tip">` / `<div class="warn">` 等 div 写法（marp 不支持 div 布局）。改用：
+
+```markdown
+> 💡 提示：xxx     （引用块 + emoji，等价于 tip）
+
+> ⚠️ 警告：xxx     （等价于 warn）
+
+> ✅ 成功：xxx     （等价于 success）
+
+> 🎯 要点：xxx     （等价于 highlight）
+```
 
 ## Workflow
 
