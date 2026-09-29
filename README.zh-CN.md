@@ -61,8 +61,32 @@
 | 多图无文案 | `![bg](<a>)` `![bg](<b>)` —— 默认横排 |
 | 文 + 2 图 | `![bg right vertical](<a>)` + `![bg](<b>)` |
 | 竖版图 | 每张都加 `vertical` |
+| 咨询关系图 | `<!-- _class: diagram -->` + 内联 `<svg>` —— 需要 `--html` |
 
 所有图片都必须是 `![bg ...]` 背景图 —— Marp 不支持行内图片尺寸。路径含空格或非 ASCII 字符时必须用 `<...>` 包起来，否则 Marp 会在第一个空格处截断 URL，把路径当正文渲染出来。
+
+## Smart Drawing（内联 SVG 画关系图）
+
+咨询顾问那种阶梯、箭头串、2×2 矩阵、价值树、闭环图，直接以**内联 SVG 写在 `.md` 里**，而不是做成图片文件。PDF 里是矢量不糊，文字可搜索，改一个颜色只动一个十六进制值。
+
+```bash
+marp deck.marp.md --html --pdf --allow-local-files   # --html 是必须的
+```
+
+不加 `--html`，Marp 会转义这段标记，图形渲染成一整页肉眼可见的源码。
+
+四条会**静默**破坏渲染的规则：
+
+- **SVG 内部不能有空行** —— markdown 在第一个空行处切断 HTML 块，图形直接消失且不报错。
+- **每张图的 `marker` id 必须唯一** —— 导出成单个合并 HTML 时所有 SVG 共享一个 DOM，重复 id 会让所有箭头都取到第一个定义。
+- **SVG 内部不能写 `---`** —— 依然会被解析成分页符。
+- **字号走 CSS class，不写 `font-size` 属性** —— `svg .t / .tb / .sm` 定义在 style 块里，改一次全篇图形同步缩放。
+
+箭头要画成 **5 点 path（矩形 + 右侧 34px 三角尖）**，文字居中于**矩形部分**而不是整个外框。做成 6 点空心 `>` 形，左半边是镂空的白字会掉进洞里。
+
+然后把每一页都渲染成 PNG 亲眼看 —— SVG 的几何关系没法靠读源码判断。
+
+详见 [references/smart-drawing.md](references/smart-drawing.md)；可运行样例 [examples/smart-drawing-deck.marp.md](examples/smart-drawing-deck.marp.md)。
 
 ## 工作流程
 
@@ -80,9 +104,11 @@
 | `SKILL.md` | 入口 —— 硬规则、15 行上限、演讲者备注、CSS 引导、工作流、故障排查 |
 | `references/slide-density.md` | 完整的行数计算规则、拆分策略、表格 / 代码块 / 列表处理 |
 | `references/image-syntax.md` | `![bg ...]` 语法、横竖排判断、路径转义、反面案例 |
+| `references/smart-drawing.md` | 内联 SVG 咨询关系图 —— `--html`、画布约定、可直接抄的模板、连线语义、QA 清单 |
 | `references/layout-patterns.md` | 封面、分隔页、内容页、多图页的骨架模板 |
 | `references/style-bootstrap.md` | 优普丰 / openclaw 配色，可直接粘进 frontmatter |
 | `references/asset-prep.md` | 图片素材的下载、压缩、命名 |
+| `examples/smart-drawing-deck.marp.md` | 已验证的 8 页样例：阶梯、箭头串、2×2 矩阵、关系树 |
 | `agents/openai.yaml` | OpenAI 兼容的 agent 元信息 |
 
 ## 常见问题
@@ -95,3 +121,6 @@
 | 表格右边被切掉 | 超过 4 列 |
 | 演讲者备注出现在 PDF 里 | 没放在 HTML 注释里 |
 | 一页变成两页、出现空白页 | 注释里写了 `---` |
+| 整页显示 SVG 源码 | 渲染命令漏了 `--html` |
+| 图形整个消失 | SVG 内部有空行，HTML 块被切断 |
+| 表格只有半宽 | 漏了 `display: table !important` —— marp default 主题给 `table` 设了 `display: block` |

@@ -61,8 +61,32 @@ Three traps:
 | Multiple images | `![bg](<a>)` `![bg](<b>)` — horizontal row by default |
 | Text + 2 images | `![bg right vertical](<a>)` + `![bg](<b>)` |
 | Portrait images | Add `vertical` to each |
+| Smart drawing / 关系图 | `<!-- _class: diagram -->` + inline `<svg>` — needs `--html` |
 
 Every image must be a `![bg ...]` background — Marp has no inline image sizing. Paths containing spaces or non-ASCII characters must be wrapped in `<...>`, or Marp truncates the URL at the first space and renders the path as text.
+
+## Smart drawing (inline SVG)
+
+Consulting diagrams — staircase, arrow chain, 2×2 matrix, value tree, closed loop — are written as inline SVG in the `.md`, not as image files. They stay vector in the PDF, their text stays searchable, and a colour change is one hex value.
+
+```bash
+marp deck.marp.md --html --pdf --allow-local-files   # --html is required
+```
+
+Without `--html` Marp escapes the markup and the diagram renders as a page of visible source code.
+
+Four rules that break rendering silently:
+
+- **No blank lines inside the SVG block** — markdown cuts the HTML block there and the diagram disappears with no error.
+- **Unique `marker` ids per diagram** — a merged single-HTML export shares one DOM, so duplicates make every arrowhead resolve to the first definition.
+- **No `---` inside the SVG** — still a page break.
+- **Font sizes via CSS class, not a `font-size` attribute** — `svg .t / .tb / .sm` are defined in the style block, so one edit rescales every diagram.
+
+Draw a **5-point arrow path (rectangle + 34px right tip)** and centre the text on the rectangle, not the full width. A hollow 6-point chevron leaves a hole on its left half and the text vanishes into it.
+
+Then render every page to PNG and look at it — SVG geometry is not verifiable from the source.
+
+Details: [references/smart-drawing.md](references/smart-drawing.md). Runnable deck: [examples/smart-drawing-deck.marp.md](examples/smart-drawing-deck.marp.md).
 
 ## Workflow
 
@@ -80,9 +104,11 @@ Every image must be a `![bg ...]` background — Marp has no inline image sizing
 | `SKILL.md` | Entry point — hard rules, 15-line cap, speaker notes, CSS bootstrap, workflow, troubleshooting |
 | `references/slide-density.md` | Full line-counting rules, splitting heuristics, tables, code blocks, lists |
 | `references/image-syntax.md` | `![bg ...]` syntax, orientation rules, path escaping, anti-patterns |
+| `references/smart-drawing.md` | Consulting relationship diagrams as inline SVG — `--html`, canvas conventions, ready-to-copy templates, connector semantics, QA checklist |
 | `references/layout-patterns.md` | Cover, divider, content, and multi-image slide skeletons |
 | `references/style-bootstrap.md` | The UPerform / openclaw CSS palette, ready to paste into frontmatter |
 | `references/asset-prep.md` | Downloading, compressing, and naming image assets |
+| `examples/smart-drawing-deck.marp.md` | Verified 8-page deck: staircase, arrow chain, 2×2 matrix, value tree |
 | `agents/openai.yaml` | OpenAI-compatible agent metadata |
 
 ## Common failures
@@ -95,3 +121,6 @@ Every image must be a `![bg ...]` background — Marp has no inline image sizing
 | Table truncated on the right | More than 4 columns |
 | Speaker note visible in the PDF | Not inside an HTML comment |
 | One slide became two | A `---` inside an HTML comment |
+| Whole slide shows SVG source | Missing `--html` at render time |
+| SVG diagram vanished | A blank line inside the SVG block |
+| Table renders at half width | Dropped the `display: table !important` rule — marp's default theme sets `table { display: block }` |

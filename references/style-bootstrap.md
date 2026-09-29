@@ -44,10 +44,36 @@ style: |-
     color: #e74c3c;
     font-size: 1.1em;
   }
+  /* marp default 主题给 table 设了 display:block;width:max-content。
+     块盒会被撑开，但内部的匿名表格仍然收缩到内容宽度 —— 结果是表格永远半宽。
+     width 加 !important 也救不回来，必须把 display 改回 table。 */
   table {
-    width: 100%;
+    display: table !important;
+    width: 100% !important;
     border-collapse: collapse;
     font-size: 0.82em;
+  }
+  /* ---- Smart drawing (inline SVG) helpers ---- */
+  svg {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+  }
+  svg text {
+    font-family: 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
+  }
+  svg .t   { font-size: 26px; font-weight: 700; }   /* 图形主标题 */
+  svg .tb  { font-size: 19px; font-weight: 700; }   /* 节点 / 序号 */
+  svg .sm  { font-size: 15px; }                     /* 副标签 */
+  svg .qt  { font-size: 20px; font-weight: 700; }   /* 象限标题 */
+  svg .lbl { font-size: 15px; fill: #7f8c8d; }     /* 底部浅灰注脚 */
+  /* 封面/分隔页/整幅关系图页隐藏 footer：深色背景上灰字对比度低，
+     且图形贴底时（X 轴标题、图例）会与 footer 撞在一起。 */
+  section.cover footer,
+  section.divider footer,
+  section.diagram footer {
+    display: none;
   }
   th {
     background: #c0392b;
@@ -154,7 +180,8 @@ header:
 1. Copy the whole `style: |-` block above (including the `footer` and `header` lines) into the new deck's frontmatter.
 2. Add `<!-- _class: cover -->` at the top of the title slide.
 3. Use `<!-- _class: divider -->` for major section breaks.
-4. **Do not** use div callouts like `<div class="tip">` (marp does not support div layout). Use instead:
+4. Add `<!-- _class: diagram -->` to any slide holding a full-width inline-SVG diagram.
+5. **Do not** use div callouts like `<div class="tip">` (without `--html`, marp does not support div layout). Use instead:
    - Blockquote + emoji: `> 💡 Tip: xxx`
    - A table
    - Emoji + bold paragraph: `**✅ Output**: xxx`
@@ -168,6 +195,17 @@ header:
 | Smaller tables | `table { font-size: 0.7em; }` |
 | Larger code blocks | `pre { font-size: 0.85em; }` |
 | No page number on cover/divider | Add `<!-- _paginate: skip -->` to those slides |
+| Bigger/smaller diagram type | `svg .t / .tb / .sm / .qt / .lbl` — one edit rescales every diagram in the deck |
+| Footer back on a diagram page | Drop `<!-- _class: diagram -->` and remove that selector from the `footer` rule |
+
+## Smart drawing support
+
+The `svg` / `svg text` / type-scale rules and the `section.diagram footer` rule exist for inline-SVG consulting diagrams. Two notes:
+
+- **Inline SVG only renders with the `--html` flag.** `marp deck.marp.md --html --pdf --allow-local-files`. Without it Marp escapes the markup and the diagram shows up as a page of source code. Write the required command into a comment at the top of any deck that ships diagrams.
+- **Put font sizes in the class, not in a `font-size` attribute.** The deck `<style>` reaches into `<svg>` fine, so `class="t"` resizes across every diagram at once; a hardcoded `font-size="26"` does not.
+
+Templates and coordinate formulas: [smart-drawing.md](smart-drawing.md). Runnable deck: `../examples/smart-drawing-deck.marp.md`.
 
 ## Known differences vs the openclaw reference
 
@@ -180,6 +218,7 @@ header:
 After rendering, check:
 1. No missing CJK glyphs (confirm the rendering machine has `PingFang SC`, `Microsoft YaHei`, or `Noto Sans CJK SC` installed).
 2. Cover shows the deep navy-black → red gradient; dividers show the deep blue-grey background.
-3. No table exceeds the slide width (≤ 4 columns per slide).
-4. Code blocks have no horizontal scrollbar (use `pre { font-size: 0.7em }` for long prompt templates).
-5. Long prompt templates use `<details>` collapse (marp supports HTML details) or are split across slides, so no single page is overloaded — remember the 15-line cap, and push speaker-only detail into `<!-- -->` notes.
+3. No table exceeds the slide width (≤ 4 columns per slide), **and tables actually reach the full slide width** — if they render at roughly half width, the `display: table !important` rule was dropped.
+4. Diagram slides: bottom-most labels (axis titles, legends) do not collide with the footer; the type scale (`svg .t/.tb/.sm`) is applied via `class`, not `font-size` attributes.
+5. Code blocks have no horizontal scrollbar (use `pre { font-size: 0.7em }` for long prompt templates).
+6. Long prompt templates use `<details>` collapse (marp supports HTML details) or are split across slides, so no single page is overloaded — remember the 15-line cap, and push speaker-only detail into `<!-- -->` notes.
