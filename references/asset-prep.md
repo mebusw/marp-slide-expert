@@ -7,14 +7,14 @@ When converting a deck with external image URLs (courseware screenshots, blog di
 Always rename downloaded images with a **chapter / section prefix** so the paths stay stable and meaningful:
 
 ```text
-L1_1.1-01_本节脉络.png      ← lesson 1, section 1.1, item 01
-L3_3.6-30_智能工作台实战.png ← lesson 3, section 3.6, item 30
+L1_1.1-01_section-overview.png    ← lesson 1, section 1.1, item 01
+L3_3.6-30_workbench-walkthrough.png ← lesson 3, section 3.6, item 30
 ```
 
 Format: `L<lesson>_<section>_<sequence>_<descriptive name>.<ext>`
 
 This avoids:
-- URL-encoded filenames like `1.1-01_%E6%9C%AC%E8%8A%82.png` that read poorly.
+- URL-encoded filenames that read poorly, and non-Latin names that render inconsistently across machines.
 - Collisions when the same section number appears in multiple lessons.
 - Path-unsafe characters like `/` in section names.
 
@@ -32,7 +32,7 @@ ls chunk_* | xargs -P 8 -I {} sh -c '
 '
 ```
 
-For Chinese URLs, use Python + `unquote()` from `urllib.parse` to normalize filenames.
+For URLs with non-ASCII characters, use Python + `unquote()` from `urllib.parse` to normalize filenames.
 
 ## Compression
 
@@ -97,7 +97,7 @@ A common pattern: keep `.marp.md` files and `assests/` side-by-side, and referen
 For images that need to render in PDF when invoked from a parent directory, wrap paths in `<...>` brackets:
 
 ```markdown
-![bg left contain opacity:.9](<AI coding 转型和案例 Harness Engineering/腾讯云 FDE 认证课 marp/assests/L1_xxx.png>)
+![bg left contain opacity:.9](<course/Harness Engineering/assests/L1_xxx.png>)
 ```
 
 The brackets tell marp the entire content (including spaces) is one URL.

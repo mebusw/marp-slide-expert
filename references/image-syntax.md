@@ -73,11 +73,11 @@ For a typical screenshot-heavy deck (most slides are 1920×1080 → landscape), 
 
 ## Path escaping
 
-Paths with spaces, Chinese characters, or special chars MUST be wrapped in `<...>`:
+Paths with spaces, non-ASCII characters, or special chars MUST be wrapped in `<...>`:
 
 ```markdown
 ![bg](<path with spaces.png>)
-![bg](<中文路径/image.jpg>)
+![bg](<non-ascii path/image.jpg>)
 ![bg](<path(with)parens.png>)
 ```
 
