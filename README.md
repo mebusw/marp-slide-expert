@@ -122,5 +122,6 @@ Details: [references/smart-drawing.md](references/smart-drawing.md). Runnable de
 | Speaker note visible in the PDF | Not inside an HTML comment |
 | One slide became two | A `---` inside an HTML comment |
 | Whole slide shows SVG source | Missing `--html` at render time |
+| SVG renders in Obsidian but exports to PDF as source | Obsidian's built-in exporter flattens inline HTML — use Marp CLI `--html --pdf`, or the Enhanced PDF Export plugin |
 | SVG diagram vanished | A blank line inside the SVG block |
 | Table renders at half width | Dropped the `display: table !important` rule — marp's default theme sets `table { display: block }` |

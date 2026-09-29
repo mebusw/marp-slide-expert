@@ -122,5 +122,6 @@ marp deck.marp.md --html --pdf --allow-local-files   # --html 是必须的
 | 演讲者备注出现在 PDF 里 | 没放在 HTML 注释里 |
 | 一页变成两页、出现空白页 | 注释里写了 `---` |
 | 整页显示 SVG 源码 | 渲染命令漏了 `--html` |
+| Obsidian 里显示正常，导 PDF 却变源码 | Obsidian 内置导出器会拍平 inline HTML —— 改用 Marp CLI `--html --pdf`，或装 Enhanced PDF Export 插件 |
 | 图形整个消失 | SVG 内部有空行，HTML 块被切断 |
 | 表格只有半宽 | 漏了 `display: table !important` —— marp default 主题给 `table` 设了 `display: block` |

@@ -13,7 +13,6 @@ These break rendering silently if violated:
 
 - **Only `![bg ...](...)` for images.** Marp does NOT support `![w:60% center]`, `![width:200px]`, or any inline image sizing. If you need an image, it must be a background.
 - **Wrap paths containing spaces in `<...>`**: `![bg](<path with spaces.png>)`. Without the brackets, marp silently treats the space as URL terminator.
-- **No `<div>` wrappers.** Without the `--html` flag, Marp ignores HTML divs for layout. Use class directives (`<!-- _class: name -->`) for cover/divider styling.
 - **Inline SVG requires `--html`.** Marp escapes HTML by default, so a `<svg>` diagram renders as a page of visible source code. Any deck containing inline SVG must be rendered with `marp deck.marp.md --html --pdf --allow-local-files`. See "Smart drawing" below.
 - **Slides overflow when content is too dense.** Marp has no auto-shrink. Split proactively.
 - **Max 15 visible lines per slide.** Count every rendered line — paragraph lines, bullet items, table rows (including the header row), code block lines, quote/callout-box lines. Over 15 and the bottom of the slide gets cut off in the PDF. See "15-line hard cap" below.
@@ -127,19 +126,6 @@ It includes:
 
 Copy the `style: |-` block verbatim into a new deck's frontmatter.
 
-### Callout boxes (replacing the retired div classes)
-
-**Do not** use `<div class="tip">` / `<div class="warn">` — marp ignores div-based layout. Use a blockquote plus an emoji instead:
-
-```markdown
-> 💡 Tip: xxx        (blockquote + emoji == tip)
-
-> ⚠️ Warning: xxx    (== warn)
-
-> ✅ Success: xxx    (== success)
-
-> 🎯 Key point: xxx  (== highlight)
-```
 
 ## Speaker notes (HTML comments — invisible in the PDF)
 
@@ -195,6 +181,8 @@ Rules:
 | Table rows truncated horizontally | Table too wide — keep ≤ 4 columns or shrink font in CSS |
 | Table renders at half width | marp's default theme sets `table { display: block }` — the block box stretches but the inner anonymous table shrink-wraps. Fix with `display: table !important` (already in style-bootstrap) |
 | Whole slide shows SVG source code | Missing `--html` at render time |
+| SVG fine in Obsidian reading mode but exports as source in PDF | Obsidian's built-in exporter flattens inline HTML/SVG — export with Marp CLI `--html --pdf`, or use the Enhanced PDF Export plugin. The deck is not at fault; see [references/smart-drawing.md](references/smart-drawing.md) §1.1 |
+| Obsidian's Marp plugin exports SVG as source | Its export command omits `--html`; patch `main.js` (2 sites in the `il()` function) — see [references/smart-drawing.md](references/smart-drawing.md) §1.2 |
 | SVG diagram disappeared entirely | A blank line inside the SVG block split the HTML block — remove it |
 | One slide split into two | A `---` inside the SVG or inside an HTML comment |
 | All diagrams' arrowheads look identical | Duplicate `marker` id across SVGs in one merged HTML export — suffix per diagram |

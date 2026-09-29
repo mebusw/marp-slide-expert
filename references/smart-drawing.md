@@ -21,7 +21,62 @@ marp deck.marp.md --html --pdf --allow-local-files
 
 - 含关系图的 deck，**渲染命令必须带 `--html`**。在 deck 顶部（frontmatter 之后）用注释写死这条命令，避免下次渲染忘。
 - `SKILL.md` 硬规则里的「No `<div>` wrappers」是**不加 `--html` 时**的行为。加上 `--html` 后 div 也能用，但仍然别用 div 做布局——SVG 表达几何关系更直接。
-- 加了 `--html` 之后 deck 可以被任意工具链消费，代价只是要记得这个开关。
+
+### 1.1 渲染器矩阵：谁能把内联 SVG 渲染进 PDF
+
+内联 SVG 的可移植性**只取决于渲染器，不取决于文件**。同一份 `.md`，换个导出器结果就不同：
+
+| 渲染器 | 屏幕 | 导出 PDF |
+|---|---|---|
+| Marp CLI + `--html` | ✅ | ✅ 矢量（本 skill 的标准路径） |
+| Marp CLI 不加 `--html` | ❌ 整页源码 | ❌ |
+| Obsidian 阅读模式 | ✅ | — |
+| **Obsidian 内置 Export to PDF** | ✅ | **❌ 变成源码** |
+| Obsidian + **Enhanced PDF Export** 插件 | ✅ | ✅ |
+| 浏览器（导出 HTML 后 Ctrl+P） | ✅ | ✅ |
+
+**所以：如果你在 Obsidian 里写稿、又用 Obsidian 内置导出，图形会变源码——这是 Obsidian 导出器拍平 inline HTML 的已知问题，不是 deck 写错了。** 两个出路：
+
+1. **继续用 Marp CLI 导出**（`--html --pdf`）。这是本 skill 面向的场景，源文件保持单文件内联。
+2. **在 Obsidian 里换导出器**：装 [Enhanced PDF Export](https://github.com/cygnusyang/obsidian-enhanced-pdf-export)，它先经 Obsidian 的 preview renderer 渲染再打印，明确保留了 inline SVG / Mermaid / callout。源文件同样不用拆。
+
+**不要**为了迁就某个导出器就把 SVG 拆成独立 `.svg` 文件——那会失去"源码和 Markdown 在一起"的最大好处（可搜索、可 diff、改一处全篇同步），而插件方案能保留它。
+
+### 1.2 Obsidian 的 Marp 插件：导出命令缺 `--html`
+
+如果你在 Obsidian 里用 [Marp 插件](https://github.com/JichouP/obsidian-marp)（JichouP，v1.5.0）导出，它内置的三个导出动作（PDF / PPTX / HTML）**都不会传 `--html`**，所以内联 SVG 必然变源码。
+
+插件的预览是好的——它自己的 `Marp` 实例静态 `html = {br:[]}`（truthy），预览走这条路径；但导出时它把原始 markdown 写到 `~/Downloads/<name>.tmp`，再 shell out 给 marp-cli：
+
+```bash
+npx -y @marp-team/marp-cli@latest --stdin false --allow-local-files \
+    --bespoke.transition -o ~/Downloads/<name>.pdf \
+    --engine ~/Downloads/engine.js -- ~/Downloads/<name>.tmp
+    #                                 ↑ 这里没有 --html
+```
+
+**修法：给这两处命令各加一个 `--html`。** 补丁点在 `.obsidian/plugins/marp/main.js` 的 `il()` 函数里，只有两处：
+
+```bash
+cd "<vault>/.obsidian/plugins/marp"
+cp main.js main.js.bak                                    # 先备份
+python3 - <<'EOF'
+p = 'main.js'
+s = open(p, encoding='utf-8', errors='surrogateescape').read()
+s = s.replace('@marp-team/marp-cli@latest --',
+              '@marp-team/marp-cli@latest --html --')
+open(p, 'w', encoding='utf-8', errors='surrogateescape').write(s)
+EOF
+node --check main.js && echo "syntax OK"                # 语法自检
+```
+
+改完**必须重载 Obsidian**（`Cmd+Shift+R`，或在插件设置里禁用再启用）才生效。
+
+三点注意：
+
+- `<!-- marp html: true -->` 全局指令和 frontmatter 里的 `html: true` **都无效**（实测），因为 `html` 是引擎构造参数，在解析 markdown 之前就定死了——只有命令行开关能用。
+- 插件升级会覆盖补丁。每次升级后如果又变源码，重新打一次即可。
+- 补丁文件若在坚果云 / iCloud 等同步目录里，会同步到其他机器；不想同步就把 `main.js.bak` 和补丁后的 `main.js` 排除掉，或改用 CLI 直接导出。
 
 ### SVG 三条铁律
 
