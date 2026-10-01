@@ -1,6 +1,6 @@
 ---
 name: marp-slide-expert
-description: Convert or create Marp slide decks from Markdown sources. Use when working with .marp.md / .md files meant for marp CLI rendering, designing slide layouts with mixed text and images, drawing consulting-style smart drawings / relation diagrams (staircase, arrow chain, 2x2 matrix, value tree) as inline SVG, splitting long content into slides (15-line per-slide cap), writing speaker notes as invisible HTML comments, preparing image assets, or troubleshooting marp syntax errors and content overflow. Applies to marp / marpit slide format.
+description: Convert or create Marp slide decks from Markdown sources. Use when working with .marp.md / .md files meant for marp CLI rendering, designing page-level slide layouts (cover, divider, text, tables, multi-column / split layouts), drawing infographics and relation diagrams as inline SVG (staircase, arrow chain, 2x2 matrix, value tree, sankey, funnel, swimlanes, bento grid, argument map), splitting long content into slides (15-line per-slide cap), writing speaker notes as invisible HTML comments, preparing image assets, or troubleshooting marp syntax errors and content overflow. Applies to marp / marpit slide format.
 ---
 
 # Marp Expert
@@ -17,38 +17,73 @@ These break rendering silently if violated:
 - **Slides overflow when content is too dense.** Marp has no auto-shrink. Split proactively.
 - **Max 15 visible lines per slide.** Count every rendered line — paragraph lines, bullet items, table rows (including the header row), code block lines, quote/callout-box lines. Over 15 and the bottom of the slide gets cut off in the PDF. See "15-line hard cap" below.
 
+## 先分清：页级版式 vs 图级版式
+
+这是两种完全不同的东西，**用错工具是最常见的返工原因**：
+
+| | 页级版式（slide layout） | 图级版式（diagram） |
+|---|---|---|
+| **排的是** | 一页的**内容块**——文字、表格、图 | 一张图**内部**的节点和连线 |
+| **手段** | CSS grid + `<div>` / marp 语法 | 内联 `<svg>` |
+| **要不要 `--html`** | **不需要** | **需要** |
+| **文件** | [references/layout-patterns.md](references/layout-patterns.md) | [references/infographics-svg/](references/infographics-svg/INDEX.md) |
+| **例子** | 三栏对比、双栏各带表、上下分区 | 阶梯、箭头串、2×2、桑基、泳道、便当格 |
+
+**判断：这一页要表达「内容之间的结构关系」吗？**
+- 是（要看谁依赖谁、怎么演进、卡在哪）→ **画图**
+- 否（只是内容多，并排放不下）→ **排版式**
+
 ## Layout patterns (cheat sheet)
 
 | Scenario | Pattern |
 |---|---|
 | Cover | `<!-- _class: cover -->` + `# Title` + `## Subtitle` |
 | Major section break | `<!-- _class: divider -->` + `# Section Name` |
+| Text only / text + table | Plain markdown, default content slide |
+| **Two columns** | `<div class="cols cols-2">` — 并列论点、两套方案 |
+| **Three columns** | `<div class="cols cols-3">` — 演进/挑战/对策，**每栏 ≤ 5 行** |
+| **Main + side** | `<div class="cols cols-main">` (2:1) — 左要点右佐证，最常用 |
+| **Top / bottom split** | `<div class="split-h">` — 上结论下证据 |
 | Single image + text | `![bg left contain opacity:.9](<path>)` — image left, text right |
 | Multi-image, no text | `![bg](<a>)` `![bg](<b>)` — horizontal row by default |
 | Text + 2 images | `![bg right vertical](<a>)` + `![bg](<b>)` — img(a) right column, img(b) fills left, content overlays left |
 | Portrait multi-image | Add `vertical` to each: `![bg vertical](<a>)` etc. |
-| Smart drawing / 关系图 | `<!-- _class: diagram -->` + inline `<svg>` — see "Smart drawing" below |
+| Infographic / 关系图 | `<!-- _class: diagram -->` + inline `<svg>` — see below |
 
-For full syntax and orientation logic, read [references/image-syntax.md](references/image-syntax.md).
+**15-line cap is per slide, not per column** — a 3-column slide gives each column only ~5 lines. Splitting into three pages usually reads better than cramming one.
 
-## Smart drawing — 咨询级关系图（内联 SVG）
+For full syntax and orientation logic, read [references/image-syntax.md](references/image-syntax.md). For column layout details and the CSS block, read [references/layout-patterns.md](references/layout-patterns.md).
 
-Consulting smart drawings (staircase, arrow chain, 2×2 matrix, value tree, closed loop) are drawn as **inline SVG written directly in the `.md`** — not as images. A PNG has to be redrawn to change one number; SVG travels with the file, keeps its text searchable, stays vector in the PDF, and recolours with one hex value.
+## Infographics & relation diagrams — 内联 SVG
+
+Infographics and relation diagrams (staircase, arrow chain, 2×2 matrix, value tree, sankey, funnel, swimlanes, bento grid, argument map) are drawn as **inline SVG written directly in the `.md`** — not as images. A PNG has to be redrawn to change one number; SVG travels with the file, keeps its text searchable, stays vector in the PDF, and recolours with one hex value.
 
 ```bash
-# 含关系图的 deck 必须带 --html，否则 SVG 被转义成一整页源码
+# 含内联 SVG 的 deck 必须带 --html，否则 SVG 被转义成一整页源码
 marp deck.marp.md --html --pdf --allow-local-files
 ```
 
-**Pick the diagram in two steps: relationship first, then metaphor.** Nine relationship families (hierarchy / sequence / cycle / comparison / matrix / framework / strategy / mapping / growth) route to one of the templates below. The narrative layer — staircase, pyramid, flywheel, iceberg, funnel, bridge, mountain, convergence — swaps the *shell* on that same skeleton without changing the routing. Full routing table and the metaphor → geometry map: [references/smart-drawing.md](references/smart-drawing.md) §4.
+**The diagram module is a four-layer pipeline.** Work through them in order — each answers exactly one question:
 
-| Relationship | Answers | Template |
+| Layer | Question | File |
+|---|---|---|
+| ① structures 选题 | 这份内容能画哪几张图？ | [structures.md](references/infographics-svg/structures.md) |
+| ② skeletons 体裁 | 用什么图形承载这个关系？ | [skeletons/INDEX.md](references/infographics-svg/skeletons/INDEX.md) |
+| ③ metaphor 语气 | 在同一副骨架上换什么叙事外壳？ | [metaphor.md](references/infographics-svg/metaphor.md) |
+| ④ styles 配色 | 什么颜色、什么字阶？ | [styles/INDEX.md](references/infographics-svg/styles/INDEX.md) |
+| craft 笔法 | 画布多大？线怎么连？字怎么排？ | [craft/](references/infographics-svg/craft/canvas.md) |
+
+**Pick the skeleton in two steps: relationship first, then metaphor.** Relationship families (hierarchy / sequence / cycle / comparison / matrix / framework / strategy / mapping / growth) route to a skeleton. The narrative layer — staircase, pyramid, flywheel, iceberg, funnel, bridge, mountain — swaps the *shell* on that same skeleton without changing the routing. That separation is what lets the skeleton library grow without the metaphor table ever changing.
+
+| Relationship | Answers | Skeleton |
 |---|---|---|
 | Sequence | what happens first, then next | Arrow chain |
 | Hierarchy (depth 3+) | where value comes from | Value tree |
-| Matrix (2 dimensions) | who gets the money, who doesn't | 2×2 matrix |
+| Matrix (2 independent dimensions) | who gets the money, who doesn't | 2×2 quadrant |
 | Growth / evolution | where we are, what's next | Staircase |
-| Feedback | how it compounds | Closed-loop dashed line, overlaid |
+| Flow with magnitude | where does the volume go | Sankey |
+| Parallel tracks | who did what, when | Swimlanes |
+| Argument | what backs this claim | Toulmin map |
 
 **Non-negotiables when writing SVG into markdown:**
 
@@ -58,14 +93,19 @@ marp deck.marp.md --html --pdf --allow-local-files
 - **Font sizes come from CSS classes, never a `font-size` attribute** — the deck's `style:` block already defines `svg .t / .tb / .sm / .qt / .lbl` (see [references/style-bootstrap.md](references/style-bootstrap.md)), so one edit re-sizes every diagram.
 - **Add `<!-- _class: diagram -->`** when diagram content reaches the bottom of the viewBox (axis titles, legends, footnotes) — the CSS hides the footer on those slides so they don't collide.
 - **Keep nodes ≤ 7 per diagram.** Past that, split the page or fall back to a table.
-- **One colour family + one accent** (grey → navy → red, per the palette below). Three or more hues turn muddy under projection.
+- **One colour family + one accent.** Three or more hues turn muddy under projection.
+- **Geometry must not contradict the data.** A funnel whose band widths are equal-arithmetic while the values drop 100:1 is lying to the reader — use the sqrt scale in [flow-cycle](references/infographics-svg/skeletons/flow-cycle.md).
 
-Two failure modes worth memorising:
+**Before shipping, run both gates** — the first catches what is *certainly* wrong, the second catches what merely *looks* wrong:
 
-- A **hollow chevron** (6-point path notched on both sides) leaves a triangular hole on its left half — white text lands in the hole and disappears. Draw a **5-point path: rectangle + a 34px right tip**, and centre the text on the rectangle at `x + 81`, not on the full 196px width.
-- Trust the **rendered PNG**, never the SVG source. Render with `--images png` and inspect every page.
+```bash
+node scripts/svg-lint.mjs deck.marp.md                 # 6 deterministic checks
+marp deck.marp.md --html --images png -o check          # render and actually look
+```
 
-Full templates with coordinate formulas, the connector-semantics table, visual-hierarchy rules, and the QA checklist: **[references/smart-drawing.md](references/smart-drawing.md)**. A verified 8-page runnable deck: **[examples/smart-drawing-deck.marp.md](examples/smart-drawing-deck.marp.md)**.
+Trust the **rendered PNG**, never the SVG source.
+
+Full templates with coordinate formulas, connector-semantics table, visual-hierarchy rules, and QA checklist: **[references/infographics-svg/](references/infographics-svg/INDEX.md)**. Every skeleton, metaphor and style, one per slide: **[examples/infographic-diagrams.marp.md](examples/infographic-diagrams.marp.md)**.
 
 ## Content density — the 15-line hard cap
 
@@ -123,6 +163,7 @@ It includes:
 - H1/H2/H3 color scale (red / deep blue-grey / bright red)
 - Code blocks (dark `#1a1a2e` background + green `#2ecc71` text)
 - SVG helpers: `svg` sizing, CJK font for `svg text`, the `.t / .tb / .sm / .qt / .lbl` type scale, and `section.cover/divider/diagram footer { display: none }`
+- Page-level column layouts: `.cols-2` / `.cols-3` / `.cols-main` / `.split-h` grids, plus in-column `h3`/`p`/`ul`/`table` scaling
 
 Copy the `style: |-` block verbatim into a new deck's frontmatter.
 
@@ -166,9 +207,10 @@ Rules:
    - Split so **no slide exceeds 15 rendered lines** (see the count table above). When a section is long, decide per-paragraph: audience-facing content splits onto a new slide; speaker-only context moves into a `<!-- -->` note.
    - Never split mid-sentence, mid-bullet, or mid-table-row. Cut at paragraph boundaries.
    - Image placement per the cheat sheet above.
-   - For relationship diagrams, route by relationship type → pick the template in [references/smart-drawing.md](references/smart-drawing.md) → mark the slide `<!-- _class: diagram -->`.
+   - For column layouts, use the `cols-*` / `split-h` classes in [references/layout-patterns.md](references/layout-patterns.md) — remember the 15-line cap is per slide, so a 3-column slide gets ~5 lines per column.
+   - For relationship diagrams, route by relationship type → pick the skeleton in [references/infographics-svg/skeletons/INDEX.md](references/infographics-svg/skeletons/INDEX.md) → optionally swap the shell via [metaphor.md](references/infographics-svg/metaphor.md) → mark the slide `<!-- _class: diagram -->`.
 4. Count lines on every generated slide before rendering. Any slide > 15 → fix now.
-5. Render preview: `marp deck.marp.md --pdf --allow-local-files` (add `--html` if the deck contains inline SVG) and visually check first 5 pages plus a sample from middle/end. For a deck with diagrams, render every page to PNG (`--images png`) — SVG geometry is not verifiable from the source.
+5. Lint and render: `node scripts/svg-lint.mjs deck.marp.md`, then `marp deck.marp.md --pdf --allow-local-files` (add `--html` if the deck contains inline SVG) and visually check first 5 pages plus a sample from middle/end. For a deck with diagrams, render **every** page to PNG (`--images png`) — SVG geometry is not verifiable from the source.
 6. Iterate on overflow / awkward layout.
 
 ## Quick troubleshooting
@@ -180,13 +222,20 @@ Rules:
 | Content cut off at bottom | Slide has > 15 rendered lines — split, or move speaker-only detail into a `<!-- -->` note |
 | Table rows truncated horizontally | Table too wide — keep ≤ 4 columns or shrink font in CSS |
 | Table renders at half width | marp's default theme sets `table { display: block }` — the block box stretches but the inner anonymous table shrink-wraps. Fix with `display: table !important` (already in style-bootstrap) |
-| Whole slide shows SVG source code | Missing `--html` at render time |
-| SVG fine in Obsidian reading mode but exports as source in PDF | Obsidian's built-in exporter flattens inline HTML/SVG — export with Marp CLI `--html --pdf`, or use the Enhanced PDF Export plugin. The deck is not at fault; see [references/smart-drawing.md](references/smart-drawing.md) §1.1 |
-| Obsidian's Marp plugin exports SVG as source | Its export command omits `--html`; patch `main.js` (2 sites in the `il()` function) — see [references/smart-drawing.md](references/smart-drawing.md) §1.2 |
+| Whole slide shows SVG source code | Missing `--html` at render time (columns do **not** need it — only inline SVG) |
+| Table inside a column is half width | The `display: table !important` fix was dropped from the `style:` block |
+| **All styling gone** — default theme, colours lost, columns collapsed | An HTML comment `<!-- -->` was placed **inside the YAML frontmatter**, breaking the YAML parse so the whole `style:` block is silently dropped. Comments go **after** the closing `---` |
+| Table inside a column overflows sideways | Column count too high for the narrower column — cut columns or add `font-size: 0.66em` |
+| Column bottoms look ragged | Missing `align-items: start` on the grid |
+| 3-column slide is an unreadable wall of text | The 15-line cap is per slide; a 3-column slide gets ~5 lines per column — split into separate pages |
+| SVG fine in Obsidian reading mode but exports as source in PDF | Obsidian's built-in exporter flattens inline HTML/SVG — export with Marp CLI `--html --pdf`, or use the Enhanced PDF Export plugin. The deck is not at fault; see [references/infographics-svg/craft/marp-compat.md](references/infographics-svg/craft/marp-compat.md) §4 |
+| Obsidian's Marp plugin exports SVG as source | Its export command omits `--html`; patch `main.js` (2 sites in the `il()` function) — see [references/infographics-svg/craft/marp-compat.md](references/infographics-svg/craft/marp-compat.md) §4.1 |
 | SVG diagram disappeared entirely | A blank line inside the SVG block split the HTML block — remove it |
 | One slide split into two | A `---` inside the SVG or inside an HTML comment |
 | All diagrams' arrowheads look identical | Duplicate `marker` id across SVGs in one merged HTML export — suffix per diagram |
 | White text invisible on an arrow shape | Drawn as a hollow chevron — use a 5-point path (rectangle + right tip) and centre text on the rectangle |
+| Chinese label overflows its node | SVG `<text>` does not wrap — shorten the label or split it across `<tspan>` lines |
+| Funnel doesn't look as steep as the numbers suggest | Band widths were drawn as equal-arithmetic; use the sqrt scale in [flow-cycle](references/infographics-svg/skeletons/flow-cycle.md) |
 | SVG text ignores the deck's CSS classes | A `font-size` attribute was hardcoded, or the class was declared in an SVG-internal `<style>` instead of the frontmatter `style:` block |
 | Axis title / legend overlaps the footer | Add `<!-- _class: diagram -->` to that slide |
 | Slide split awkwardly | Cut mid-bullet or mid-table-row — re-split at paragraph boundaries |
