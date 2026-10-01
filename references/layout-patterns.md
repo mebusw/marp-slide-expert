@@ -13,7 +13,7 @@ Reference: [marpit.marp.app/directives-and-comment](https://marpit.marp.app/dire
 | **A 全幅** | [cover](#cover-slide) / [divider](#divider-slide) / [end](#end-of-deck-slide) | 封面、章节分隔、收尾 |
 | **B 单栏** | [content](#content-slide) / 文字+表格 / 大表为主 | 默认。内容线性、一次读完 |
 | **C 分栏** | [cols-2](#column-layouts) / `cols-3` / `cols-main` / `split-h` / `cols-2-table` | 并列信息多，单栏会溢出或太长 |
-| **D 混合** | [multi-image](#multi-image-content-slide) / [text+image](#text--supporting-images) | 有截图/配图要放 |
+| **D 混合** | [multi-image](#multi-image-content-slide) / [text+image](#text--supporting-images) / [split-v](#5-图位上下分区-split-vflex) | 有截图/配图要放 |
 
 **选择顺序**：先试 B（单栏），超 15 行再考虑 C（分栏），有图再进 D。**分栏不是默认解**——三栏塞三段话，不如拆成三页，每页一个论点。
 
@@ -153,6 +153,12 @@ Body paragraph...
 .cols-3  { grid-template-columns: repeat(3,1fr); gap: 20px; }
 .cols-main  { grid-template-columns: 2fr 1fr;   gap: 24px; }   /* 主次 2:1，反过来写 1fr 2fr */
 .split-h { display: grid; grid-template-rows: auto auto; gap: 24px; align-items: start; }
+/* D 族：文/图上下分区（flex column）；图位放真实 <img>，max-width/max-height 约束缩放 */
+.split-v    { display: flex; flex-direction: column; gap: 18px; min-height: 380px; }
+.split-v > div { border-radius: 6px; padding: 16px 20px; }
+.split-v .up   { background: #eef1f4; flex: 1; }
+.split-v .down { background: #1a1a2e; color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; flex: 1; }
+.split-v img   { max-width: 100%; max-height: 100%; border-radius: 4px; display: block; }
 .cols h3, .split-h h3 { color: #c0392b; font-size: 1.05em; margin: 0 0 6px; }
 .cols p, .split-h p   { font-size: 0.8em; line-height: 1.5; margin: 0 0 8px; }
 .cols ul, .split-h ul { font-size: 0.82em; margin: 0 0 8px; }
@@ -244,7 +250,30 @@ Body paragraph...
 </div>
 ```
 
-### 5. 双栏各带表 `cols-2-table`
+### 5. 图位上下分区 `split-v`（flex）
+
+**「上文下图」**——上半文字、下半图片。marp 的 `bg` 关键字只有整页和左右半幅，**做不了上下分区**；用 `<div>` + flex column 自己写。
+
+```markdown
+<div class="split-v">
+<div class="up">
+
+### 上文
+
+结论先行。上下比例用 `flex` 调：`flex:1` 等高，图位更大就写 `flex:2`。
+
+</div>
+<div class="down">
+
+<img src="assets/demo.png" alt="图位">
+
+</div>
+</div>
+```
+
+`.down` 深色是图位容器，`<img>` 居中显示。**横图**靠 `max-width:100%` 收窄就够了；**竖图**要给 `max-height` 一个具体值（如 `style="max-height:230px"`）——`max-height:100%` 的百分比高度在 flex 分格里不可靠，图会撑爆格子。把 `flex-direction` 换成 `row`，同一套写法就是左右分区。
+
+### 6. 双栏各带表 `cols-2-table`
 
 两张对照表并排。**每张表 ≤ 2–3 列**——分栏后宽度只有原来的 1/2，4 列的表在栏里会横向溢出。
 

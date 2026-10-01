@@ -11,7 +11,7 @@
 
 两条路最后都进同一批骨架文件。
 
-## 15 种信息结构
+## 18 种信息结构
 
 **提取要点**这一列是重点——它规定了在 `key_elements` 和 `relationships` 里**必须提取到什么**，不是泛泛列「要素1、要素2」。按要点组织信息，画出来才有价值。
 
@@ -32,6 +32,9 @@
 | 13 | **two-dimensional** 二维定位 | 「高X低Y」策略矩阵 | **两个维度名称及极性**、各元素在两维度上的定位 | [matrix-quadrant](skeletons/matrix-quadrant.md) 2×2 |
 | 14 | **landscape** 领域全景 | 「主要分为…」生态概览 | 分类维度、各区域/流派名称、代表性实体 | [structure-block](skeletons/structure-block.md) 便当格 |
 | 15 | **geographic** 地理分布 | 多地区数据对比 | 地区名称、各地区数据/特征、地区间关系 | [structure-block](skeletons/structure-block.md) 便当格<br>*见下方降级说明* |
+| 16 | **composition** 占比构成 | 「X% 是…」份额、构成 | 分类名称、各自百分比（**合计 100%**）、对比的时点/对象 | [pie](skeletons/pie.md) 饼图 |
+| 17 | **profile** 多维画像 | 「在 X 个维度上分别是…」 | 维度名称（5–7 个）、统一满分刻度、各对象各维度得分 | [radar](skeletons/radar.md) 雷达图 |
+| 18 | **balance** 平衡自评 | 「现状离目标还差…」找短板 | 维度（6–10 个）、现状分、目标分（**同一把尺**） | [wheel](skeletons/wheel.md) 平衡轮 |
 
 ### 两个降级说明
 
@@ -66,15 +69,16 @@
 | flow 结构但没有具体数值 | 桑基的宽度就是数据，没数据就没有图 |
 | two-dimensional 但两个维度不独立 | 象限退化成一条对角带，四个象限有两个永远空着 |
 | multi-dimensional 但只列了维度没给评价 | 对比矩阵全是空格，读者会以为是漏了 |
+| composition 但没有具体份额 / profile·balance 但没有评分 | 饼图的弧长、雷达的半径就是数据——没有数值只能画成等分，那是编造 |
 
 ## 提取优先级
 
 按「可视化增值」排序，优先画**图表比纯文字更有效**的结构：
 
 ```
-高增值：flow（有量级）· two-dimensional（空间定位）· parallel-evolution（并行对比）
-        · cycle（回路）· hierarchy（拆解）
-中增值：network · argument · multi-dimensional · stakeholder
+高增值：flow（有量级）· composition（有份额）· two-dimensional（空间定位）
+        · parallel-evolution（并行对比）· cycle（回路）· hierarchy（拆解）
+中增值：network · argument · multi-dimensional · stakeholder · profile · balance
 低增值：landscape（容易退化成列表）· timeline（容易退化成项目符号）
 ```
 

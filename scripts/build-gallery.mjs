@@ -181,7 +181,8 @@ style: |-
   .split-v { display:flex; flex-direction:column; gap:18px; min-height:380px; }
   .split-v > div { border-radius:6px; padding:16px 20px; }
   .split-v .up { background:#eef1f4; flex:1; }
-  .split-v .down { background:#1a1a2e; color:#fff; text-align:center; flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .split-v .down { background:#1a1a2e; color:#fff; text-align:center; flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; }
+  .split-v img { max-width:100%; max-height:100%; border-radius:4px; display:block; }
   .cols h3, .split-h h3 { color:#c0392b; font-size:1.05em; margin:0 0 6px; }
   .cols p, .split-h p   { font-size:0.8em; line-height:1.5; margin:0 0 8px; }
   .cols ul, .split-h ul { font-size:0.82em; margin:0 0 8px; }
@@ -226,7 +227,7 @@ parts.push(`<!-- _class: cover -->
 
 # marp-slide-expert 图例总览
 
-## 56 页演示 · 选型时一翻到底 · 复制时一拿就走
+## 53 页演示 · 选型时一翻到底 · 复制时一拿就走
 
 <!-- A 全幅页走 marp 自带的 _class: cover/divider，CSS 已在 style-bootstrap 里。
      B 单栏 = 默认 C 分栏 = .cols-*  D 混合 = 文字 + bg 图片 -->
@@ -241,11 +242,11 @@ parts.push(`<!-- _class: divider -->
 
 ---
 
-## 1. 选题——这份内容能画哪几张图
+## 1. 选题——这份内容能画哪几张图（1/2）
 
 读文档，扫下面的表，找出内容里出现了哪几种结构：
 
-| 信息结构（15 种） | → 骨架 | 适合 |
+| 信息结构 | → 骨架 | 适合 |
 |---|---|---|
 | network 关系网络 | [network-hub](#) | 影响、相互作用 |
 | hierarchy 层次 | [hierarchy-tree](#) | 由…组成、下设、从属 |
@@ -257,6 +258,13 @@ parts.push(`<!-- _class: divider -->
 | two-dimensional 二维 | [matrix-quadrant](#) | 高 X 低 Y |
 | multi-dimensional 多维 | [structure-block](#) 对比矩阵 | 在 X 方面优秀但 Y 不足 |
 | landscape 全景 | [structure-block](#) 便当格 | 主要分为… |
+
+---
+
+## 1. 选题——这份内容能画哪几张图（2/2）
+
+| 信息结构 | → 骨架 | 适合 |
+|---|---|---|
 | concept-decomposition 概念 | [hierarchy-tree](#) 关系树 | 该理论包含… |
 | stakeholder 利益相关方 | [structure-block](#) 或 quadrant | 多方参与 |
 | debate / semantic-opposition 对立 | [structure-block](#) | 支持 vs 反对 |
@@ -264,12 +272,15 @@ parts.push(`<!-- _class: divider -->
 | 起伏叙事 / 复盘 | [wave-timeline](#) | 过程曲折、最终成功 |
 | 罗列属性 | [icon-rail](#) | 3–6 项并列 |
 | 展示卡片 | [card-row](#) | 3–5 张图文卡 |
+| composition 占比构成 | [pie](#) | 份额、构成变化 |
+| profile 多维画像 | [radar](#) | 多维度形状对比 |
+| balance 平衡自评 | [wheel](#) | 现状 vs 目标、找短板 |
 
 详见 [references/infographics-svg/structures.md](#)。
 
 ---
 
-## 2. 骨架——选什么图形承载
+## 2. 骨架——选什么图形承载（1/2）
 
 | 关系 | 判定问句 | 骨架 |
 |---|---|---|
@@ -280,10 +291,20 @@ parts.push(`<!-- _class: divider -->
 | Flow 流量 | X 从哪来，流向哪，带多少量？ | 桑基 |
 | Parallel 并行 | 多实体同步推进？ | 泳道 |
 | Network 网络 | 多对多关系？ | 网络图 |
+
+---
+
+## 2. 骨架——选什么图形承载（2/2）
+
+| 关系 | 判定问句 | 骨架 |
+|---|---|---|
 | Argument 论证 | 主张 + 证据？ | 图尔敏 |
 | 罗列 | 3–6 项并列属性？ | icon-rail |
 | 展示 | 3–5 张图文卡片？ | card-row |
 | 起伏叙事 | 过程曲折但最终成功？ | wave-timeline |
+| 占比 | 各部分加起来是整体？ | 饼图 |
+| 画像 | 同一组维度上的形状？ | 雷达图 |
+| 平衡 | 单对象现状 vs 目标？ | 平衡轮 |
 
 详见 [references/infographics-svg/skeletons/INDEX.md](#)。
 
@@ -498,7 +519,9 @@ parts.push(`<!-- _class: divider -->
 A 族全幅页（封面/分隔/收尾）和 B/C 族文字版式都用 marp 自带样式。
 本节是第三种：**图 + 文混排**——两种 marp 模式各有所长，分清场景用对模式。
 `);
-parts.push(`## D · marp 模式：\\\`![bg ...]\\\` 背景图
+parts.push(`## D · marp 模式：\`![bg ...]\` 背景图
+
+![bg cover opacity:.3](<../assets/marp.png>)
 
 marp 的图片是**slide 级背景图**。一图占一页，要做左右半图或上下分区靠 marp 自带的关键字。
 
@@ -525,42 +548,55 @@ marp 的图片是**slide 级背景图**。一图占一页，要做左右半图�
 
 </div>
 </div>
-
-<!-- D 模式实际渲染示例：图放右、文放左，用 marp 自带关键字 -->
-![bg right vertical](<../assets/marp.png>)
+`);
+parts.push(`<!-- D 模式实际渲染示例：图放右、文放左，用 marp 自带关键字 -->
+![bg right vertical contain](<../assets/marp.png>)
 
 ### D · marp 模式示例：图在右，文在左
 
 > 这是用 \`![bg right vertical](<assets/marp.png>)\` 渲染的——
-> 红色块占右半幅，左半幅是文字内容。
+> 图占右半幅，左半幅是文字内容。
 > marp 自带 \`bg right\`/\`bg left\`/\`bg\` 三种关键字，垂直版用 \`vertical\`。
 
 ### 这页的标题
 `);
-parts.push(`## D · CSS 模式：\\\`<div>\`\\\` + flex 上下分区
+parts.push(`## D · CSS 模式：\`<div>\` + flex 上下分区
 
-D 模式搞不定的（多图分区、上下分区），**用 \`<div>\` 自定义分栏**——和 C 族同源，只是不用 CSS grid 而用 flex column。
+<div class="cols cols-2">
+<div class="col">
 
-<div class="split-v">
-<div class="up">
+marp 的 \`bg\` 关键字只有整页和左右半幅，**没有「上文下图」**——上下分区用 \`<div>\` 自己写，和 C 族同源，只是把 grid 换成 flex column。
 
-### 上半区文字
-
-要点放这里。短说明、引言、标题。
+- \`.split-v\` 容器用 \`flex-direction:column\` 管上下；换成 \`row\` 就是左右
+- \`gap\` 是分区间距；\`flex:1\` 上下等高，图大就把下格写成 \`flex:2\`
+- 图位直接放**真实 \`<img src="...">\`**，不是占位色块
+- 横图靠 \`max-width:100%\` 收窄；**竖图要给 \`max-height\` 一个具体值**——百分比高度在 flex 分格里不可靠
 
 </div>
-<div class="down">
+<div class="col">
 
-### 下半区（图位）
+<div class="split-v" style="min-height:400px">
+<div class="up">
 
-**图位用色块占位**——这里演示用 dark navy 背景。真实场景换成 \`<img src="...">\` 即可。
+### 上文 · 结论先行
+
+右格就是「上文下图」的实渲——上格文字，下格图片。
+
+</div>
+<div class="down" style="flex:1.6">
+
+<img src="../assets/marp.png" alt="下格的图片位" style="max-height:230px">
+
+</div>
+</div>
 
 </div>
 </div>
 
 <!--
-\`flex-direction:column\` 决定上下分区，\`gap\` 是上下间距，
-\`flex:1\` 让上下等高。背景图换成 \`<img>\` 即可。
+上格 .up 浅灰 = 文字区，下格 .down 深色 = 图位；\`.split-v img\` 已经给了
+max-width/max-height:100%，图片会保持比例缩进格子。
+\`flex-direction:column\` 决定上下分区，换成 \`row\` 就是左右——同一套写法。
 -->
 `);
 
@@ -569,7 +605,7 @@ parts.push(`<!-- _class: divider -->
 
 # ③ 图形骨架
 
-## 16 个关系类型，每个都有现成坐标
+## 19 个图形骨架，每个都有现成坐标
 
 每个骨架的坐标公式在 references/infographics-svg/skeletons/ 下。
 选骨架先问"节点之间是什么关系"，再问"这页要什么情绪"（见下文 ④ 隐喻）。
@@ -578,7 +614,7 @@ const SKEL_NOTE = {
   'linear-sequence': '步距 192、箭头宽 184、尖长 34；文字居中于矩形部分 x_i+75，不是整个外框',
   'hierarchy-tree': '直角连接器 M 父cx,父底 V 中继y H 子cx V 子顶；可加侧分叉表示助理/秘书',
   'matrix-quadrant': '两个轴必须独立；四条象限都必须有名字，位置要反映真实数值',
-  'flow-cycle': '环形弧段切于节点圆；漏斗四条斜边共线（母线 s=1.118）；两种画法：正三角 / 倒梯形',
+  'flow-cycle': '环形弧段切于节点圆；漏斗母线 s=0.9、四条斜边共线，顶口 + 下料管口 = 漏斗的识别特征',
   'network-hub': '连线落在径向上：起点 R-r_n，终点 r_c。阵营节点 y 必须跟跨阵营主连线 y 共线',
   lanes: '阶段竖线必须与事件列对齐；同泳道事件加水平连线，先画线再画圆',
   'structure-block': '没有连线；便当格必须有一个 hero 格，对比矩阵高亮须等于一整列',
@@ -586,6 +622,9 @@ const SKEL_NOTE = {
   'wave-timeline': '整体 y 单调不降，5–7 峰；节点最多 5–6 个；起终点各一节点',
   'icon-rail': '3–6 项水平对齐；每个图标一色；无连线',
   'card-row': '3–5 卡水平对齐；图区 60–70%，文字 30–40%；卡间距 20px',
+  radar: '轴数 5–7、所有轴同一满分刻度；系列 ≤ 3：实线填充 + 虚线描边',
+  pie: '扇区 ≤ 5、从大到小顺时针；多饼同分类同色、图例共享；各饼合计 100%',
+  wheel: '玫瑰图式花瓣（不是雷达折线）：半径 = 分值、6–10 瓣、瓣间留缝；短板染红、目标虚线弧',
 };
 for (const s of skeletons) {
   parts.push(diagramSlide(`${s.name}`, s.svg, SKEL_NOTE[s.group] || '见 skeletons 规格文件'));
@@ -601,7 +640,7 @@ parts.push(`<!-- _class: divider -->
 骨架定了之后换壳。**一页只讲一个隐喻。**
 `);
 const MP_NOTE = {
-  Pyramid: '顶层三角形 + 三层梯形 = 正三角金字塔；强调「收敛到顶点」',
+  Pyramid: '顶三角 + 三层梯形，斜边全部共线到顶点（母线 ±0.9）；强调「收敛到顶点」',
   Flywheel: '两种画法：统一粗细（推荐）/ 渐变粗细；markerUnits 必须 userSpaceOnUse',
   Iceberg: '默认不规则山形，水下 7+ 边起伏；规整六边形备选',
   Onion: '用椭圆不用圆角矩形——同心椭圆，递减；层数 ≤ 4',

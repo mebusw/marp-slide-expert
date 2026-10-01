@@ -26,13 +26,13 @@
 | 隐喻 | 核心语义 | 几何底座（骨架） | 改动量 | 关键提醒 |
 |---|---|---|---|---|
 | **Staircase 阶梯** | 逐级跃迁、进阶 | [linear-sequence](skeletons/linear-sequence.md) 阶梯 | 原生 | 高度用等差不用等比，等比就变柱状图了 |
-| **Pyramid 金字塔** | 战略层 → 执行层收敛 | 阶梯镜像，层宽 `w_i = 220 - i*40`，顶部收成单点 | 小 | 顶层必须收成一个点，否则还是阶梯 |
+| **Pyramid 金字塔** | 战略层 → 执行层收敛 | 阶梯镜像，从顶点拉两条母线（±0.9），逐层切高 | 小 | 顶三角和各层梯形的斜边必须共线到顶点，否则像一摞矩形 |
 | **Wave timeline 波浪时间线** | 有起伏的演进 | 阶梯 + 节点间改 `C` 贝塞尔曲线 | 小 | 起伏幅度别超过层高差，否则失去递进感 |
 | **S-Curve** | 技术从试验到普及 | 三段折线 polyline + 三个阶段底色 | 中 | 三段斜率必须递增（1:2:4），否则不像 S |
 | **Growth curve 增长曲线** | 增长不是线性 | 折线 + 面积填充 `opacity="0.15"` | 小 | 面积填充只用 1 个色，透明度 ≤ 0.2 |
 | **Mountain 山峰** | 攻坚到高点再回落 | 三角折线 + 顶点强调 | 中 | 顶点加实心圆或加粗，回落段用虚线区分「已发生/预期」 |
 | **Bridge / Gap jump 跨越鸿沟** | 现状与目标之间的断裂 | 水平带 + 中间缺口 + 跃起曲线 | 中 | 缺口宽度本身要表达难度，别画成装饰性缺口 |
-| **Funnel 漏斗** | 大量到少量、转化 | [flow-cycle](skeletons/flow-cycle.md) 漏斗 | 原生 | 层宽用平方根尺度，等差会替数据说谎 |
+| **Funnel 漏斗** | 大量到少量、转化 | [flow-cycle](skeletons/flow-cycle.md) 漏斗 | 原生 | 四边共线（母线 0.9）+ 顶口管口；层宽是示意，量级看数字 |
 | **Flywheel 飞轮** | 势能自我积累 | 环形 + 弧线 `stroke-width` 逐段递增（2.5→6） | 中 | 线宽递增是「飞轮」的唯一识别特征，不能省 |
 | **Cycle 循环** | PDCA、持续改进 | 环形四象限 + 环形箭头 | 原生 | 箭头方向全图统一（都顺时针或都逆时针） |
 | **Iceberg 冰山** | 显性 vs 隐性成本 | 水位线矩形 + 上小下大两块 | 中 | 水位线用虚线；**水下部分面积要明显大于水上**（通常 3:1），否则失去「隐藏量大」的隐喻 |
@@ -83,26 +83,51 @@
 
 ## 1. Pyramid 金字塔
 
-阶梯镜像，层宽递减，顶部最窄。`w_i = 220 - i*40`，层高 `56`，`y_i = 60 + i*74`。
+**几何：所有斜边共线到顶点。** 从顶点 (510, 40) 向左右拉两条母线（斜率 ±0.9），每 80px 切一刀；第 i 层的底边半宽 = `0.9 × (y − 40)`。层与层直接相接、不留缝——每层梯形的斜边都是母线上的一段，四层的轮廓拼起来就是一个完整的等腰三角形。
 
-**顶层建议画成三角形**（不是矩形）——四层正三角叠起来就是完整的金字塔，识别度比四块矩形堆叠强得多。两种画法：
+**顶层画成三角形**（不是矩形）——顶三角的斜边和下面各层梯形的斜边**落在同一条直线上**，这是"正三角金字塔"与"一摞矩形"的唯一区别。两种画法：
 
 | 画法 | 怎么搭 | 适合 |
 |---|---|---|
-| **正三角金字塔**（本模板） | 顶层用三角，其余三层是等宽梯形 | 强调「收敛到顶点的方向」——战略屋、能力金字塔、价值链 |
-| **四层矩形**（保留版本） | 四层都是矩形 | 强调「每一层都是可读的整体」——4 大能力模型、4 大原则 |
+| **正三角金字塔**（本模板） | 顶层三角 + 三层梯形，斜边全部共线到顶点 | 强调「收敛到顶点的方向」——战略屋、能力金字塔、价值链 |
+| **四层矩形**（备选） | 四层都是矩形，宽度等差递增、互不共线 | 强调「每一层都是可读的整体」——4 大能力模型、4 大原则 |
+
+层参数（顶点 510,40；层高 80；母线斜率 0.9）：
+
+| 层 | y 区间 | 底边半宽 | 底边宽 |
+|---|---|---|---|
+| L1 愿景（三角） | 40–120 | 72 | 144 |
+| L2 战略 | 120–200 | 144 | 288 |
+| L3 举措 | 200–280 | 216 | 432 |
+| L4 执行动作 | 280–360 | 288 | 576 |
 
 ```html
-<svg viewBox="0 0 1020 400" width="100%">
-<path d="M510,90 L600,118 L420,118 Z" fill="#1a1a2e"/>
-<text x="510" y="115" class="tb" fill="#ffffff" text-anchor="middle">愿景</text>
-<rect x="370" y="134" width="280" height="56" rx="4" fill="#2c3e50"/>
-<text x="510" y="170" class="tb" fill="#ffffff" text-anchor="middle">战略</text>
-<rect x="330" y="208" width="360" height="56" rx="4" fill="#5d7d95"/>
+<svg viewBox="0 0 1020 420" width="100%">
+<path d="M510,40 L582,120 L438,120 Z" fill="#1a1a2e"/>
+<text x="510" y="112" class="tb" fill="#ffffff" text-anchor="middle">愿景</text>
+<path d="M438,120 L582,120 L654,200 L366,200 Z" fill="#2c3e50"/>
+<text x="510" y="168" class="tb" fill="#ffffff" text-anchor="middle">战略</text>
+<path d="M366,200 L654,200 L726,280 L294,280 Z" fill="#5d7d95"/>
+<text x="510" y="248" class="tb" fill="#ffffff" text-anchor="middle">举措</text>
+<path d="M294,280 L726,280 L798,360 L222,360 Z" fill="#95a5a6"/>
+<text x="510" y="328" class="tb" fill="#ffffff" text-anchor="middle">执行动作</text>
+<text x="510" y="398" class="lbl" text-anchor="middle">自上而下拆解，越往下越具体</text>
+</svg>
+```
+
+**四层矩形备选**（不共线，靠宽度等差表达层级）：
+
+```html
+<svg viewBox="0 0 1020 420" width="100%">
+<rect x="360" y="40"  width="300" height="72" rx="4" fill="#1a1a2e"/>
+<text x="510" y="84" class="tb" fill="#ffffff" text-anchor="middle">愿景</text>
+<rect x="320" y="120" width="380" height="72" rx="4" fill="#2c3e50"/>
+<text x="510" y="164" class="tb" fill="#ffffff" text-anchor="middle">战略</text>
+<rect x="280" y="200" width="460" height="72" rx="4" fill="#5d7d95"/>
 <text x="510" y="244" class="tb" fill="#ffffff" text-anchor="middle">举措</text>
-<rect x="290" y="282" width="440" height="56" rx="4" fill="#95a5a6"/>
-<text x="510" y="318" class="tb" fill="#ffffff" text-anchor="middle">执行动作</text>
-<text x="510" y="378" class="lbl" text-anchor="middle">自上而下拆解，越往下越具体</text>
+<rect x="240" y="280" width="540" height="72" rx="4" fill="#95a5a6"/>
+<text x="510" y="324" class="tb" fill="#ffffff" text-anchor="middle">执行动作</text>
+<text x="510" y="398" class="lbl" text-anchor="middle">四层等距矩形：每层都是完整的可读块</text>
 </svg>
 ```
 

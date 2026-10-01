@@ -7,7 +7,7 @@
 | 入口 | 什么时候走 | 在哪 |
 |---|---|---|
 | **关系驱动** | 已经知道要画什么关系，只是不知道怎么画 | 本文件 |
-| **文档驱动** | 用户丢来一篇文章/一段材料，说「帮我画图」 | [../structures.md](../structures.md) — 15 种信息结构识别，**同一张表带出骨架映射列** |
+| **文档驱动** | 用户丢来一篇文章/一段材料，说「帮我画图」 | [../structures.md](../structures.md) — 18 种信息结构识别，**同一张表带出骨架映射列** |
 
 两条路汇进同一批骨架文件。
 
@@ -26,6 +26,9 @@
 | **Growth** 演进 | 我们在哪，下一步去哪？ | [linear-sequence](linear-sequence.md) 阶梯 |
 | **Evidence** 论证 | 主张靠什么证据支撑？ | [evidence](evidence.md) 图尔敏 |
 | **Flow** 流量 | X 从哪来，流向哪，带多少量？ | [flow-cycle](flow-cycle.md) 桑基 |
+| **Composition** 占比 | 各部分加起来是一个整体？份额各多少？ | [pie](pie.md) |
+| **Profile** 画像 | 同一组维度上，对象的得分形状如何？ | [radar](radar.md) |
+| **Balance** 平衡 | 单个对象的现状 vs 目标，短板在哪？ | [wheel](wheel.md) |
 
 **关键区分**：节点多且**多对多双向**（A↔B↔C 都相连）时，不要硬塞进中心辐射（Hub & Spoke）——那会丢掉交叉关联，退化成一张关系网。此时用 [network-hub](network-hub.md) 的网络图，或拆成分组矩阵。
 
@@ -44,6 +47,9 @@
 | [wave-timeline](wave-timeline.md) | 起伏波浪 + 整体向上推进，过程曲折抵达 | 时间点无波折（用 lanes） |
 | [icon-rail](icon-rail.md) | 3–6 项**并列**的属性/方面，水平对齐 | 节点之间有顺序（用 linear-sequence） |
 | [card-row](card-row.md) | 3–5 张**图文卡片**水平对齐，每张上半图下半文 | 内容是数字对比（用 structure-block） |
+| [pie](pie.md) | 占比构成；1–3 个饼的对比（同分类同色） | 比较绝对值大小（用表格或条形） |
+| [radar](radar.md) | 2–3 个对象、5–7 个统一刻度的维度叠比 | 单对象自评找短板（用 wheel） |
+| [wheel](wheel.md) | 单对象自评：现状 vs 目标、缺口即优先级 | 多对象叠比（用 radar） |
 
 ## 第三步：换叙事外壳
 

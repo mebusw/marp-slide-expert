@@ -1,6 +1,6 @@
 ---
 name: marp-slide-expert
-description: Convert or create Marp slide decks from Markdown sources. Use when working with .marp.md / .md files meant for marp CLI rendering, designing page-level slide layouts (cover, divider, text, tables, multi-column / split layouts), drawing infographics and relation diagrams as inline SVG (staircase, arrow chain, 2x2 matrix, value tree, sankey, funnel, swimlanes, bento grid, icon-rail, card-row, wave-timeline, argument map), splitting long content into slides (15-line per-slide cap), writing speaker notes as invisible HTML comments, preparing image assets, or troubleshooting marp syntax errors and content overflow. Applies to marp / marpit slide format.
+description: Convert or create Marp slide decks from Markdown sources. Use when working with .marp.md / .md files meant for marp CLI rendering, designing page-level slide layouts (cover, divider, text, tables, multi-column / split layouts), drawing infographics and relation diagrams as inline SVG (staircase, arrow chain, 2x2 matrix, value tree, sankey, funnel, swimlanes, bento grid, icon-rail, card-row, wave-timeline, argument map, pie / radar / balance-wheel charts), splitting long content into slides (15-line per-slide cap), writing speaker notes as invisible HTML comments, preparing image assets, or troubleshooting marp syntax errors and content overflow. Applies to marp / marpit slide format.
 ---
 
 # Marp Expert
@@ -56,7 +56,7 @@ For full syntax and orientation logic, read [references/image-syntax.md](referen
 
 ## Infographics & relation diagrams — 内联 SVG
 
-Infographics and relation diagrams (staircase, arrow chain, 2×2 matrix, value tree, sankey, funnel, swimlanes, bento grid, argument map) are drawn as **inline SVG written directly in the `.md`** — not as images. A PNG has to be redrawn to change one number; SVG travels with the file, keeps its text searchable, stays vector in the PDF, and recolours with one hex value.
+Infographics and relation diagrams (staircase, arrow chain, 2×2 matrix, value tree, sankey, funnel, swimlanes, bento grid, argument map, pie, radar, balance wheel) are drawn as **inline SVG written directly in the `.md`** — not as images. A PNG has to be redrawn to change one number; SVG travels with the file, keeps its text searchable, stays vector in the PDF, and recolours with one hex value.
 
 ```bash
 # 含内联 SVG 的 deck 必须带 --html，否则 SVG 被转义成一整页源码
@@ -73,7 +73,7 @@ marp deck.marp.md --html --pdf --allow-local-files
 | ④ styles 配色 | 什么颜色、什么字阶？ | [styles/INDEX.md](references/infographics-svg/styles/INDEX.md) |
 | craft 笔法 | 画布多大？线怎么连？字怎么排？ | [craft/](references/infographics-svg/craft/canvas.md) |
 
-**Pick the skeleton in two steps: relationship first, then metaphors.** Relationship families (hierarchy / sequence / cycle / comparison / matrix / framework / strategy / mapping / growth) route to a skeleton. The narrative layer — staircase, pyramid, flywheel, iceberg, funnel, bridge, mountain — swaps the *shell* on that same skeleton without changing the routing. That separation is what lets the skeleton library grow without the metaphors table ever changing.
+**Pick the skeleton in two steps: relationship first, then metaphors.** Relationship families (hierarchy / sequence / cycle / comparison / matrix / framework / strategy / mapping / growth / composition / profile / balance) route to a skeleton. The narrative layer — staircase, pyramid, flywheel, iceberg, funnel, bridge, mountain — swaps the *shell* on that same skeleton without changing the routing. That separation is what lets the skeleton library grow without the metaphors table ever changing.
 
 | Relationship | Answers | Skeleton |
 |---|---|---|
@@ -84,6 +84,9 @@ marp deck.marp.md --html --pdf --allow-local-files
 | Flow with magnitude | where does the volume go | Sankey |
 | Parallel tracks | who did what, when | Swimlanes |
 | Argument | what backs this claim | Toulmin map |
+| Composition | part-to-whole shares, 1–3 pies | Pie / donut |
+| Profile | multi-dimension score shape | Radar |
+| Balance | one object, current vs target | Balance wheel |
 
 **Non-negotiables when writing SVG into markdown:**
 
@@ -94,7 +97,7 @@ marp deck.marp.md --html --pdf --allow-local-files
 - **Add `<!-- _class: diagram -->`** when diagram content reaches the bottom of the viewBox (axis titles, legends, footnotes) — the CSS hides the footer on those slides so they don't collide.
 - **Keep nodes ≤ 7 per diagram.** Past that, split the page or fall back to a table.
 - **One colour family + one accent.** Three or more hues turn muddy under projection.
-- **Geometry must not contradict the data.** A funnel whose band widths are equal-arithmetic while the values drop 100:1 is lying to the reader — use the sqrt scale in [flow-cycle](references/infographics-svg/skeletons/flow-cycle.md).
+- **Geometry must not contradict the data.** A funnel drawn layer-by-layer with drifting slopes reads as a stack of plates, and casual band widths imply proportions the numbers don't support. Draw one generatrix through all bands, add rim + spout, and label the diagram "band width is schematic" — exact proportions belong in a sankey. See [flow-cycle](references/infographics-svg/skeletons/flow-cycle.md).
 
 **Before shipping, run both gates** — the first catches what is *certainly* wrong, the second catches what merely *looks* wrong:
 
@@ -235,7 +238,7 @@ Rules:
 | All diagrams' arrowheads look identical | Duplicate `marker` id across SVGs in one merged HTML export — suffix per diagram |
 | White text invisible on an arrow shape | Drawn as a hollow chevron — use a 5-point path (rectangle + right tip) and centre text on the rectangle |
 | Chinese label overflows its node | SVG `<text>` does not wrap — shorten the label or split it across `<tspan>` lines |
-| Funnel doesn't look as steep as the numbers suggest | Band widths were drawn as equal-arithmetic; use the sqrt scale in [flow-cycle](references/infographics-svg/skeletons/flow-cycle.md) |
+| Funnel doesn't look like a funnel | Bands were drawn layer-by-layer with drifting slopes, or the rim/spout is missing — use the single-generatrix template (s=0.9, no gaps) in [flow-cycle](references/infographics-svg/skeletons/flow-cycle.md) |
 | SVG text ignores the deck's CSS classes | A `font-size` attribute was hardcoded, or the class was declared in an SVG-internal `<style>` instead of the frontmatter `style:` block |
 | Axis title / legend overlaps the footer | Add `<!-- _class: diagram -->` to that slide |
 | Slide split awkwardly | Cut mid-bullet or mid-table-row — re-split at paragraph boundaries |

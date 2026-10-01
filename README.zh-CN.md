@@ -1,23 +1,31 @@
 # Marp Slide Expert
 
-> [English](README.md) · 56 页图例：[examples/infographic-gallery.marp.md](examples/infographic-gallery.marp.md)
+> [English](README.md) · 53 页图例：[examples/infographic-gallery.marp.md](examples/infographic-gallery.marp.md)
 
-生成能通过 `marp --pdf --allow-local-files` 干净渲染的 Marp 幻灯片。一个 skill 解决两件事：
+**把 Markdown 渲染成咨询顾问级的幻灯片。** 关系图、信息架构图、汇报图表、数据可视化——连同封面、分栏、表格版式，一次渲染成可以直接上演讲台的 PDF。
 
-1. **页级版式** — 封面 / 分隔 / 单栏 / 多栏分栏 / 图片排布
-2. **内联 SVG 信息图** — 16 个骨架、6 个叙事外壳、7 套配色，构成一个四层模块
+- **咨询级制图，零拖拽** —— 19 种图形骨架（漏斗、金字塔、桑基、泳道、雷达、平衡轮、2×2……）、6 种叙事外壳、7 套配色（含麦肯锡式咨询蓝）：像咨询顾问一样「选图」，而不是对着对齐线拖框
+- **有图有表，也不用自己排版** —— 封面 / 章节页 / 双栏 / 三栏 / 主次分栏 / 上文下图全部内置；尺寸、字号、15 行溢出红线也都替你守着
+- **专业演讲、咨询项目直接可用** —— 纯矢量输出：投影不糊、打印不虚、改色只动一个十六进制值
+- **彻底解放脑力工作者** —— 把脑力留给「讲什么」；排版、配色、画图，交给 skill
 
-那些会**静默**破坏 Marp 渲染的坑，你不用再从翻车的 PDF 里学到——skill 已经记下来了。
+**它是基于 Markdown 的。** Markdown 是纯文本「源码」——一份 deck 就是一个可读、可改、可 diff 的 `.md` 文件：
+
+- **人改得动，AI 更改得动** —— 改数字、换配色、重画一张图，都是改一行文本；一句提示词，AI 就能照着改
+- **一份源码，多端交付** —— `marp` 一键导出 **PDF / HTML / PPTX**；`.md` 还能放进 **Obsidian 知识库**，和笔记一起管理、搜索、版本化
+- **AI 时代原生 skill** —— 为 Claude Code / Cursor 这类工作流而生；会**静默**破坏渲染的坑（表格半宽、SVG 变源码、空行断图……）已全部前置修好
 
 ## 幻灯片示例
 
 ![](./assets/sample-gallery.png)
 
+53 页图例总览（[PDF 版](examples/infographic-gallery.marp.pdf)）——每个骨架、每个隐喻、每套风格各一页，选型时一翻到底。
+
 
 ## 为什么用这个 skill
 
 - **Marp 默认主题几处必坏的坑** —— 表格半宽、没有 CJK 字体、内容溢出底部。skill 自带一份能用的配色和 CSS，全部修好
-- **内联 SVG 跟着文件走** —— PNG 改一个数字要重画；内联 SVG 改一处十六进制值就够。skill 自带 16 套模板和坐标公式，不用边画边算
+- **内联 SVG 跟着文件走** —— PNG 改一个数字要重画；内联 SVG 改一处十六进制值就够。skill 自带 19 套骨架模板和坐标公式，不用边画边算
 - **不靠肉眼赌** —— skill 自带 SVG lint（6 项确定性检查），渲染命令写在卡片里。交付前两道自动关卡
 
 ## 安装
@@ -63,7 +71,17 @@ style: |-
 marp deck.marp.md --pdf --allow-local-files
 ```
 
-如果用了内联 SVG：
+一份源码，多端交付——网页、PPT、逐页图片：
+
+```bash
+marp deck.marp.md --html        # 网页版（可全屏演示）
+marp deck.marp.md --pptx        # PowerPoint（逐页图片版）
+marp deck.marp.md --images png  # 逐页 PNG（发帖配图用）
+```
+
+> 想要**可编辑**的 PPT？加 `--pptx-editable`（实验特性，需本机装有 LibreOffice）。
+
+如果用了内联 SVG，所有导出都要带 `--html`：
 
 ```bash
 marp deck.marp.md --html --pdf --allow-local-files
@@ -84,10 +102,10 @@ marp deck.marp.md --html --pdf --allow-local-files
 
 | | |
 |---|---|
-| `references/infographics-svg/` | 16 个骨架模板（阶梯、箭头串、2×2、价值树、桑基、漏斗、泳道、便当格、并列圆圈、图文卡片组、起伏波浪大事记……）+ 6 个叙事外壳（金字塔、飞轮、冰山、漏斗、洋葱、聚焦）+ 7 套配色 |
+| `references/infographics-svg/` | 19 个骨架模板（阶梯、箭头串、2×2、价值树、桑基、漏斗、泳道、便当格、并列圆圈、图文卡片组、起伏波浪大事记、饼图、雷达图、平衡轮……）+ 6 个叙事外壳（金字塔、飞轮、冰山、漏斗、洋葱、聚焦）+ 7 套配色 |
 | `references/layout-patterns.md` | 页级版式菜谱（封面、分隔、内容、分栏、分区、图片叠加） |
 | `references/style-bootstrap.md` | UPerform / openclaw 配色 —— 整段粘进 frontmatter 即可 |
-| `examples/infographic-gallery.marp.md` | 56 页样例 deck，每个模板都用上 —— 起点就在这 |
+| `examples/infographic-gallery.marp.md` | 53 页样例 deck，每个模板都用上 —— 起点就在这 |
 | `scripts/svg-lint.mjs` | 6 项确定性 SVG 检查（空行、`---`、id 冲突、坐标越界）。每次渲染前必跑 |
 | `scripts/build-gallery.mjs` | 从 references/ 重新生成样例 deck。改了模板重跑就行，不要手改 deck |
 

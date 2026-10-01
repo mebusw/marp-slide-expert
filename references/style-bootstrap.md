@@ -77,6 +77,12 @@ style: |-
   .cols-3     { grid-template-columns: repeat(3, 1fr); gap: 20px; }
   .cols-main  { grid-template-columns: 2fr 1fr;        gap: 24px; }  /* 反序写 1fr 2fr */
   .split-h    { display: grid; grid-template-rows: auto auto; gap: 24px; align-items: start; }
+  /* D 族：文/图上下分区（flex column）——marp 的 bg 关键字做不了上下，图位放真实 <img> */
+  .split-v    { display: flex; flex-direction: column; gap: 18px; min-height: 380px; }
+  .split-v > div { border-radius: 6px; padding: 16px 20px; }
+  .split-v .up   { background: #eef1f4; flex: 1; }
+  .split-v .down { background: #1a1a2e; color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; flex: 1; }
+  .split-v img   { max-width: 100%; max-height: 100%; border-radius: 4px; display: block; }
   .cols h3, .split-h h3 { color: #c0392b; font-size: 1.05em; margin: 0 0 6px; }
   .cols p, .split-h p   { font-size: 0.8em; line-height: 1.5; margin: 0 0 8px; }
   .cols ul, .split-h ul { font-size: 0.82em; margin: 0 0 8px; }
@@ -195,7 +201,7 @@ header:
 2. Add `<!-- _class: cover -->` at the top of the title slide.
 3. Use `<!-- _class: divider -->` for major section breaks.
 4. Add `<!-- _class: diagram -->` to any slide holding a full-width inline-SVG diagram.
-5. Use the `cols-*` / `split-h` classes for column layouts (see [layout-patterns.md](layout-patterns.md)). These use `<div>` + grid, which **renders without `--html`** — only inline SVG requires that flag.
+5. Use the `cols-*` / `split-h` / `split-v` classes for column and top-bottom layouts (see [layout-patterns.md](layout-patterns.md)). These use `<div>` + grid/flex, which **renders without `--html`** — only inline SVG requires that flag.
 6. For callout boxes, prefer blockquote + emoji over a styled div:
    - Blockquote + emoji: `> 💡 Tip: xxx`
    - A table

@@ -22,7 +22,8 @@ style: |-
   .split-v { display:flex; flex-direction:column; gap:18px; min-height:380px; }
   .split-v > div { border-radius:6px; padding:16px 20px; }
   .split-v .up { background:#eef1f4; flex:1; }
-  .split-v .down { background:#1a1a2e; color:#fff; text-align:center; flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .split-v .down { background:#1a1a2e; color:#fff; text-align:center; flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; }
+  .split-v img { max-width:100%; max-height:100%; border-radius:4px; display:block; }
   .cols h3, .split-h h3 { color:#c0392b; font-size:1.05em; margin:0 0 6px; }
   .cols p, .split-h p   { font-size:0.8em; line-height:1.5; margin:0 0 8px; }
   .cols ul, .split-h ul { font-size:0.82em; margin:0 0 8px; }
@@ -61,7 +62,7 @@ _paginate: skip
 
 # marp-slide-expert 图例总览
 
-## 56 页演示 · 选型时一翻到底 · 复制时一拿就走
+## 53 页演示 · 选型时一翻到底 · 复制时一拿就走
 
 <!-- A 全幅页走 marp 自带的 _class: cover/divider，CSS 已在 style-bootstrap 里。
      B 单栏 = 默认 C 分栏 = .cols-*  D 混合 = 文字 + bg 图片 -->
@@ -77,11 +78,11 @@ _paginate: skip
 
 ---
 
-## 1. 选题——这份内容能画哪几张图
+## 1. 选题——这份内容能画哪几张图（1/2）
 
 读文档，扫下面的表，找出内容里出现了哪几种结构：
 
-| 信息结构（15 种） | → 骨架 | 适合 |
+| 信息结构 | → 骨架 | 适合 |
 |---|---|---|
 | network 关系网络 | [network-hub](#) | 影响、相互作用 |
 | hierarchy 层次 | [hierarchy-tree](#) | 由…组成、下设、从属 |
@@ -93,6 +94,13 @@ _paginate: skip
 | two-dimensional 二维 | [matrix-quadrant](#) | 高 X 低 Y |
 | multi-dimensional 多维 | [structure-block](#) 对比矩阵 | 在 X 方面优秀但 Y 不足 |
 | landscape 全景 | [structure-block](#) 便当格 | 主要分为… |
+
+---
+
+## 1. 选题——这份内容能画哪几张图（2/2）
+
+| 信息结构 | → 骨架 | 适合 |
+|---|---|---|
 | concept-decomposition 概念 | [hierarchy-tree](#) 关系树 | 该理论包含… |
 | stakeholder 利益相关方 | [structure-block](#) 或 quadrant | 多方参与 |
 | debate / semantic-opposition 对立 | [structure-block](#) | 支持 vs 反对 |
@@ -100,12 +108,15 @@ _paginate: skip
 | 起伏叙事 / 复盘 | [wave-timeline](#) | 过程曲折、最终成功 |
 | 罗列属性 | [icon-rail](#) | 3–6 项并列 |
 | 展示卡片 | [card-row](#) | 3–5 张图文卡 |
+| composition 占比构成 | [pie](#) | 份额、构成变化 |
+| profile 多维画像 | [radar](#) | 多维度形状对比 |
+| balance 平衡自评 | [wheel](#) | 现状 vs 目标、找短板 |
 
 详见 [references/infographics-svg/structures.md](#)。
 
 ---
 
-## 2. 骨架——选什么图形承载
+## 2. 骨架——选什么图形承载（1/2）
 
 | 关系 | 判定问句 | 骨架 |
 |---|---|---|
@@ -116,10 +127,20 @@ _paginate: skip
 | Flow 流量 | X 从哪来，流向哪，带多少量？ | 桑基 |
 | Parallel 并行 | 多实体同步推进？ | 泳道 |
 | Network 网络 | 多对多关系？ | 网络图 |
+
+---
+
+## 2. 骨架——选什么图形承载（2/2）
+
+| 关系 | 判定问句 | 骨架 |
+|---|---|---|
 | Argument 论证 | 主张 + 证据？ | 图尔敏 |
 | 罗列 | 3–6 项并列属性？ | icon-rail |
 | 展示 | 3–5 张图文卡片？ | card-row |
 | 起伏叙事 | 过程曲折但最终成功？ | wave-timeline |
+| 占比 | 各部分加起来是整体？ | 饼图 |
+| 画像 | 同一组维度上的形状？ | 雷达图 |
+| 平衡 | 单对象现状 vs 目标？ | 平衡轮 |
 
 详见 [references/infographics-svg/skeletons/INDEX.md](#)。
 
@@ -354,7 +375,7 @@ A 族全幅页（封面/分隔/收尾）和 B/C 族文字版式都用 marp 自�
 
 ---
 
-## D · marp 模式：\`![bg ...]\` 背景图
+## D · marp 模式：`![bg ...]` 背景图
 
 ![bg cover opacity:.3](<../assets/marp.png>)
 
@@ -386,9 +407,9 @@ marp 的图片是**slide 级背景图**。一图占一页，要做左右半图�
 
 
 ---
+
 <!-- D 模式实际渲染示例：图放右、文放左，用 marp 自带关键字 -->
 ![bg right vertical contain](<../assets/marp.png>)
-
 
 ### D · marp 模式示例：图在右，文在左
 
@@ -401,31 +422,43 @@ marp 的图片是**slide 级背景图**。一图占一页，要做左右半图�
 
 ---
 
-## D · CSS 模式：\`<div>`\` + flex 上下分区
+## D · CSS 模式：`<div>` + flex 上下分区
 
-D 模式搞不定的（多图分区、上下分区），**用 `<div>` 自定义分栏**——和 C 族同源，只是不用 CSS grid 而用 flex column。
+<div class="cols cols-2">
+<div class="col">
 
-<div class="split-v">
+marp 的 `bg` 关键字只有整页和左右半幅，**没有「上文下图」**——上下分区用 `<div>` 自己写，和 C 族同源，只是把 grid 换成 flex column。
+
+- `.split-v` 容器用 `flex-direction:column` 管上下；换成 `row` 就是左右
+- `gap` 是分区间距；`flex:1` 上下等高，图大就把下格写成 `flex:2`
+- 图位直接放**真实 `<img src="...">`**，不是占位色块
+- 横图靠 `max-width:100%` 收窄；**竖图要给 `max-height` 一个具体值**——百分比高度在 flex 分格里不可靠
+
+</div>
+<div class="col">
+
+<div class="split-v" style="min-height:400px">
 <div class="up">
 
-### 上半区文字
+### 上文 · 结论先行
 
-要点放这里。短说明、引言、标题。
-
-</div>
-<div class="down">
-
-### 下半区（图位）
-
-**图位用色块占位**——这里演示用 dark navy 背景。真实场景换成 `<img src="...">` 即可。
+右格就是「上文下图」的实渲——上格文字，下格图片。
 
 </div>
+<div class="down" style="flex:1.6">
 
+<img src="../assets/marp.png" alt="下格的图片位" style="max-height:230px">
+
+</div>
+</div>
+
+</div>
 </div>
 
 <!--
-`flex-direction:column` 决定上下分区，`gap` 是上下间距，
-`flex:1` 让上下等高。背景图换成 `<img>` 即可。
+上格 .up 浅灰 = 文字区，下格 .down 深色 = 图位；`.split-v img` 已经给了
+max-width/max-height:100%，图片会保持比例缩进格子。
+`flex-direction:column` 决定上下分区，换成 `row` 就是左右——同一套写法。
 -->
 
 
@@ -435,7 +468,7 @@ D 模式搞不定的（多图分区、上下分区），**用 `<div>` 自定义�
 
 # ③ 图形骨架
 
-## 16 个关系类型，每个都有现成坐标
+## 19 个图形骨架，每个都有现成坐标
 
 每个骨架的坐标公式在 references/infographics-svg/skeletons/ 下。
 选骨架先问"节点之间是什么关系"，再问"这页要什么情绪"（见下文 ④ 隐喻）。
@@ -536,7 +569,7 @@ D 模式搞不定的（多图分区、上下分区），**用 `<div>` 自定义�
 <text x="510" y="238" class="sm" fill="#7f8c8d" text-anchor="middle">持续改进</text>
 </svg>
 
-<!-- 环形弧段切于节点圆；漏斗四条斜边共线（母线 s=1.118）；两种画法：正三角 / 倒梯形 -->
+<!-- 环形弧段切于节点圆；漏斗母线 s=0.9、四条斜边共线，顶口 + 下料管口 = 漏斗的识别特征 -->
 
 
 ---
@@ -545,20 +578,21 @@ D 模式搞不定的（多图分区、上下分区），**用 `<div>` 自定义�
 
 ## 变体 B：漏斗 Funnel
 
-<svg viewBox="0 0 1020 460" width="100%">
-<path d="M120,50 L900,50 L820,122 L200,122 Z" fill="#2c3e50"/>
-<text x="510" y="94" class="tb" fill="#ffffff" text-anchor="middle">线索 10,000</text>
-<path d="M207,128 L813,128 L732,200 L288,200 Z" fill="#34495e"/>
-<text x="510" y="172" class="tb" fill="#ffffff" text-anchor="middle">商机 1,200</text>
-<path d="M294,206 L726,206 L645,278 L375,278 Z" fill="#7f8d8d"/>
-<text x="510" y="250" class="tb" fill="#ffffff" text-anchor="middle">提案 380</text>
-<path d="M382,284 L638,284 L510,370 Z" fill="#c0392b"/>
-<text x="510" y="328" class="tb" fill="#ffffff" text-anchor="middle">成交 96</text>
-<text x="510" y="402" class="lbl" text-anchor="middle">成交 96 · 整体转化率 0.96%</text>
-<text x="510" y="428" class="lbl" text-anchor="middle">层宽为示意形状，量级以数字为准</text>
+<svg viewBox="0 0 1020 500" width="100%">
+<ellipse cx="510" cy="70" rx="330" ry="17" fill="#1a1a2e"/>
+<path d="M180,70 L840,70 L750,170 L270,170 Z" fill="#2c3e50"/>
+<text x="510" y="128" class="tb" fill="#ffffff" text-anchor="middle">线索 10,000</text>
+<path d="M270,170 L750,170 L660,270 L360,270 Z" fill="#34495e"/>
+<text x="510" y="228" class="tb" fill="#ffffff" text-anchor="middle">商机 1,200</text>
+<path d="M360,270 L660,270 L570,370 L450,370 Z" fill="#7f8c8d"/>
+<text x="510" y="328" class="tb" fill="#ffffff" text-anchor="middle">提案 380</text>
+<rect x="450" y="370" width="120" height="58" fill="#c0392b"/>
+<text x="510" y="406" class="tb" fill="#ffffff" text-anchor="middle">成交 96</text>
+<text x="510" y="456" class="lbl" text-anchor="middle">成交 96 · 整体转化率 0.96%</text>
+<text x="510" y="482" class="lbl" text-anchor="middle">层宽为示意形状，量级以数字为准</text>
 </svg>
 
-<!-- 环形弧段切于节点圆；漏斗四条斜边共线（母线 s=1.118）；两种画法：正三角 / 倒梯形 -->
+<!-- 环形弧段切于节点圆；漏斗母线 s=0.9、四条斜边共线，顶口 + 下料管口 = 漏斗的识别特征 -->
 
 
 ---
@@ -873,6 +907,87 @@ D 模式搞不定的（多图分区、上下分区），**用 `<div>` 自定义�
 
 <!-- _class: diagram -->
 
+## 变体：饼图 Pie Chart
+
+<svg viewBox="0 0 1020 420" width="100%">
+<path d="M190,190 L190,85 A105,105 0 1 1 157.6,289.9 Z" fill="#c0392b"/>
+<path d="M190,190 L157.6,289.9 A105,105 0 0 1 105.1,128.3 Z" fill="#2c3e50"/>
+<path d="M190,190 L105.1,128.3 A105,105 0 0 1 190,85 Z" fill="#95a5a6"/>
+<path d="M510,190 L510,85 A105,105 0 1 1 438.1,266.5 Z" fill="#c0392b"/>
+<path d="M510,190 L438.1,266.5 A105,105 0 0 1 433.5,118.1 Z" fill="#2c3e50"/>
+<path d="M510,190 L433.5,118.1 A105,105 0 0 1 510,85 Z" fill="#95a5a6"/>
+<path d="M830,190 L830,85 A105,105 0 1 1 730.1,222.4 Z" fill="#c0392b"/>
+<path d="M830,190 L730.1,222.4 A105,105 0 0 1 768.3,105.1 Z" fill="#2c3e50"/>
+<path d="M830,190 L768.3,105.1 A105,105 0 0 1 830,85 Z" fill="#95a5a6"/>
+<text x="252.2" y="204.9" class="tb" fill="#ffffff" text-anchor="middle">55%</text>
+<text x="130.1" y="214.5" class="tb" fill="#ffffff" text-anchor="middle">30%</text>
+<text x="161.4" y="138.9" class="sm" fill="#1a1a2e" text-anchor="middle">15%</text>
+<text x="568.6" y="218.2" class="tb" fill="#ffffff" text-anchor="middle">62%</text>
+<text x="447" y="197" class="tb" fill="#ffffff" text-anchor="middle">25%</text>
+<text x="485" y="137.2" class="sm" fill="#1a1a2e" text-anchor="middle">13%</text>
+<text x="881" y="232" class="tb" fill="#ffffff" text-anchor="middle">70%</text>
+<text x="770.1" y="175.5" class="tb" fill="#ffffff" text-anchor="middle">20%</text>
+<text x="810.5" y="135.1" class="sm" fill="#1a1a2e" text-anchor="middle">10%</text>
+<text x="190" y="64" class="tb" fill="#2c3e50" text-anchor="middle">2023</text>
+<text x="510" y="64" class="tb" fill="#2c3e50" text-anchor="middle">2024</text>
+<text x="830" y="64" class="tb" fill="#2c3e50" text-anchor="middle">2025</text>
+<rect x="372" y="372" width="14" height="14" fill="#c0392b"/>
+<text x="392" y="384" class="sm" fill="#1a1a2e">产品</text>
+<rect x="484" y="372" width="14" height="14" fill="#2c3e50"/>
+<text x="504" y="384" class="sm" fill="#1a1a2e">服务</text>
+<rect x="596" y="372" width="14" height="14" fill="#95a5a6"/>
+<text x="616" y="384" class="sm" fill="#1a1a2e">其他</text>
+<text x="510" y="410" class="lbl" text-anchor="middle">同一配色跨三饼同义 · 各饼合计 100%</text>
+</svg>
+
+<!-- 扇区 ≤ 5、从大到小顺时针；多饼同分类同色、图例共享；各饼合计 100% -->
+
+
+---
+
+<!-- _class: diagram -->
+
+## 变体：雷达图 Radar Chart
+
+<svg viewBox="0 0 1020 500" width="100%">
+<polygon points="510,205 549,227.5 549,272.5 510,295 471,272.5 471,227.5" fill="none" stroke="#dcdcdc" stroke-width="1"/>
+<polygon points="510,160 587.9,205 587.9,295 510,340 432.1,295 432.1,205" fill="none" stroke="#dcdcdc" stroke-width="1"/>
+<polygon points="510,115 626.9,182.5 626.9,317.5 510,385 393.1,317.5 393.1,182.5" fill="none" stroke="#dcdcdc" stroke-width="1"/>
+<polygon points="510,70 665.9,160 665.9,340 510,430 354.1,340 354.1,160" fill="none" stroke="#b9c3cc" stroke-width="1.5"/>
+<line x1="510" y1="250" x2="510" y2="70" stroke="#dcdcdc" stroke-width="1"/>
+<line x1="510" y1="250" x2="665.9" y2="160" stroke="#dcdcdc" stroke-width="1"/>
+<line x1="510" y1="250" x2="665.9" y2="340" stroke="#dcdcdc" stroke-width="1"/>
+<line x1="510" y1="250" x2="510" y2="430" stroke="#dcdcdc" stroke-width="1"/>
+<line x1="510" y1="250" x2="354.1" y2="340" stroke="#dcdcdc" stroke-width="1"/>
+<line x1="510" y1="250" x2="354.1" y2="160" stroke="#dcdcdc" stroke-width="1"/>
+<polygon points="510,142 650.3,169 619.1,313 510,394 432.1,295 416.5,196" fill="none" stroke="#2c3e50" stroke-width="2" stroke-dasharray="6 4"/>
+<polygon points="510,88 603.5,196 634.7,322 510,340 400.9,313 385.3,178" fill="#c0392b" fill-opacity="0.18" stroke="#c0392b" stroke-width="2.5"/>
+<circle cx="510" cy="88" r="4" fill="#c0392b"/>
+<circle cx="603.5" cy="196" r="4" fill="#c0392b"/>
+<circle cx="634.7" cy="322" r="4" fill="#c0392b"/>
+<circle cx="510" cy="340" r="4" fill="#c0392b"/>
+<circle cx="400.9" cy="313" r="4" fill="#c0392b"/>
+<circle cx="385.3" cy="178" r="4" fill="#c0392b"/>
+<text x="510" y="44" class="tb" fill="#1a1a2e" text-anchor="middle">品牌</text>
+<text x="688" y="147" class="tb" fill="#1a1a2e">产品力</text>
+<text x="688" y="353" class="tb" fill="#1a1a2e">渠道</text>
+<text x="510" y="456" class="tb" fill="#1a1a2e" text-anchor="middle">服务</text>
+<text x="332" y="353" class="tb" fill="#1a1a2e" text-anchor="end">技术</text>
+<text x="332" y="147" class="tb" fill="#1a1a2e" text-anchor="end">价格</text>
+<line x1="60" y1="40" x2="92" y2="40" stroke="#c0392b" stroke-width="3"/>
+<text x="100" y="46" class="sm" fill="#1a1a2e">本品（实线）</text>
+<line x1="60" y1="68" x2="92" y2="68" stroke="#2c3e50" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="100" y="74" class="sm" fill="#1a1a2e">竞品（虚线）</text>
+<text x="510" y="488" class="lbl" text-anchor="middle">各维满分 5 · 数据为示意</text>
+</svg>
+
+<!-- 轴数 5–7、所有轴同一满分刻度；系列 ≤ 3：实线填充 + 虚线描边 -->
+
+
+---
+
+<!-- _class: diagram -->
+
 ## 变体 A：便当格 Bento Grid
 
 <svg viewBox="0 0 1020 490" width="100%">
@@ -947,7 +1062,7 @@ D 模式搞不定的（多图分区、上下分区），**用 `<div>` 自定义�
 
 <svg viewBox="0 0 1020 500" width="100%">
 <defs>
-<marker id="a1_d15" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/></marker>
+<marker id="a1_d17" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/></marker>
 </defs>
 <path d="M60,350
          C120,300 160,260 220,290
@@ -978,6 +1093,62 @@ D 模式搞不定的（多图分区、上下分区），**用 `<div>` 自定义�
 
 ---
 
+<!-- _class: diagram -->
+
+## 变体：平衡轮 Balance Wheel
+
+<svg viewBox="0 0 1020 510" width="100%">
+<circle cx="510" cy="255" r="39" fill="none" stroke="#dcdcdc" stroke-width="1" stroke-dasharray="3 4"/>
+<circle cx="510" cy="255" r="78" fill="none" stroke="#dcdcdc" stroke-width="1" stroke-dasharray="3 4"/>
+<circle cx="510" cy="255" r="117" fill="none" stroke="#dcdcdc" stroke-width="1" stroke-dasharray="3 4"/>
+<circle cx="510" cy="255" r="156" fill="none" stroke="#dcdcdc" stroke-width="1" stroke-dasharray="3 4"/>
+<circle cx="510" cy="255" r="195" fill="none" stroke="#b9c3cc" stroke-width="1.5"/>
+<path d="M438.5,73.6 A195,195 0 0 1 581.5,73.6" fill="none" stroke="#2c3e50" stroke-width="2" stroke-dasharray="5 4"/>
+<path d="M572.2,111.9 A156,156 0 0 1 653.1,192.8" fill="none" stroke="#2c3e50" stroke-width="2" stroke-dasharray="5 4"/>
+<path d="M655.1,197.8 A156,156 0 0 1 655.1,312.2" fill="none" stroke="#2c3e50" stroke-width="2" stroke-dasharray="5 4"/>
+<path d="M670.9,325 A175.5,175.5 0 0 1 580,415.9" fill="none" stroke="#2c3e50" stroke-width="2" stroke-dasharray="5 4"/>
+<path d="M567.2,400.1 A156,156 0 0 1 452.8,400.1" fill="none" stroke="#2c3e50" stroke-width="2" stroke-dasharray="5 4"/>
+<path d="M447.8,398.1 A156,156 0 0 1 366.9,317.2" fill="none" stroke="#2c3e50" stroke-width="2" stroke-dasharray="5 4"/>
+<path d="M346.7,319.3 A175.5,175.5 0 0 1 346.7,190.7" fill="none" stroke="#2c3e50" stroke-width="2" stroke-dasharray="5 4"/>
+<path d="M366.9,192.8 A156,156 0 0 1 447.8,111.9" fill="none" stroke="#2c3e50" stroke-width="2" stroke-dasharray="5 4"/>
+<path d="M510,255 L452.8,109.9 A156,156 0 0 1 567.2,109.9 Z" fill="#5d7d95"/>
+<path d="M510,255 L556.7,147.7 A117,117 0 0 1 617.3,208.3 Z" fill="#5d7d95"/>
+<path d="M510,255 L600.7,219.3 A97.5,97.5 0 0 1 600.7,290.7 Z" fill="#c0392b"/>
+<path d="M510,255 L635.2,309.4 A136.5,136.5 0 0 1 564.4,380.2 Z" fill="#5d7d95"/>
+<path d="M510,255 L538.6,327.6 A78,78 0 0 1 481.4,327.6 Z" fill="#c0392b"/>
+<path d="M510,255 L463.3,362.3 A117,117 0 0 1 402.7,301.7 Z" fill="#5d7d95"/>
+<path d="M510,255 L383,305 A136.5,136.5 0 0 1 383,205 Z" fill="#5d7d95"/>
+<path d="M510,255 L420.6,216.1 A97.5,97.5 0 0 1 471.1,165.6 Z" fill="#5d7d95"/>
+<text x="510" y="120" class="sm" fill="#ffffff" text-anchor="middle">8</text>
+<text x="581.4" y="188.6" class="sm" fill="#ffffff" text-anchor="middle">6</text>
+<text x="591.5" y="260" class="sm" fill="#ffffff" text-anchor="middle">5</text>
+<text x="595.2" y="345.2" class="sm" fill="#ffffff" text-anchor="middle">7</text>
+<text x="510" y="322" class="sm" fill="#ffffff" text-anchor="middle">4</text>
+<text x="438.6" y="331.4" class="sm" fill="#ffffff" text-anchor="middle">6</text>
+<text x="389.5" y="260" class="sm" fill="#ffffff" text-anchor="middle">7</text>
+<text x="452.4" y="202.4" class="sm" fill="#ffffff" text-anchor="middle">5</text>
+<text x="510" y="30" class="tb" fill="#1a1a2e" text-anchor="middle">事业</text>
+<text x="669.1" y="95.9" class="tb" fill="#1a1a2e">财富</text>
+<text x="735" y="255" class="tb" fill="#1a1a2e">健康</text>
+<text x="669.1" y="414.1" class="tb" fill="#1a1a2e">家庭</text>
+<text x="510" y="480" class="tb" fill="#1a1a2e" text-anchor="middle">成长</text>
+<text x="350.9" y="414.1" class="tb" fill="#1a1a2e" text-anchor="end">社交</text>
+<text x="285" y="255" class="tb" fill="#1a1a2e" text-anchor="end">休闲</text>
+<text x="350.9" y="95.9" class="tb" fill="#1a1a2e" text-anchor="end">贡献</text>
+<rect x="60" y="40" width="14" height="14" fill="#5d7d95"/>
+<text x="82" y="52" class="sm" fill="#1a1a2e">维度得分（半径 = 分值）</text>
+<rect x="60" y="66" width="14" height="14" fill="#c0392b"/>
+<text x="82" y="78" class="sm" fill="#1a1a2e">短板（优先改进）</text>
+<line x1="60" y1="99" x2="92" y2="99" stroke="#2c3e50" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="100" y="104" class="sm" fill="#1a1a2e">目标</text>
+<text x="510" y="500" class="lbl" text-anchor="middle">1–10 分制 · 半径 = 分值 · 扇区宽度不代表权重 · 数据为示意</text>
+</svg>
+
+<!-- 玫瑰图式花瓣（不是雷达折线）：半径 = 分值、6–10 瓣、瓣间留缝；短板染红、目标虚线弧 -->
+
+
+---
+
 <!-- _class: divider -->
 
 # ④ 隐喻外壳
@@ -993,19 +1164,19 @@ D 模式搞不定的（多图分区、上下分区），**用 `<div>` 自定义�
 
 ## 1. Pyramid 金字塔
 
-<svg viewBox="0 0 1020 400" width="100%">
-<path d="M510,90 L600,118 L420,118 Z" fill="#1a1a2e"/>
-<text x="510" y="115" class="tb" fill="#ffffff" text-anchor="middle">愿景</text>
-<rect x="370" y="134" width="280" height="56" rx="4" fill="#2c3e50"/>
-<text x="510" y="170" class="tb" fill="#ffffff" text-anchor="middle">战略</text>
-<rect x="330" y="208" width="360" height="56" rx="4" fill="#5d7d95"/>
-<text x="510" y="244" class="tb" fill="#ffffff" text-anchor="middle">举措</text>
-<rect x="290" y="282" width="440" height="56" rx="4" fill="#95a5a6"/>
-<text x="510" y="318" class="tb" fill="#ffffff" text-anchor="middle">执行动作</text>
-<text x="510" y="378" class="lbl" text-anchor="middle">自上而下拆解，越往下越具体</text>
+<svg viewBox="0 0 1020 420" width="100%">
+<path d="M510,40 L582,120 L438,120 Z" fill="#1a1a2e"/>
+<text x="510" y="112" class="tb" fill="#ffffff" text-anchor="middle">愿景</text>
+<path d="M438,120 L582,120 L654,200 L366,200 Z" fill="#2c3e50"/>
+<text x="510" y="168" class="tb" fill="#ffffff" text-anchor="middle">战略</text>
+<path d="M366,200 L654,200 L726,280 L294,280 Z" fill="#5d7d95"/>
+<text x="510" y="248" class="tb" fill="#ffffff" text-anchor="middle">举措</text>
+<path d="M294,280 L726,280 L798,360 L222,360 Z" fill="#95a5a6"/>
+<text x="510" y="328" class="tb" fill="#ffffff" text-anchor="middle">执行动作</text>
+<text x="510" y="398" class="lbl" text-anchor="middle">自上而下拆解，越往下越具体</text>
 </svg>
 
-<!-- 顶层三角形 + 三层梯形 = 正三角金字塔；强调「收敛到顶点」 -->
+<!-- 顶三角 + 三层梯形，斜边全部共线到顶点（母线 ±0.9）；强调「收敛到顶点」 -->
 
 
 ---
@@ -1016,12 +1187,12 @@ D 模式搞不定的（多图分区、上下分区），**用 `<div>` 自定义�
 
 <svg viewBox="0 0 1020 460" width="100%">
 <defs>
-<marker id="a1_d17" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="10" refX="13" refY="5" orient="auto"><path d="M0,0 L14,5 L0,10 z" fill="#c0392b"/></marker>
+<marker id="a1_d20" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="10" refX="13" refY="5" orient="auto"><path d="M0,0 L14,5 L0,10 z" fill="#c0392b"/></marker>
 </defs>
-<path d="M669.2,143.9 A150,150 0 0 1 669.2,336.1" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a1_d17)"/>
-<path d="M606.1,399.2 A150,150 0 0 1 413.9,399.2" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a1_d17)"/>
-<path d="M350.8,336.1 A150,150 0 0 1 350.8,143.9" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a1_d17)"/>
-<path d="M413.9,80.8 A150,150 0 0 1 606.1,80.8" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a1_d17)"/>
+<path d="M669.2,143.9 A150,150 0 0 1 669.2,336.1" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a1_d20)"/>
+<path d="M606.1,399.2 A150,150 0 0 1 413.9,399.2" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a1_d20)"/>
+<path d="M350.8,336.1 A150,150 0 0 1 350.8,143.9" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a1_d20)"/>
+<path d="M413.9,80.8 A150,150 0 0 1 606.1,80.8" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a1_d20)"/>
 <circle cx="610" cy="140" r="36" fill="#2c3e50"/><text x="610" y="146" class="sm" fill="#ffffff" text-anchor="middle">用户</text>
 <circle cx="610" cy="340" r="36" fill="#34495e"/><text x="610" y="346" class="sm" fill="#ffffff" text-anchor="middle">价值</text>
 <circle cx="410" cy="340" r="36" fill="#5d7d95"/><text x="410" y="346" class="sm" fill="#ffffff" text-anchor="middle">规模</text>
@@ -1108,16 +1279,16 @@ D 模式搞不定的（多图分区、上下分区），**用 `<div>` 自定义�
 
 <svg viewBox="0 0 1020 380" width="100%">
 <defs>
-<marker id="a1_d21" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/></marker>
+<marker id="a1_d24" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/></marker>
 </defs>
-<path d="M150,80 Q340,80 500,190" fill="none" stroke="#95a5a6" stroke-width="2.5" marker-end="url(#a1_d21)"/>
-<path d="M150,190 Q340,190 500,190" fill="none" stroke="#5d7d95" stroke-width="2.5" marker-end="url(#a1_d21)"/>
-<path d="M150,300 Q340,300 500,190" fill="none" stroke="#2c3e50" stroke-width="2.5" marker-end="url(#a1_d21)"/>
+<path d="M150,80 Q340,80 500,190" fill="none" stroke="#95a5a6" stroke-width="2.5" marker-end="url(#a1_d24)"/>
+<path d="M150,190 Q340,190 500,190" fill="none" stroke="#5d7d95" stroke-width="2.5" marker-end="url(#a1_d24)"/>
+<path d="M150,300 Q340,300 500,190" fill="none" stroke="#2c3e50" stroke-width="2.5" marker-end="url(#a1_d24)"/>
 <circle cx="500" cy="190" r="44" fill="#c0392b"/>
 <text x="500" y="197" class="t" fill="#ffffff" text-anchor="middle">汇聚</text>
-<path d="M544,190 Q640,90 850,90" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1_d21)"/>
-<path d="M544,190 Q640,190 850,190" fill="none" stroke="#e74c3c" stroke-width="2.5" marker-end="url(#a1_d21)"/>
-<path d="M544,190 Q640,290 850,290" fill="none" stroke="#a93226" stroke-width="2.5" marker-end="url(#a1_d21)"/>
+<path d="M544,190 Q640,90 850,90" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1_d24)"/>
+<path d="M544,190 Q640,190 850,190" fill="none" stroke="#e74c3c" stroke-width="2.5" marker-end="url(#a1_d24)"/>
+<path d="M544,190 Q640,290 850,290" fill="none" stroke="#a93226" stroke-width="2.5" marker-end="url(#a1_d24)"/>
 <circle cx="880" cy="90"  r="28" fill="#eef1f4"/><text x="880" y="97" class="sm" fill="#1a1a2e" text-anchor="middle">A</text>
 <circle cx="880" cy="190" r="28" fill="#eef1f4"/><text x="880" y="197" class="sm" fill="#1a1a2e" text-anchor="middle">B</text>
 <circle cx="880" cy="290" r="28" fill="#eef1f4"/><text x="880" y="297" class="sm" fill="#1a1a2e" text-anchor="middle">C</text>
