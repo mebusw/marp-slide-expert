@@ -86,7 +86,9 @@ marp deck.marp.md --html --pdf --allow-local-files   # --html 是必须的
 
 然后把每一页都渲染成 PNG 亲眼看 —— SVG 的几何关系没法靠读源码判断。
 
-详见 [references/smart-drawing.md](references/smart-drawing.md)；可运行样例 [examples/smart-drawing-deck.marp.md](examples/smart-drawing-deck.marp.md)。
+交付前跑两道自动关卡：`node scripts/svg-lint.mjs deck.marp.md` 抓**必然错**的（空行、`---`、id 冲突、坐标越界），渲染 PNG 抓**看起来错**的（重叠、错位、留白）。两步都要跑。
+
+详见 [references/infographics-svg/](references/infographics-svg/INDEX.md) —— 四层模块（structures 选题 / skeletons 体裁 / metaphor 语气 / styles 配色，外加共用的 craft 笔法层）。所有模板横向对照：[examples/infographics-gallery.html](examples/infographics-gallery.html)。可运行样例 [examples/smart-drawing-deck.marp.md](examples/smart-drawing-deck.marp.md)。
 
 ## 工作流程
 
@@ -104,11 +106,15 @@ marp deck.marp.md --html --pdf --allow-local-files   # --html 是必须的
 | `SKILL.md` | 入口 —— 硬规则、15 行上限、演讲者备注、CSS 引导、工作流、故障排查 |
 | `references/slide-density.md` | 完整的行数计算规则、拆分策略、表格 / 代码块 / 列表处理 |
 | `references/image-syntax.md` | `![bg ...]` 语法、横竖排判断、路径转义、反面案例 |
-| `references/smart-drawing.md` | 内联 SVG 咨询关系图 —— `--html`、画布约定、可直接抄的模板、连线语义、QA 清单 |
-| `references/layout-patterns.md` | 封面、分隔页、内容页、多图页的骨架模板 |
+| `references/infographics-svg/` | 信息图与关系图模块 —— `structures`（画什么）→ `skeletons`（用什么形状）→ `metaphor`（叙事外壳）→ `styles`（配色），外加共用的 `craft/` 笔法层（画布、连线、排版、marp 兼容、QA） |
+| `references/layout-patterns.md` | **页级版式** —— 封面、分隔页、内容页、**分栏 / 分区**、多图页 |
 | `references/style-bootstrap.md` | 优普丰 / openclaw 配色，可直接粘进 frontmatter |
 | `references/asset-prep.md` | 图片素材的下载、压缩、命名 |
 | `examples/smart-drawing-deck.marp.md` | 已验证的 8 页样例：阶梯、箭头串、2×2 矩阵、关系树 |
+| `examples/infographics-gallery.html` | 浏览器直开 —— 13 个骨架、6 个隐喻外壳、9 套风格横向总览，由 `scripts/build-gallery.mjs` 生成 |
+| `examples/infographic-columns.marp.md` | 已验证的 10 页**页级分栏版式**样例 |
+| `scripts/svg-lint.mjs` | SVG 6 项确定性检查 —— 每次交付前必跑 |
+| `scripts/build-gallery.mjs` | 从 `references/` 重新生成图库，两者不会漂移 |
 | `agents/openai.yaml` | OpenAI 兼容的 agent 元信息 |
 
 ## 常见问题

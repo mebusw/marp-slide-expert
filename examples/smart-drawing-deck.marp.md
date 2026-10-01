@@ -156,7 +156,7 @@ Speaker notes:
       <path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/>
     </marker>
   </defs>
-  <text x="20" y="30" font-size="16" fill="#c0392b" font-weight="700">能力成熟度递进 →</text>
+  <text x="20" y="30" class="sm" fill="#c0392b" font-weight="700">能力成熟度递进 →</text>
   <line x1="20" y1="48" x2="990" y2="48" stroke="#c0392b" stroke-width="2" marker-end="url(#a1)"/>
   <line x1="10" y1="420" x2="1010" y2="420" stroke="#dcdcdc" stroke-width="1.5"/>
   <rect x="20"  y="330" width="176" height="90" fill="#95a5a6"/>
@@ -164,8 +164,8 @@ Speaker notes:
   <rect x="412" y="210" width="176" height="210" fill="#2c3e50"/>
   <rect x="608" y="150" width="176" height="270" fill="#a93226"/>
   <rect x="804" y="90"  width="176" height="330" fill="#c0392b"/>
-  <text x="108"  y="382" class="t" fill="#ffffff" text-anchor="middle">L1</text>
-  <text x="108"  y="404" class="sm" fill="#ffffff" text-anchor="middle" opacity=".85">个人英雄</text>
+  <text x="85"  y="382" class="t" fill="#ffffff" text-anchor="middle">L1</text>
+  <text x="85"  y="404" class="sm" fill="#ffffff" text-anchor="middle" opacity=".85">个人英雄</text>
   <text x="304"  y="350" class="t" fill="#ffffff" text-anchor="middle">L2</text>
   <text x="304"  y="372" class="sm" fill="#ffffff" text-anchor="middle" opacity=".85">有流程文档</text>
   <text x="500"  y="322" class="t" fill="#ffffff" text-anchor="middle">L3</text>
@@ -174,7 +174,7 @@ Speaker notes:
   <text x="696"  y="316" class="sm" fill="#ffffff" text-anchor="middle" opacity=".85">数据驱动</text>
   <text x="892"  y="266" class="t" fill="#ffffff" text-anchor="middle">L5</text>
   <text x="892"  y="288" class="sm" fill="#ffffff" text-anchor="middle" opacity=".85">持续进化</text>
-  <text x="108" y="446" class="lbl" text-anchor="middle">靠个人</text>
+  <text x="85" y="446" class="lbl" text-anchor="middle">靠个人</text>
   <text x="304" y="446" class="lbl" text-anchor="middle">可复制</text>
   <text x="500" y="446" class="lbl" text-anchor="middle">可度量</text>
   <text x="696" y="446" class="lbl" text-anchor="middle">可预测</text>
@@ -196,45 +196,45 @@ Speaker notes:
 
 <!-- _class: diagram -->
 
-<svg viewBox="0 0 1040 300" width="100%">
+<svg viewBox="0 0 1020 300" width="100%">
   <defs>
     <marker id="a2" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
       <path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/>
     </marker>
   </defs>
-  <path d="M10,88 L172,88 L206,145 L172,202 L10,202 Z" fill="#95a5a6"/>
-  <path d="M214,88 L376,88 L410,145 L376,202 L214,202 Z" fill="#7f8c8d"/>
-  <path d="M418,88 L580,88 L614,145 L580,202 L418,202 Z" fill="#2c3e50"/>
-  <path d="M622,88 L784,88 L818,145 L784,202 L622,202 Z" fill="#a93226"/>
-  <path d="M826,88 L988,88 L1022,145 L988,202 L826,202 Z" fill="#c0392b"/>
-  <circle cx="108"  cy="46" r="23" fill="#ffffff" stroke="#95a5a6" stroke-width="2.5"/>
-  <circle cx="312"  cy="46" r="23" fill="#ffffff" stroke="#7f8c8d" stroke-width="2.5"/>
-  <circle cx="516"  cy="46" r="23" fill="#ffffff" stroke="#2c3e50" stroke-width="2.5"/>
-  <circle cx="720"  cy="46" r="23" fill="#ffffff" stroke="#a93226" stroke-width="2.5"/>
-  <circle cx="924"  cy="46" r="23" fill="#ffffff" stroke="#c0392b" stroke-width="2.5"/>
-  <text x="108" y="54" class="tb" fill="#95a5a6" text-anchor="middle">1</text>
-  <text x="312" y="54" class="tb" fill="#7f8c8d" text-anchor="middle">2</text>
-  <text x="516" y="54" class="tb" fill="#2c3e50" text-anchor="middle">3</text>
-  <text x="720" y="54" class="tb" fill="#a93226" text-anchor="middle">4</text>
-  <text x="924" y="54" class="tb" fill="#c0392b" text-anchor="middle">5</text>
-  <text x="91"  y="140" class="t" fill="#ffffff" text-anchor="middle">愿景</text>
-  <text x="91"  y="168" class="sm" fill="#ffffff" text-anchor="middle" opacity=".85">统一共识</text>
-  <text x="295" y="140" class="t" fill="#ffffff" text-anchor="middle">战略</text>
-  <text x="295" y="168" class="sm" fill="#ffffff" text-anchor="middle" opacity=".85">有所取舍</text>
-  <text x="499" y="140" class="t" fill="#ffffff" text-anchor="middle">举措</text>
-  <text x="499" y="168" class="sm" fill="#ffffff" text-anchor="middle" opacity=".85">资源聚焦</text>
-  <text x="703" y="140" class="t" fill="#ffffff" text-anchor="middle">项目</text>
-  <text x="703" y="168" class="sm" fill="#ffffff" text-anchor="middle" opacity=".85">分组交付</text>
-  <text x="907" y="140" class="t" fill="#ffffff" text-anchor="middle">度量</text>
-  <text x="907" y="168" class="sm" fill="#ffffff" text-anchor="middle" opacity=".85">闭环校准</text>
+  <path d="M10,88 L160,88 L194,145 L160,202 L10,202 Z" fill="#95a5a6"/>
+  <path d="M202,88 L352,88 L386,145 L352,202 L202,202 Z" fill="#7f8c8d"/>
+  <path d="M394,88 L544,88 L578,145 L544,202 L394,202 Z" fill="#2c3e50"/>
+  <path d="M586,88 L736,88 L770,145 L736,202 L586,202 Z" fill="#a93226"/>
+  <path d="M778,88 L928,88 L962,145 L928,202 L778,202 Z" fill="#c0392b"/>
+  <circle cx="85"  cy="46" r="23" fill="#ffffff" stroke="#95a5a6" stroke-width="2.5"/>
+  <circle cx="277"  cy="46" r="23" fill="#ffffff" stroke="#7f8c8d" stroke-width="2.5"/>
+  <circle cx="469"  cy="46" r="23" fill="#ffffff" stroke="#2c3e50" stroke-width="2.5"/>
+  <circle cx="661"  cy="46" r="23" fill="#ffffff" stroke="#a93226" stroke-width="2.5"/>
+  <circle cx="853"  cy="46" r="23" fill="#ffffff" stroke="#c0392b" stroke-width="2.5"/>
+  <text x="85" y="54" class="tb" fill="#95a5a6" text-anchor="middle">1</text>
+  <text x="277" y="54" class="tb" fill="#7f8c8d" text-anchor="middle">2</text>
+  <text x="469" y="54" class="tb" fill="#2c3e50" text-anchor="middle">3</text>
+  <text x="661" y="54" class="tb" fill="#a93226" text-anchor="middle">4</text>
+  <text x="853" y="54" class="tb" fill="#c0392b" text-anchor="middle">5</text>
+  <text x="85"  y="140" class="t" fill="#ffffff" text-anchor="middle">愿景</text>
+  <text x="85"  y="168" class="sm" fill="#ffffff" text-anchor="middle" opacity=".85">统一共识</text>
+  <text x="277" y="140" class="t" fill="#ffffff" text-anchor="middle">战略</text>
+  <text x="277" y="168" class="sm" fill="#ffffff" text-anchor="middle" opacity=".85">有所取舍</text>
+  <text x="469" y="140" class="t" fill="#ffffff" text-anchor="middle">举措</text>
+  <text x="469" y="168" class="sm" fill="#ffffff" text-anchor="middle" opacity=".85">资源聚焦</text>
+  <text x="661" y="140" class="t" fill="#ffffff" text-anchor="middle">项目</text>
+  <text x="661" y="168" class="sm" fill="#ffffff" text-anchor="middle" opacity=".85">分组交付</text>
+  <text x="853" y="140" class="t" fill="#ffffff" text-anchor="middle">度量</text>
+  <text x="853" y="168" class="sm" fill="#ffffff" text-anchor="middle" opacity=".85">闭环校准</text>
   <line x1="108" y1="252" x2="914" y2="252" stroke="#c0392b" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#a2)"/>
-  <text x="512" y="282" class="sm" fill="#7f8c8d" text-anchor="middle">从"想清楚"到"做出来"，每一步都有可交付物</text>
+  <text x="469" y="282" class="sm" fill="#7f8c8d" text-anchor="middle">从"想清楚"到"做出来"，每一步都有可交付物</text>
 </svg>
 
 <!--
 Speaker notes:
 - 箭头串（process arrow）= 流程叙事，横向阅读，一眼看五步。
-- 关键技法：每个箭头是一条 5 点 path——矩形 + 右侧 34px 的三角尖。文字只放在矩形部分，居中于 (x+81)，不要按整个外框居中。
+- 关键技法：每个箭头是一条 5 点 path——矩形 + 右侧 34px 的三角尖。文字只放在矩形部分，居中于 (x+75)，不要按整个外框居中。
 - 反面教材：做成 6 点的空心 ">" 形，左半边是镂空的，白字会浮在洞里完全看不见。
 - 下方虚线是"结果反哺"，把五步变成一个闭环而不是一次性流程。
 -->
@@ -245,7 +245,7 @@ Speaker notes:
 
 <!-- _class: diagram -->
 
-<svg viewBox="0 0 1000 530" width="100%">
+<svg viewBox="0 0 1020 530" width="100%">
   <defs>
     <marker id="a3x" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
       <path d="M0,0 L10,4 L0,8 z" fill="#1a1a2e"/>
@@ -278,7 +278,7 @@ Speaker notes:
   <text x="662" y="146" class="sm" fill="#1a1a2e">云迁移</text>
   <circle cx="300" cy="200" r="18" fill="#7f8c8d" opacity=".85"/>
   <text x="326" y="206" class="sm" fill="#1a1a2e">出海版</text>
-  <circle cx="720" cy="390" r="30" fill="#b9770e" opacity=".85"/>
+  <circle cx="661" cy="390" r="30" fill="#b9770e" opacity=".85"/>
   <text x="758" y="396" class="sm" fill="#1a1a2e" font-weight="700">核心订阅</text>
   <circle cx="280" cy="390" r="12" fill="#95a5a6" opacity=".85"/>
   <text x="300" y="396" class="sm" fill="#1a1a2e">硬件</text>

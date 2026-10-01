@@ -68,6 +68,20 @@ style: |-
   svg .sm  { font-size: 15px; }                     /* 副标签 */
   svg .qt  { font-size: 20px; font-weight: 700; }   /* 象限标题 */
   svg .lbl { font-size: 15px; fill: #7f8c8d; }     /* 底部浅灰注脚 */
+  /* ---- 页级分栏版式（C 族）----
+     纯文字/表格的并置排版，用 <div> + grid 实现。
+     分栏不需要 --html（只有内联 SVG 才需要那个开关）。
+     align-items:start 不能省，否则短栏被拉伸、底部参差。 */
+  .cols { display: grid; align-items: start; }
+  .cols-2     { grid-template-columns: 1fr 1fr;       gap: 24px; }
+  .cols-3     { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .cols-main  { grid-template-columns: 2fr 1fr;        gap: 24px; }  /* 反序写 1fr 2fr */
+  .split-h    { display: grid; grid-template-rows: auto auto; gap: 24px; align-items: start; }
+  .cols h3, .split-h h3 { color: #c0392b; font-size: 1.05em; margin: 0 0 6px; }
+  .cols p, .split-h p   { font-size: 0.8em; line-height: 1.5; margin: 0 0 8px; }
+  .cols ul, .split-h ul { font-size: 0.82em; margin: 0 0 8px; }
+  /* 栏宽只有全宽的 1/2 或 1/3，表格必须更小才不横向溢出 */
+  .cols table, .split-h table { font-size: 0.66em; }
   /* 封面/分隔页/整幅关系图页隐藏 footer：深色背景上灰字对比度低，
      且图形贴底时（X 轴标题、图例）会与 footer 撞在一起。 */
   section.cover footer,
@@ -181,10 +195,37 @@ header:
 2. Add `<!-- _class: cover -->` at the top of the title slide.
 3. Use `<!-- _class: divider -->` for major section breaks.
 4. Add `<!-- _class: diagram -->` to any slide holding a full-width inline-SVG diagram.
-5. **Do not** use div callouts like `<div class="tip">` (without `--html`, marp does not support div layout). Use instead:
+5. Use the `cols-*` / `split-h` classes for column layouts (see [layout-patterns.md](layout-patterns.md)). These use `<div>` + grid, which **renders without `--html`** — only inline SVG requires that flag.
+6. For callout boxes, prefer blockquote + emoji over a styled div:
    - Blockquote + emoji: `> 💡 Tip: xxx`
    - A table
    - Emoji + bold paragraph: `**✅ Output**: xxx`
+
+## ⚠️ Comments must go outside the frontmatter
+
+The frontmatter is **YAML**. An HTML comment inside it breaks the parse, and the failure is silent and total — the whole `style:` block is discarded, so the deck renders in marp's default theme with no colours, no column grids, and no table fix. No warning is printed.
+
+```yaml
+---
+marp: true
+<!-- 渲染命令：marp deck.marp.md --html --pdf      ← ❌ 破坏 YAML，style 块整个丢失
+style: |-
+  section { ... }
+---
+```
+
+Put the comment **after** the closing `---`:
+
+```yaml
+---
+marp: true
+style: |-
+  section { ... }
+---
+<!-- 渲染命令：marp deck.marp.md --html --pdf        ← ✅ -->
+```
+
+**Quick check after editing frontmatter:** if the deck suddenly loses all styling, look for a `<!--` before the closing `---` first.
 
 ## Customization points
 
@@ -203,9 +244,9 @@ header:
 The `svg` / `svg text` / type-scale rules and the `section.diagram footer` rule exist for inline-SVG consulting diagrams. Two notes:
 
 - **Inline SVG only renders with the `--html` flag.** `marp deck.marp.md --html --pdf --allow-local-files`. Without it Marp escapes the markup and the diagram shows up as a page of source code. Write the required command into a comment at the top of any deck that ships diagrams.
-- **Put font sizes in the class, not in a `font-size` attribute.** The deck `<style>` reaches into `<svg>` fine, so `class="t"` resizes across every diagram at once; a hardcoded `font-size="26"` does not.
+- **Column layouts (`.cols-*` / `.split-h`) do NOT need `--html`.** Tested on marp-cli v4.5.1: block-level `<div>` wrappers render identically with and without the flag. Only inline `<svg>` is affected. A text-and-tables deck that uses columns can therefore stay on the default render path and export from Obsidian without a plugin.
 
-Templates and coordinate formulas: [smart-drawing.md](smart-drawing.md). Runnable deck: `../examples/smart-drawing-deck.marp.md`.
+Templates and coordinate formulas: [infographics-svg/](infographics-svg/INDEX.md). Runnable deck: `../examples/smart-drawing-deck.marp.md`.
 
 ## Known differences vs the openclaw reference
 

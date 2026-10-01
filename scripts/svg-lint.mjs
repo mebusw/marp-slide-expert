@@ -206,7 +206,8 @@ for (const file of files) {
 
   const n = findings.length - before;
   total += n;
-  const svgCount = (text.match(/<svg\b/g) || []).length;
+  // 数实际的 svg 块，而不是 <svg 字符串出现次数——正文里提到 `<svg>` 不算图
+  const svgCount = (text.match(/<svg\b[\s\S]*?<\/svg>/g) || []).length;
   if (n === 0) {
     console.log(`${c('g', '✓')} ${file} — ${svgCount} 个 SVG，全部通过`);
   } else {

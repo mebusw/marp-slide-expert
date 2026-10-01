@@ -74,3 +74,129 @@
 ## 配色
 
 隐喻不决定配色。**默认用 deck 自己的调色板**（[../style-bootstrap.md](../style-bootstrap.md)），保证图和正文属于同一份 deck。8 个备选风格见 [styles/INDEX.md](styles/INDEX.md)。
+
+---
+
+# 隐喻模板
+
+> 下面 6 个是最常用的换壳实例，可以直接抄改。坐标参数在上面的速查表里。
+
+## 1. Pyramid 金字塔
+
+阶梯镜像，层宽递减，顶部最窄。`w_i = 220 - i*40`，层高 `56`，`y_i = 60 + i*74`。
+
+```html
+<svg viewBox="0 0 1020 400" width="100%">
+<rect x="410" y="60"  width="200" height="56" rx="4" fill="#1a1a2e"/>
+<text x="510" y="96"  class="tb" fill="#ffffff" text-anchor="middle">愿景</text>
+<rect x="370" y="134" width="280" height="56" rx="4" fill="#2c3e50"/>
+<text x="510" y="170" class="tb" fill="#ffffff" text-anchor="middle">战略</text>
+<rect x="330" y="208" width="360" height="56" rx="4" fill="#5d7d95"/>
+<text x="510" y="244" class="tb" fill="#ffffff" text-anchor="middle">举措</text>
+<rect x="290" y="282" width="440" height="56" rx="4" fill="#95a5a6"/>
+<text x="510" y="318" class="tb" fill="#ffffff" text-anchor="middle">执行动作</text>
+<text x="510" y="374" class="lbl" text-anchor="middle">自上而下拆解，越往下越具体</text>
+</svg>
+```
+
+**别和 Foundation blocks 搞混**：金字塔**顶层最窄**（收敛到一点），基础块**底层最宽**（地基承重）。方向相反。
+
+## 2. Flywheel 飞轮
+
+环形，**弧线 `stroke-width` 逐段递增**（2.5 → 4 → 5.5 → 7）——线宽递增是「势能自我积累」的唯一识别特征，不能省。
+
+```html
+<svg viewBox="0 0 1020 400" width="100%">
+<defs>
+<marker id="a1" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/></marker>
+</defs>
+<path d="M556,110 A160,160 0 0 1 670,230" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1)"/>
+<path d="M670,230 A160,160 0 0 1 556,350" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a1)"/>
+<path d="M556,350 A160,160 0 0 1 450,230" fill="none" stroke="#c0392b" stroke-width="5.5" marker-end="url(#a1)"/>
+<path d="M450,230 A160,160 0 0 1 556,110" fill="none" stroke="#c0392b" stroke-width="7" marker-end="url(#a1)"/>
+<circle cx="560" cy="150" r="34" fill="#2c3e50"/><text x="560" y="157" class="sm" fill="#ffffff" text-anchor="middle">用户</text>
+<circle cx="640" cy="270" r="34" fill="#34495e"/><text x="640" y="277" class="sm" fill="#ffffff" text-anchor="middle">价值</text>
+<circle cx="480" cy="270" r="34" fill="#5d7d95"/><text x="480" y="277" class="sm" fill="#ffffff" text-anchor="middle">规模</text>
+<circle cx="560" cy="310" r="34" fill="#95a5a6"/><text x="560" y="317" class="sm" fill="#ffffff" text-anchor="middle">效率</text>
+<text x="560" y="238" class="t" fill="#1a1a2e" text-anchor="middle">飞轮</text>
+<text x="510" y="386" class="lbl" text-anchor="middle">线宽递增 = 势能自我积累</text>
+</svg>
+```
+
+## 3. Iceberg 冰山
+
+**水下面积必须明显大于水上（通常 3:1）**，否则隐喻反了——变成「大部分是显性的」。
+
+```html
+<svg viewBox="0 0 1020 460" width="100%">
+<text x="510" y="34" class="sm" fill="#7f8c8d" text-anchor="middle">显性成本只占冰山一角</text>
+<path d="M300,150 L470,60 L600,150 Z" fill="#B5DEDE"/>
+<text x="510" y="128" class="sm" fill="#1a1a2e" text-anchor="middle">显性：预算 / 人力 / 迁移</text>
+<rect x="20" y="150" width="980" height="2" fill="#2563EB"/>
+<path d="M300,152 L190,430 L830,430 L720,152 Z" fill="#1E3A5F"/>
+<text x="510" y="240" class="sm" fill="#93C5FD">隐性：组织惯性 / 切换成本 / 学习曲线</text>
+<text x="510" y="290" class="sm" fill="#93C5FD">数据一致性风险 / 长期运维债</text>
+<text x="510" y="360" class="tb" fill="#FFFFFF" text-anchor="middle">水下 3 倍于水上</text>
+</svg>
+```
+
+## 4. Onion 洋葱
+
+同心圆角矩形递减，层间距 8–12px，层数 ≤ 4。
+
+```html
+<svg viewBox="0 0 1020 440" width="100%">
+<rect x="260" y="50" width="500" height="340" rx="14" fill="#eef1f4" stroke="#9CA3AF" stroke-width="1.5"/>
+<rect x="300" y="86" width="420" height="268" rx="12" fill="#CDDDD8" stroke="#7f8c8d" stroke-width="1.5"/>
+<rect x="340" y="122" width="340" height="196" rx="10" fill="#2c3e50"/>
+<text x="510" y="212" class="sm" fill="#ffffff" text-anchor="middle">动机</text>
+<text x="510" y="248" class="tb" fill="#ffffff" text-anchor="middle">核心价值</text>
+<text x="510" y="182" class="sm" fill="#1a1a2e" text-anchor="middle">手段</text>
+<text x="510" y="116" class="sm" fill="#1a1a2e" text-anchor="middle">外层语境</text>
+<text x="510" y="416" class="lbl" text-anchor="middle">越往内越核心</text>
+</svg>
+```
+
+## 5. Focus / Spotlight 聚焦
+
+半透明椭圆高亮 + 向内放射细线。**不透明色块会挡住内容**，用 `fill-opacity="0.10"`。
+
+```html
+<svg viewBox="0 0 1020 400" width="100%">
+<ellipse cx="330" cy="200" rx="220" ry="120" fill="#c0392b" fill-opacity="0.10" stroke="#c0392b" stroke-width="2"/>
+<circle cx="330" cy="200" r="46" fill="#c0392b"/>
+<text x="330" y="208" class="t" fill="#ffffff" text-anchor="middle">核心</text>
+<line x1="450" y1="180" x2="700" y2="120" stroke="#dcdcdc" stroke-width="1.5"/>
+<line x1="450" y1="200" x2="700" y2="200" stroke="#dcdcdc" stroke-width="1.5"/>
+<line x1="450" y1="220" x2="700" y2="280" stroke="#dcdcdc" stroke-width="1.5"/>
+<circle cx="730" cy="115" r="30" fill="#eef1f4"/><text x="730" y="122" class="sm" fill="#1a1a2e" text-anchor="middle">资源 A</text>
+<circle cx="730" cy="200" r="30" fill="#eef1f4"/><text x="730" y="207" class="sm" fill="#1a1a2e" text-anchor="middle">资源 B</text>
+<circle cx="730" cy="285" r="30" fill="#eef1f4"/><text x="730" y="292" class="sm" fill="#1a1a2e" text-anchor="middle">资源 C</text>
+</svg>
+```
+
+## 6. Convergence / Divergence 汇聚与发散
+
+控制点放在两端连线的**垂直平分线上**，曲度才对称。
+
+```html
+<svg viewBox="0 0 1020 380" width="100%">
+<defs>
+<marker id="a1" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/></marker>
+</defs>
+<path d="M150,80 Q340,80 500,190" fill="none" stroke="#95a5a6" stroke-width="2.5" marker-end="url(#a1)"/>
+<path d="M150,190 Q340,190 500,190" fill="none" stroke="#5d7d95" stroke-width="2.5" marker-end="url(#a1)"/>
+<path d="M150,300 Q340,300 500,190" fill="none" stroke="#2c3e50" stroke-width="2.5" marker-end="url(#a1)"/>
+<circle cx="500" cy="190" r="44" fill="#c0392b"/>
+<text x="500" y="197" class="t" fill="#ffffff" text-anchor="middle">汇聚</text>
+<path d="M544,190 Q640,90 850,90" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1)"/>
+<path d="M544,190 Q640,190 850,190" fill="none" stroke="#e74c3c" stroke-width="2.5" marker-end="url(#a1)"/>
+<path d="M544,190 Q640,290 850,290" fill="none" stroke="#a93226" stroke-width="2.5" marker-end="url(#a1)"/>
+<circle cx="880" cy="90"  r="28" fill="#eef1f4"/><text x="880" y="97" class="sm" fill="#1a1a2e" text-anchor="middle">A</text>
+<circle cx="880" cy="190" r="28" fill="#eef1f4"/><text x="880" y="197" class="sm" fill="#1a1a2e" text-anchor="middle">B</text>
+<circle cx="880" cy="290" r="28" fill="#eef1f4"/><text x="880" y="297" class="sm" fill="#1a1a2e" text-anchor="middle">C</text>
+<circle cx="110" cy="80"  r="26" fill="#eef1f4"/><text x="110" y="87" class="sm" fill="#1a1a2e" text-anchor="middle">x1</text>
+<circle cx="110" cy="190" r="26" fill="#eef1f4"/><text x="110" y="197" class="sm" fill="#1a1a2e" text-anchor="middle">x2</text>
+<circle cx="110" cy="300" r="26" fill="#eef1f4"/><text x="110" y="307" class="sm" fill="#1a1a2e" text-anchor="middle">x3</text>
+</svg>
+```
