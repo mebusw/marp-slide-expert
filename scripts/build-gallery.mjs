@@ -164,7 +164,7 @@ paginate: true
 style: |-
   section { font-family:'PingFang SC','Microsoft YaHei','Noto Sans CJK SC',sans-serif; font-size:22px; background:#FAFAFA; color:#1a1a2e; }
   h1 { color:#1a1a2e; font-size:1.9em; border-bottom:3px solid #c0392b; }
-  h2 { color:#2c3e50; font-size:1.3em; margin-bottom:4px; }
+  h2 { color:#c0392b; font-size:1.3em; margin-bottom:4px; }
   h3 { color:#c0392b; font-size:1.05em; margin:0 0 6px; }
   svg { display:block; margin:0 auto; max-width:100%; height:auto; }
   svg text { font-family:'PingFang SC','Microsoft YaHei','Noto Sans CJK SC',sans-serif; }

@@ -1,6 +1,6 @@
 ---
 name: marp-slide-expert
-description: Convert or create Marp slide decks from Markdown sources. Use when working with .marp.md / .md files meant for marp CLI rendering, designing page-level slide layouts (cover, divider, text, tables, multi-column / split layouts), drawing infographics and relation diagrams as inline SVG (staircase, arrow chain, 2x2 matrix, value tree, sankey, funnel, swimlanes, bento grid, icon-rail, card-row, wave-timeline, argument map, pie / radar / balance-wheel charts), splitting long content into slides (15-line per-slide cap), writing speaker notes as invisible HTML comments, preparing image assets, or troubleshooting marp syntax errors, content overflow, and blank pages (slides that are only speaker notes / HTML comments, duplicated `---` breaks, or inline-SVG pages that come out empty without `html: true`). Applies to marp / marpit slide format.
+description: Convert or create Marp slide decks from Markdown sources. Use when working with .marp.md / .md files meant for marp CLI rendering, designing page-level slide layouts (cover, divider, text, tables, multi-column / split layouts), drawing infographics and relation diagrams as inline SVG (staircase, arrow chain, 2x2 matrix, value tree, sankey, funnel, swimlanes, bento grid, icon-rail, card-row, wave-timeline, argument map, pie / radar / balance-wheel charts), splitting long content into slides (15-line per-slide cap), writing speaker notes as invisible HTML comments, preparing image assets, or troubleshooting marp syntax errors, content overflow, and blank pages (slides that are only speaker notes / HTML comments, duplicated `---` breaks, or inline-SVG pages that come out as source because the renderer was not given `--html`). Applies to marp / marpit slide format.
 ---
 
 # Marp Expert
@@ -13,7 +13,7 @@ These break rendering silently if violated:
 
 - **Only `![bg ...](...)` for images.** Marp does NOT support `![w:60% center]`, `![width:200px]`, or any inline image sizing. If you need an image, it must be a background.
 - **Wrap paths containing spaces in `<...>`**: `![bg](<path with spaces.png>)`. Without the brackets, marp silently treats the space as URL terminator.
-- **Inline SVG requires `--html`.** Marp escapes HTML by default, so a `<svg>` diagram renders as a page of visible source code. Any deck containing inline SVG must be rendered with `marp deck.marp.md --html --pdf --allow-local-files`. See "Smart drawing" below.
+- **Inline SVG requires the `--html` flag.** `html: true` in the frontmatter does NOT work (verified on marp-cli 4.5.1 / marp-core 4.4.0) — it must be the CLI flag or the programmatic option. Marp escapes HTML by default, so a `<svg>` diagram renders as a page of visible source code. Any deck containing inline SVG must be rendered with `marp deck.marp.md --html --pdf --allow-local-files`. See "Smart drawing" below.
 - **Slides overflow when content is too dense.** Marp has no auto-shrink. Split proactively.
 - **Never ship a slide whose only content is an HTML comment.** A page made only of a speaker note / `<!-- _class: ... -->` is *not blank in the source* but *is a white screen to the reader*. The usual cause is a duplicated page break: `---\n\n---\n` around an inserted block emits an extra empty slide. See "空白页" below.
 - **Max 15 visible lines per slide.** Count every rendered line — paragraph lines, bullet items, table rows (including the header row), code block lines, quote/callout-box lines. Over 15 and the bottom of the slide gets cut off in the PDF. See "15-line hard cap" below.
@@ -253,15 +253,23 @@ Marp 按**行首的 `---`** 切页。于是这一段：
 - 命令行 `marp` 不加 `--html` → SVG 被转义成一屏源码
 - **Obsidian 的 Marp 插件导出命令默认不带 `--html`** → 整页看起来就是空的
 
-这类页不是 bug，但要让使用者知道开关在哪。**含内联 SVG 的 deck，建议直接在 frontmatter 写死 `html: true`**，这样无论谁用什么工具导出都不用记着加参数：
+这类页不是 bug，但要让使用者知道开关在哪。
 
-```yaml
----
-marp: true
-theme: default
-html: true
----
+**⚠️ 不要试图用 frontmatter 解决。** `html: true` 写在 YAML 里是**无效的** ——
+marp-cli v4.5.1 / marp-core v4.4.0 实测：frontmatter 里的 `html: true` 不会生效，
+只有**命令行参数**或**编程式 option**才会打开 HTML：
+
+```bash
+marp deck.marp.md --html --pdf --allow-local-files     # ✅ 唯一可靠的办法
 ```
+
+```js
+new Marp({ html: true })                                // ✅ 编程式（Obsidian 插件走这条路）
+```
+
+Obsidian 的 Marp 插件内部用 marp-core，但它的**导出命令没传这个 option**，
+所以导出时 SVG 变源码。要在 Obsidian 里正常导出，得改插件的 `main.js`，
+见下方 troubleshooting 表对应两行。
 
 ### 交付前跑这一关
 
@@ -310,7 +318,7 @@ node scripts/blank-slide-lint.mjs deck.marp.md
 | SVG diagram disappeared entirely | A blank line inside the SVG block split the HTML block — remove it |
 | One slide split into two | A `---` inside the SVG or inside an HTML comment |
 | Blank white page in the middle of the deck | A slide whose only content is an HTML comment — usually a duplicated `---` around an inserted block. `node scripts/blank-slide-lint.mjs deck.marp.md` |
-| A whole SVG page comes out empty in Obsidian's export | The Marp plugin's export omits `--html`; put `html: true` in the frontmatter so the deck is renderer-independent |
+| A whole SVG page comes out as source / empty in Obsidian's export | The Marp plugin's export omits `--html`. **Frontmatter `html: true` does NOT fix this** (verified: marp-cli 4.5.1 / marp-core 4.4.0 ignore it). Patch the plugin's `main.js` to pass the option, or export via CLI with `--html` |
 | All diagrams' arrowheads look identical | Duplicate `marker` id across SVGs in one merged HTML export — suffix per diagram |
 | White text invisible on an arrow shape | Drawn as a hollow chevron — use a 5-point path (rectangle + right tip) and centre text on the rectangle |
 | Chinese label overflows its node | SVG `<text>` does not wrap — shorten the label or split it across `<tspan>` lines |

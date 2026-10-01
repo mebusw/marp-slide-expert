@@ -9,7 +9,8 @@
 //
 // 抓两类问题：
 //   1. EMPTY-SLIDE  一页只有注释 / 只有空行 —— 直接扔掉或补上可见内容
-//   2. RENDER-ONLY  一页去掉注释后只剩内联 HTML（<svg> / <div>）——
+//   2. LEAKED-NOTE  注释块里提前闭合的 -->，讲稿漏到页面上
+//   3. RENDER-ONLY  一页去掉注释后只剩内联 HTML（<svg> / <div>）——
 //                   这页能不能显示，完全取决于渲染器有没有开 html。
 //                   Obsidian 的 Marp 插件导出默认不开，这类页会整页变空白。
 //
@@ -60,6 +61,32 @@ function visibleText(lines) {
   return joined.split('\n').filter((l) => l.trim().length > 0);
 }
 
+/** 注释块里提前闭合的 --> —— 讲稿会原样漏到页面上 */
+function leakedNotes(lines) {
+  const out = [];
+  let inside = false, start = 0;
+  lines.forEach((l, i) => {
+    const t = l.trim();
+    if (!inside && t.startsWith('<!--')) {
+      if (/^<!--\s*_[^>]*-->\s*$/.test(t)) return;   // 正常的 marpit 指令
+      // 单行注释（如 deck 顶部的渲染命令提示）：开与闭在同一行。
+      // 不特判的话，下一行的 `<!-- _class: cover -->` 会被当成「提前闭合」误报。
+      const closeIdx = t.indexOf('-->');
+      if (closeIdx !== -1) {
+        if (t.slice(closeIdx + 3).trim() !== '') out.push({ line: i + 1, text: t });
+        return;
+      }
+      inside = true; start = i;
+      return;
+    }
+    if (inside && l.includes('-->')) {
+      if (t !== '-->') out.push({ line: start + 1, text: t });
+      inside = false;
+    }
+  });
+  return out;
+}
+
 /** 一页里被包在 HTML 块标签里的内容（渲染器不开 html 时会整页变空） */
 function htmlOnlyBlocks(lines) {
   const joined = lines.join('\n').replace(/<!--[\s\S]*?-->/g, '');
@@ -82,11 +109,6 @@ for (const file of process.argv.slice(2)) {
     continue;
   }
 
-  const raw = readFileSync(file, 'utf8');
-  const fm = raw.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n/);
-  const frontmatter = fm ? fm[0] : '';
-  const htmlEnabled = /^html:\s*true\s*$/m.test(frontmatter);
-
   const slides = splitSlides(stripFrontmatter(text));
   totalSlides += slides.length;
 
@@ -100,6 +122,13 @@ for (const file of process.argv.slice(2)) {
         hint: '删掉多余的分页符，或给这一页补上可见内容。切页的 `---` 两侧都要有内容。' });
       return;
     }
+    const leaks = leakedNotes(slide.lines);
+    for (const lk of leaks) {
+      found.push({ level: 'error', page: i + 1, line: lk.line,
+        code: 'LEAKED-NOTE',
+        msg: `第 ${i + 1} 页的 speaker note 提前闭合：${lk.text}`,
+        hint: '注释块内部出现了 -->，后面的讲稿会原样显示在页面上。确认这一行该收尾成 --> 还是 】。' });
+    }
     // 只剩 HTML 块 = 可见文字为零，但有 <svg>/<div> 这类块
     const plain = vis.filter((l) => !/^\s*<\/?[a-z]/i.test(l) && !/^\s*\|/.test(l));
     const htmlTags = htmlOnlyBlocks(slide.lines);
@@ -107,9 +136,8 @@ for (const file of process.argv.slice(2)) {
       found.push({ level: 'warning', page: i + 1, line: slide.startLine,
         code: 'RENDER-ONLY',
         msg: `第 ${i + 1} 页去掉注释后只剩 <${htmlTags.join('> <')}>`,
-        hint: htmlEnabled
-          ? 'frontmatter 已有 html: true，正常渲染器没问题；但请确认导出时带了 --html。'
-          : 'frontmatter 缺 `html: true` —— Obsidian 的 Marp 插件导出默认不开 html，这一页会整页变空白。加 frontmatter，或导出时带 --html。' });
+        hint: '这一页能不能显示，完全取决于渲染器有没有开 HTML。命令行必须带 --html；'
+          + 'Obsidian 的 Marp 插件导出命令不带，需改 main.js。注意：frontmatter 里写 html: true 无效。' });
     }
   });
 

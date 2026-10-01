@@ -8,10 +8,10 @@ Palette provenance: extracted and calibrated from `openclaw_lesson01.md`.
 
 | Use | Value |
 |------|------|
-| Primary red (accent) | `#c0392b` |
+| Primary red (accent / H2) | `#c0392b` |
 | Bright red (H3 / emphasis) | `#e74c3c` |
 | Deep navy-black (background / heading / code background) | `#1a1a2e` |
-| Deep blue-grey (divider background / H2) | `#2c3e50` |
+| Deep blue-grey (divider background) | `#2c3e50` |
 | Body text | `#1a1a2e` |
 | Page background | `#FAFAFA` |
 | Table alternating row | `#f5f5f5` |
@@ -37,7 +37,7 @@ style: |-
     border-bottom: 3px solid #c0392b;
   }
   h2 {
-    color: #2c3e50;
+    color: #c0392b;
     font-size: 1.4em;
   }
   h3 {
