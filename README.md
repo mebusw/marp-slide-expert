@@ -9,6 +9,10 @@ Build marp slide decks that render cleanly through `marp --pdf --allow-local-fil
 
 The pitfalls that silently break marp rendering are captured once in the skill so you don't have to learn them from a bad PDF.
 
+## Sample Slides
+
+![](./assets/sample-gallery.png)
+
 ## Why
 
 - **Marpslides look professional out of the box** — but the default theme is broken in obvious ways (tables half-width, no language fonts, content cut off the bottom). The skill ships a working palette and CSS that fixes all of it.
