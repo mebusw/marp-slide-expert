@@ -1,6 +1,6 @@
 ---
 name: marp-slide-expert
-description: Convert or create Marp slide decks from Markdown sources. Use when working with .marp.md / .md files meant for marp CLI rendering, designing page-level slide layouts (cover, divider, text, tables, multi-column / split layouts), drawing infographics and relation diagrams as inline SVG (staircase, arrow chain, 2x2 matrix, value tree, sankey, funnel, swimlanes, bento grid, argument map), splitting long content into slides (15-line per-slide cap), writing speaker notes as invisible HTML comments, preparing image assets, or troubleshooting marp syntax errors and content overflow. Applies to marp / marpit slide format.
+description: Convert or create Marp slide decks from Markdown sources. Use when working with .marp.md / .md files meant for marp CLI rendering, designing page-level slide layouts (cover, divider, text, tables, multi-column / split layouts), drawing infographics and relation diagrams as inline SVG (staircase, arrow chain, 2x2 matrix, value tree, sankey, funnel, swimlanes, bento grid, icon-rail, card-row, wave-timeline, argument map), splitting long content into slides (15-line per-slide cap), writing speaker notes as invisible HTML comments, preparing image assets, or troubleshooting marp syntax errors and content overflow. Applies to marp / marpit slide format.
 ---
 
 # Marp Expert
@@ -105,7 +105,7 @@ marp deck.marp.md --html --images png -o check          # render and actually lo
 
 Trust the **rendered PNG**, never the SVG source.
 
-Full templates with coordinate formulas, connector-semantics table, visual-hierarchy rules, and QA checklist: **[references/infographics-svg/](references/infographics-svg/INDEX.md)**. Every skeleton, metaphor and style, one per slide: **[examples/infographic-diagrams.marp.md](examples/infographic-diagrams.marp.md)**.
+Full templates with coordinate formulas, connector-semantics table, visual-hierarchy rules, and QA checklist: **[references/infographics-svg/](references/infographics-svg/INDEX.md)**. Every skeleton, metaphor and style, one per slide: **[examples/infographic-gallery.marp.md](examples/infographic-gallery.marp.md)**.
 
 ## Content density — the 15-line hard cap
 

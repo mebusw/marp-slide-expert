@@ -4,7 +4,7 @@ theme: default
 paginate: true
 style: |-
   section { font-family:'PingFang SC','Microsoft YaHei','Noto Sans CJK SC',sans-serif; font-size:22px; background:#FAFAFA; color:#1a1a2e; }
-  h1 { color:#c0392b; font-size:1.9em; border-bottom:3px solid #c0392b; }
+  h1 { color:#1a1a2e; font-size:1.9em; border-bottom:3px solid #c0392b; }
   h2 { color:#2c3e50; font-size:1.3em; margin-bottom:4px; }
   h3 { color:#c0392b; font-size:1.05em; margin:0 0 6px; }
   svg { display:block; margin:0 auto; max-width:100%; height:auto; }
@@ -14,8 +14,16 @@ style: |-
   svg .qt  { font-size:20px; font-weight:700; }
   svg .sm  { font-size:15px; }
   svg .lbl { font-size:15px; fill:#7f8c8d; }
+  /* 分栏版式——分栏不需要 --html，只有内联 SVG 才需要 */
   .cols { display:grid; align-items:start; }
   .cols-2 { grid-template-columns:1fr 1fr; gap:24px; }
+  .cols-3 { grid-template-columns:repeat(3,1fr); gap:20px; }
+  .cols-main { grid-template-columns:2fr 1fr; gap:24px; }
+  .split-h { display:grid; grid-template-rows:auto auto; gap:24px; align-items:start; }
+  .cols h3, .split-h h3 { color:#c0392b; font-size:1.05em; margin:0 0 6px; }
+  .cols p, .split-h p   { font-size:0.8em; line-height:1.5; margin:0 0 8px; }
+  .cols ul, .split-h ul { font-size:0.82em; margin:0 0 8px; }
+  .cols table, .split-h table { font-size:0.66em; }
   .stylewrap { background:#FAFAFA; border-radius:6px; padding:4px; }
   section.cover footer, section.divider footer, section.diagram footer { display:none; }
   section.cover { background:linear-gradient(135deg,#1a1a2e 0%,#c0392b 100%); color:white; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; }
@@ -23,6 +31,11 @@ style: |-
   section.cover h2 { color:rgba(255,255,255,0.85); }
   section.divider { background:#2c3e50; color:white; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
   section.divider h1 { color:#e74c3c; border-bottom:3px solid #e74c3c; font-size:2.4em; }
+  th { background:#c0392b; color:white; padding:8px 12px; }
+  td { padding:7px 12px; border-bottom:1px solid #ddd; }
+  tr:nth-child(even) { background:#f5f5f5; }
+  table { display:table !important; width:100% !important; border-collapse:collapse; font-size:0.82em; }
+  code { background:#2c3e50; color:#2ecc71; padding:3px 8px; border-radius:4px; font-size:0.85em; }
   footer { position:absolute; left:900px; bottom:25px; }
 footer: UPerform AI & Agile Consulting
 _paginate: skip
@@ -30,12 +43,12 @@ _paginate: skip
 
 <!--
   渲染命令（含内联 SVG，必须带 --html）：
-  marp examples/infographic-diagrams.marp.md --html --pdf --allow-local-files
+  marp examples/infographic-gallery.marp.md --html --pdf --allow-local-files
 
-  注释必须写在 frontmatter 的 --- 之外。放进 frontmatter 会破坏 YAML 解析，
-  导致整个 style 块被静默丢弃。
+  注释必须写在 frontmatter 的 --- 之外。
+  放进 frontmatter 会破坏 YAML 解析，导致整个 style 块被静默丢弃。
 
-  本文件由 node scripts/build-diagram-deck.mjs 从 references/infographics-svg/ 生成。
+  本文件由 node scripts/build-gallery.mjs 从 references/infographics-svg/ 生成。
   改完模板重跑一次即可，不要手改。
 
   svg-lint-ignore: viewbox-width
@@ -45,12 +58,260 @@ _paginate: skip
 ---
 <!-- _class: cover -->
 
-# 图形与风格总览
+# marp-slide-expert 图例总览
 
-## 13 骨架 · 6 隐喻 · 7 风格
+## 分栏版式 · 图形骨架 · 隐喻外壳 · 风格预览
 
-> 同一副骨架换外壳换配色
+> 选型时一翻到底，复制时一拿就走
+
+<!-- A 全幅页走 marp 自带的 _class: cover/divider，CSS 已在 style-bootstrap 里。
+     B 单栏 = 默认 C 分栏 = .cols-*  D 混合 = 文字 + bg 图片（见后） -->
 ---
+
+---
+<!-- _class: divider -->
+
+# 页级版式
+
+## 一页的内容块怎么排
+
+<!--
+四族：A 全幅 / B 单栏 / C 分栏 / D 混合
+默认走 B（单栏）。超 15 行再考虑 C，有图再进 D。
+A 全幅用 marp 自带的 _class: cover / divider / 收尾页。
+-->
+---
+
+---
+## B 单栏：默认解
+
+内容线性、一次读完，就用最朴素的写法。
+
+- 每页最多 15 行
+- 表格最多 4 列、8 行（含表头）
+- 超了就拆页，或把只讲给自己听的内容挪进演讲者备注
+
+<!-- 单栏能解决就别分栏。判断问句：读者会来回看两栏做比较吗？ -->
+
+---
+## C 分栏 · cols-2
+
+<div class="cols cols-2">
+<div class="col">
+
+### 方案 A：自建
+
+<p>团队已有基础，掌控力最强。</p>
+
+- 周期 9 个月
+- 长期成本高
+- 可控性完全
+
+</div>
+<div class="col">
+
+### 方案 B：采购
+
+<p>上线快，但受限于厂商。</p>
+
+- 周期 2 个月
+- 长期成本中
+- 可控性受限
+
+</div>
+</div>
+
+<!-- 每栏约 7 行预算（扣掉标题那 1 行）。div 前后各留空行。 -->
+
+---
+## C 分栏 · cols-3
+
+<div class="cols cols-3">
+<div class="col">
+
+### 演进
+
+- 2024 试点
+- 2025 扩面
+- 2026 收敛
+
+</div>
+<div class="col">
+
+### 挑战
+
+- 数据孤岛
+- 组织阻力
+- 预算不足
+
+</div>
+<div class="col">
+
+### 对策
+
+- 建中台
+- 搞对齐
+- 分期投
+
+</div>
+</div>
+
+<!-- 三栏每栏只剩约 5 行预算（15 行是整页的，不是每栏的）。 -->
+
+---
+## C 分栏 · cols-main（最常用）
+
+<div class="cols cols-main">
+<div class="col">
+
+### 核心结论
+
+<p>把数据中台提到集团级，先统一口径，再谈分析。</p>
+
+- 口径不一致是当前最大损耗
+- 各业务线重复建设
+- 指标无法横向比较
+
+</div>
+<div class="col">
+
+| 维度 | 现状 | 目标 |
+|---|---|---|
+| 覆盖 | 3 团队 | 全公司 |
+| 时延 | 5 天 | 1 天 |
+| 成本 | 高 | 低 |
+
+</div>
+</div>
+
+<!-- 左边 2 份宽放要点，右边 1 份放佐证表。反过来写 1fr 2fr。 -->
+
+---
+## C 分栏 · split-h
+
+<div class="split-h">
+<div>
+
+**结论**：2026 年完成全量迁移，Q4 之前不停留在试点阶段。
+
+</div>
+<div>
+
+| 阶段 | 时间 | 负责 |
+|---|---|---|
+| 试点 | 2025 Q3 | 平台组 |
+| 扩面 | 2026 Q1 | 各业务线 |
+| 收敛 | 2026 Q4 | PMO |
+
+</div>
+</div>
+
+<!-- 上结论下证据、上现状下目标。 -->
+
+---
+<!-- _class: divider -->
+
+# 图片布局
+
+## marp 天然支持 `![bg ...]`
+
+<!--
+marp 的图片是背景图，所以一图占一页。要做「左右各半」「上下分区」这种
+多图共存，用 split / vertical 关键字。
+-->
+---
+
+---
+<!--
+D 混合 = marp 背景图能力。marp 的 `![bg ...]` 是 slide 级背景图，
+需要真实图片文件才能演示。读这部分时，注意看注释里的语法说明。
+-->
+<!-- _class: divider -->
+
+# D 混合
+
+## marp 背景图（`![bg ...]`）
+
+<!--
+marp 把图片当背景图处理，所以一图占一页。要做"左右各半"、"上下两图叠"、
+"上半文下半图"这种多图共存，用 split / vertical 关键字。
+
+下面三张示例**不会真的渲染图片**（需要 PNG 文件），但展示的是正确语法。
+复制到你的 deck 时，把路径换成你的真实图片即可。
+-->
+---
+
+---
+## D 混合 · 左右各半：一张图占右半
+
+![bg right vertical](<chapter-01.png>)
+
+### 章节主题
+
+这一页右半放图，左半放文字。要点：
+
+- 文字依然以 markdown 正常渲染
+- 图片占据右半幅（vertical 让窄图正确显示）
+- 内容区读起来是「图陪文」
+
+<!--
+要换成左图右文，把 bg right 换成 bg left。
+背景图需要在 slide 同目录，或用 URL。
+-->
+
+---
+## D 混合 · 上下两图叠一文
+
+![bg](<shot-1.png>)
+![bg](<shot-2.png>)
+
+### 实施过程
+
+同一页叠两张背景图，下面那张先画、上面那张后画。
+图片是层叠的（不是横向并排），文字叠在最上层。
+
+<!--
+要横向并排多图，把 vertical 去掉即可。
+-->
+
+---
+## D 混合 · 图文分区：上下两栏
+
+![bg](<full-width-shot.png>)
+
+### 上半区文字
+
+要点放在这里。
+
+![bg](<wide-diagram.png>)
+
+下半区放图，背景图会自动铺满整页剩余区域。
+
+<!-- 这种排版适合「一图配一段短说明」，全文一页。 -->
+
+---
+<!-- _class: divider -->
+
+# 排版式 vs 画图
+
+## 什么时候用哪个
+---
+
+---
+## 问一句：这一页要表达「内容之间的结构关系」吗？
+
+| | 排版式 | 画图 |
+|---|---|---|
+| 排的是什么 | 一页的内容块 | 一张图内部的节点和连线 |
+| 手段 | CSS grid + 分栏 div | 内联 SVG |
+| 要 `--html` 吗 | **不需要** | **需要** |
+| 适合 | 并列内容、并置对比 | 依赖、演进、循环、定位 |
+
+<!--
+排版式 → references/layout-patterns.md
+画图 → references/infographics-svg/
+-->
+
 
 ---
 <!-- _class: divider -->
@@ -59,8 +320,41 @@ _paginate: skip
 
 ## 关系类型决定图形
 
-每个模板的坐标公式在 references/infographics-svg/skeletons/ 下。
+<!--
+每个骨架的坐标公式在 references/infographics-svg/skeletons/ 下。
+选骨架先问"节点之间是什么关系"，再问"这页要什么情绪"（metaphor）。
+-->
 ---
+
+---
+<!-- _class: diagram -->
+
+## 变体：图文卡片组
+
+<svg viewBox="0 0 1020 460" width="100%">
+<text x="510" y="36" class="t" fill="#1a1a2e" text-anchor="middle">三大核心能力</text>
+<rect x="40"  y="70" width="307" height="320" rx="8" fill="#FFFFFF" stroke="#e3e6ea" stroke-width="1"/>
+<rect x="356" y="70" width="307" height="320" rx="8" fill="#FFFFFF" stroke="#e3e6ea" stroke-width="1"/>
+<rect x="672" y="70" width="307" height="320" rx="8" fill="#FFFFFF" stroke="#e3e6ea" stroke-width="1"/>
+<rect x="40"  y="70" width="307" height="200" fill="#c0392b"/>
+<text x="194" y="190" class="t" fill="#ffffff" text-anchor="middle">数 据</text>
+<text x="194" y="298" class="tb" fill="#1a1a2e" text-anchor="middle">统一数据底座</text>
+<text x="194" y="328" class="sm" fill="#7f8c8d" text-anchor="middle">打通采集、治理、服务</text>
+<text x="194" y="354" class="sm" fill="#7f8c8d" text-anchor="middle">全链路一次构建</text>
+<rect x="356" y="70" width="307" height="200" fill="#2c3e50"/>
+<text x="510" y="190" class="t" fill="#ffffff" text-anchor="middle">分 析</text>
+<text x="510" y="298" class="tb" fill="#1a1a2e" text-anchor="middle">自助分析平台</text>
+<text x="510" y="328" class="sm" fill="#7f8c8d" text-anchor="middle">取数从 3 天到 5 分钟</text>
+<text x="510" y="354" class="sm" fill="#7f8c8d" text-anchor="middle">无需等待数据团队</text>
+<rect x="672" y="70" width="307" height="200" fill="#5d7d95"/>
+<text x="826" y="190" class="t" fill="#ffffff" text-anchor="middle">决 策</text>
+<text x="826" y="298" class="tb" fill="#1a1a2e" text-anchor="middle">指标统一口径</text>
+<text x="826" y="328" class="sm" fill="#7f8c8d" text-anchor="middle">横向对比无争议</text>
+<text x="826" y="354" class="sm" fill="#7f8c8d" text-anchor="middle">决策有据可依</text>
+<text x="510" y="430" class="lbl" text-anchor="middle">每张卡上 2/3 是图区，下 1/3 是文字</text>
+</svg>
+
+<!-- 3–5 卡水平对齐；图区 60–70%，文字 30–40%；卡间距 20px -->
 
 ---
 <!-- _class: diagram -->
@@ -69,23 +363,23 @@ _paginate: skip
 
 <svg viewBox="0 0 1020 520" width="100%">
 <defs>
-<marker id="a1_d0" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1a1a2e"/></marker>
-<marker id="a2_d0" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#e74c3c"/></marker>
-<marker id="a3_d0" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#7f8c8d"/></marker>
+<marker id="a1_d1" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1a1a2e"/></marker>
+<marker id="a2_d1" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#e74c3c"/></marker>
+<marker id="a3_d1" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#7f8c8d"/></marker>
 </defs>
 <rect x="400" y="40"  width="220" height="64" rx="6" fill="#c0392b"/>
 <text x="510" y="80"  class="t"  fill="#ffffff" text-anchor="middle">应当全面推行</text>
 <rect x="60"  y="108" width="220" height="64" rx="6" fill="#fdecea" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="5 4"/>
 <text x="170" y="148" class="sm" fill="#1a1a2e" text-anchor="middle">反例：小团队不适用</text>
 <text x="960" y="120" class="sm" fill="#7f8c8d" text-anchor="end">限定：大部分场景</text>
-<path d="M280,140 H360 V100 H400" fill="none" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#a2_d0)"/>
-<path d="M510,400 V316" fill="none" stroke="#1a1a2e" stroke-width="2.5" marker-end="url(#a1_d0)"/>
+<path d="M280,140 H360 V100 H400" fill="none" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#a2_d1)"/>
+<path d="M510,400 V316" fill="none" stroke="#1a1a2e" stroke-width="2.5" marker-end="url(#a1_d1)"/>
 <text x="528" y="360" class="sm" fill="#7f8c8d">所以</text>
-<path d="M510,104 V184" fill="none" stroke="#1a1a2e" stroke-width="2.5" marker-end="url(#a1_d0)"/>
+<path d="M510,104 V184" fill="none" stroke="#1a1a2e" stroke-width="2.5" marker-end="url(#a1_d1)"/>
 <text x="528" y="150" class="sm" fill="#7f8c8d">因为</text>
 <path d="M510,188 L660,250 L510,312 L360,250 Z" fill="#2c3e50"/>
 <text x="510" y="257" class="sm" fill="#ffffff" text-anchor="middle">试点数据充分</text>
-<path d="M740,336 H706 Q666,336 666,300 Q666,268 666,252" fill="none" stroke="#7f8c8d" stroke-width="2" marker-end="url(#a3_d0)"/>
+<path d="M740,336 H706 Q666,336 666,300 Q666,268 666,252" fill="none" stroke="#7f8c8d" stroke-width="2" marker-end="url(#a3_d1)"/>
 <text x="690" y="286" class="sm" fill="#7f8c8d">依据</text>
 <rect x="740" y="300" width="220" height="72" rx="6" fill="#eef1f4"/>
 <text x="850" y="332" class="sm" fill="#1a1a2e" text-anchor="middle">第三方评估报告</text>
@@ -104,7 +398,7 @@ _paginate: skip
 
 <svg viewBox="0 0 1020 460" width="100%">
 <defs>
-<marker id="a1_d1" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/></marker>
+<marker id="a1_d2" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/></marker>
 </defs>
 <circle cx="510" cy="230" r="150" fill="none" stroke="#dcdcdc" stroke-width="1.5" stroke-dasharray="4 6"/>
 <circle cx="510" cy="80"  r="46" fill="#2c3e50"/>
@@ -115,14 +409,14 @@ _paginate: skip
 <text x="510" y="388" class="tb" fill="#ffffff" text-anchor="middle">检查</text>
 <circle cx="380" cy="230" r="46" fill="#95a5a6"/>
 <text x="380" y="238" class="tb" fill="#ffffff" text-anchor="middle">改进</text>
-<path d="M556,124 A150,150 0 0 1 604,184" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1_d1)"/>
-<path d="M604,276 A150,150 0 0 1 556,336" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1_d1)"/>
-<path d="M464,336 A150,150 0 0 1 416,276" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1_d1)"/>
-<path d="M416,184 A150,150 0 0 1 464,124" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1_d1)"/>
+<path d="M556,124 A150,150 0 0 1 604,184" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1_d2)"/>
+<path d="M604,276 A150,150 0 0 1 556,336" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1_d2)"/>
+<path d="M464,336 A150,150 0 0 1 416,276" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1_d2)"/>
+<path d="M416,184 A150,150 0 0 1 464,124" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1_d2)"/>
 <text x="510" y="238" class="sm" fill="#7f8c8d" text-anchor="middle">持续改进</text>
 </svg>
 
-<!-- 环形弧段切于节点圆；漏斗四条斜边共线（母线 s=1.118） -->
+<!-- 环形弧段切于节点圆；漏斗四条斜边共线（母线 s=1.118）；两种画法：正三角 / 倒梯形 -->
 
 ---
 <!-- _class: diagram -->
@@ -134,15 +428,15 @@ _paginate: skip
 <text x="510" y="94" class="tb" fill="#ffffff" text-anchor="middle">线索 10,000</text>
 <path d="M207,128 L813,128 L732,200 L288,200 Z" fill="#34495e"/>
 <text x="510" y="172" class="tb" fill="#ffffff" text-anchor="middle">商机 1,200</text>
-<path d="M294,206 L726,206 L645,278 L375,278 Z" fill="#7f8c8d"/>
+<path d="M294,206 L726,206 L645,278 L375,278 Z" fill="#7f8d8d"/>
 <text x="510" y="250" class="tb" fill="#ffffff" text-anchor="middle">提案 380</text>
-<path d="M382,284 L638,284 L558,356 L462,356 Z" fill="#c0392b"/>
+<path d="M382,284 L638,284 L510,370 Z" fill="#c0392b"/>
 <text x="510" y="328" class="tb" fill="#ffffff" text-anchor="middle">96</text>
-<text x="510" y="392" class="lbl" text-anchor="middle">成交 96 · 整体转化率 0.96%</text>
-<text x="510" y="420" class="lbl" text-anchor="middle">层宽为示意形状，量级以数字为准</text>
+<text x="510" y="402" class="lbl" text-anchor="middle">成交 96 · 整体转化率 0.96%</text>
+<text x="510" y="428" class="lbl" text-anchor="middle">层宽为示意形状，量级以数字为准</text>
 </svg>
 
-<!-- 环形弧段切于节点圆；漏斗四条斜边共线（母线 s=1.118） -->
+<!-- 环形弧段切于节点圆；漏斗四条斜边共线（母线 s=1.118）；两种画法：正三角 / 倒梯形 -->
 
 ---
 <!-- _class: diagram -->
@@ -151,25 +445,48 @@ _paginate: skip
 
 <svg viewBox="0 0 1020 460" width="100%">
 <defs>
-<marker id="a4_d3" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#c0392b"/></marker>
+<marker id="a4_d4" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#c0392b"/></marker>
 </defs>
 <rect x="425" y="12" width="200" height="62" rx="6" fill="#1a1a2e"/>
 <text x="525" y="52" class="t" fill="#ffffff" text-anchor="middle">企业价值</text>
-<rect x="175" y="150" width="160" height="56" rx="6" fill="#2c3e50"/>
-<text x="255" y="186" class="tb" fill="#ffffff" text-anchor="middle">客户价值</text>
-<path d="M525,74 V108 H255 V146" fill="none" stroke="#b9c3cc" stroke-width="2"/>
-<path d="M525,74 V108 H795 V146" fill="none" stroke="#b9c3cc" stroke-width="2"/>
+<rect x="60"  y="150" width="160" height="56" rx="6" fill="#2c3e50"/>
+<text x="140" y="186" class="tb" fill="#ffffff" text-anchor="middle">客户价值</text>
+<rect x="280" y="150" width="160" height="56" rx="6" fill="#2c3e50"/>
+<text x="360" y="186" class="tb" fill="#ffffff" text-anchor="middle">业务增长</text>
+<rect x="500" y="150" width="160" height="56" rx="6" fill="#2c3e50"/>
+<text x="580" y="186" class="tb" fill="#ffffff" text-anchor="middle">组织能力</text>
+<rect x="720" y="150" width="160" height="56" rx="6" fill="#2c3e50"/>
+<text x="800" y="186" class="tb" fill="#ffffff" text-anchor="middle">资金效率</text>
+<path d="M525,74 V108 H140 V146" fill="none" stroke="#b9c3cc" stroke-width="2"/>
+<path d="M525,74 V108 H360 V146" fill="none" stroke="#b9c3cc" stroke-width="2"/>
+<path d="M525,74 V108 H580 V146" fill="none" stroke="#b9c3cc" stroke-width="2"/>
+<path d="M525,74 V108 H800 V146" fill="none" stroke="#b9c3cc" stroke-width="2"/>
 <rect x="40"  y="290" width="130" height="54" rx="4" fill="#fdecea" stroke="#e74c3c" stroke-width="1.5"/>
 <text x="105" y="323" class="sm" fill="#1a1a2e" text-anchor="middle">客户洞察</text>
 <rect x="180" y="290" width="130" height="54" rx="4" fill="#fdecea" stroke="#e74c3c" stroke-width="1.5"/>
 <text x="245" y="323" class="sm" fill="#1a1a2e" text-anchor="middle">品牌资产</text>
-<path d="M255,206 V238 H105 V284" fill="none" stroke="#b9c3cc" stroke-width="2"/>
-<path d="M255,206 V238 H245 V284" fill="none" stroke="#b9c3cc" stroke-width="2"/>
-<line x1="255" y1="392" x2="780" y2="392" stroke="#c0392b" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#a4_d3)"/>
-<text x="510" y="422" class="lbl" text-anchor="middle">闭环：客户反馈 → 能力迭代</text>
+<rect x="320" y="290" width="130" height="54" rx="4" fill="#eef1f4" stroke="#7f8c8d" stroke-width="1.5"/>
+<text x="385" y="323" class="sm" fill="#1a1a2e" text-anchor="middle">客户成功</text>
+<rect x="460" y="290" width="130" height="54" rx="4" fill="#fdecea" stroke="#e74c3c" stroke-width="1.5"/>
+<text x="525" y="323" class="sm" fill="#1a1a2e" text-anchor="middle">营收增长</text>
+<rect x="600" y="290" width="130" height="54" rx="4" fill="#eef1f4" stroke="#7f8c8d" stroke-width="1.5"/>
+<text x="665" y="323" class="sm" fill="#1a1a2e" text-anchor="middle">研发效能</text>
+<rect x="740" y="290" width="130" height="54" rx="4" fill="#eef1f4" stroke="#7f8c8d" stroke-width="1.5"/>
+<text x="805" y="323" class="sm" fill="#1a1a2e" text-anchor="middle">人才密度</text>
+<rect x="860" y="290" width="100" height="54" rx="4" fill="#eef1f4" stroke="#7f8c8d" stroke-width="1.5"/>
+<text x="910" y="323" class="sm" fill="#1a1a2e" text-anchor="middle">资本回报</text>
+<path d="M140,206 V238 H105 V284" fill="none" stroke="#b9c3cc" stroke-width="2"/>
+<path d="M140,206 V238 H245 V284" fill="none" stroke="#b9c3cc" stroke-width="2"/>
+<path d="M360,206 V238 H385 V284" fill="none" stroke="#b9c3cc" stroke-width="2"/>
+<path d="M580,206 V238 H525 V284" fill="none" stroke="#b9c3cc" stroke-width="2"/>
+<path d="M580,206 V238 H665 V284" fill="none" stroke="#b9c3cc" stroke-width="2"/>
+<path d="M800,206 V238 H805 V284" fill="none" stroke="#b9c3cc" stroke-width="2"/>
+<path d="M800,206 V238 H910 V284" fill="none" stroke="#b9c3cc" stroke-width="2"/>
+<line x1="140" y1="392" x2="910" y2="392" stroke="#c0392b" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#a4_d4)"/>
+<text x="525" y="422" class="lbl" text-anchor="middle">闭环：业务反馈 → 价值迭代</text>
 </svg>
 
-<!-- 直角连接器 M 父cx,父底 V 中继y H 子cx V 子顶；层级连线不带箭头 -->
+<!-- 直角连接器 M 父cx,父底 V 中继y H 子cx V 子顶；可加侧分叉表示助理/秘书 -->
 
 ---
 <!-- _class: diagram -->
@@ -188,7 +505,39 @@ _paginate: skip
 <text x="510" y="346" class="tb" fill="#ffffff" text-anchor="middle">L4 用户价值</text>
 </svg>
 
-<!-- 直角连接器 M 父cx,父底 V 中继y H 子cx V 子顶；层级连线不带箭头 -->
+<!-- 直角连接器 M 父cx,父底 V 中继y H 子cx V 子顶；可加侧分叉表示助理/秘书 -->
+
+---
+<!-- _class: diagram -->
+
+## 变体：水平属性列表
+
+<svg viewBox="0 0 1020 360" width="100%">
+<text x="510" y="36" class="t" fill="#1a1a2e" text-anchor="middle">产品五大特性</text>
+<circle cx="150" cy="170" r="44" fill="#c0392b"/>
+<circle cx="320" cy="170" r="44" fill="#2c3e50"/>
+<circle cx="510" cy="170" r="44" fill="#5d7d95"/>
+<circle cx="700" cy="170" r="44" fill="#E87461"/>
+<circle cx="870" cy="170" r="44" fill="#D4A843"/>
+<text x="150" y="178" class="tb" fill="#ffffff" text-anchor="middle">快</text>
+<text x="320" y="178" class="tb" fill="#ffffff" text-anchor="middle">稳</text>
+<text x="510" y="178" class="tb" fill="#ffffff" text-anchor="middle">省</text>
+<text x="700" y="178" class="tb" fill="#ffffff" text-anchor="middle">活</text>
+<text x="870" y="178" class="tb" fill="#ffffff" text-anchor="middle">省</text>
+<text x="150" y="100" class="sm" fill="#1a1a2e" text-anchor="middle">性能</text>
+<text x="320" y="100" class="sm" fill="#1a1a2e" text-anchor="middle">稳定</text>
+<text x="510" y="100" class="sm" fill="#1a1a2e" text-anchor="middle">成本</text>
+<text x="700" y="100" class="sm" fill="#1a1a2e" text-anchor="middle">灵活</text>
+<text x="870" y="100" class="sm" fill="#1a1a2e" text-anchor="middle">效率</text>
+<text x="150" y="260" class="sm" fill="#7f8c8d" text-anchor="middle">3 秒内完成</text>
+<text x="320" y="260" class="sm" fill="#7f8c8d" text-anchor="middle">99.9% 在线</text>
+<text x="510" y="260" class="sm" fill="#7f8c8d" text-anchor="middle">-30% 投入</text>
+<text x="700" y="260" class="sm" fill="#7f8c8d" text-anchor="middle">按需扩缩</text>
+<text x="870" y="260" class="sm" fill="#7f8c8d" text-anchor="middle">一份占用</text>
+<text x="510" y="332" class="lbl" text-anchor="middle">颜色区分维度，文字强化含义</text>
+</svg>
+
+<!-- 3–6 项水平对齐；每个图标一色；无连线 -->
 
 ---
 <!-- _class: diagram -->
@@ -197,12 +546,12 @@ _paginate: skip
 
 <svg viewBox="0 0 1020 300" width="100%">
 <defs>
-<marker id="a1_d5" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/></marker>
+<marker id="a1_d7" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/></marker>
 </defs>
 <text x="290" y="36" class="sm" fill="#7f8c8d" text-anchor="middle">Q1</text>
 <text x="565" y="36" class="sm" fill="#7f8c8d" text-anchor="middle">Q2</text>
 <text x="840" y="36" class="sm" fill="#7f8c8d" text-anchor="middle">Q3</text>
-<line x1="150" y1="50" x2="980" y2="50" stroke="#c0392b" stroke-width="2" marker-end="url(#a1_d5)"/>
+<line x1="150" y1="50" x2="980" y2="50" stroke="#c0392b" stroke-width="2" marker-end="url(#a1_d7)"/>
 <line x1="428" y1="50" x2="428" y2="256" stroke="#dcdcdc" stroke-width="1" stroke-dasharray="3 4"/>
 <line x1="703" y1="50" x2="703" y2="256" stroke="#dcdcdc" stroke-width="1" stroke-dasharray="3 4"/>
 <rect x="150" y="66"  width="830" height="86" fill="#f7f8f9"/>
@@ -230,7 +579,7 @@ _paginate: skip
 
 <svg viewBox="0 0 1020 300" width="100%">
 <defs>
-<marker id="a2_d6" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/></marker>
+<marker id="a2_d8" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/></marker>
 </defs>
 <path d="M10,88  L160,88  L194,145  L160,202  L10,202 Z" fill="#95a5a6"/>
 <path d="M202,88 L352,88 L386,145 L352,202 L202,202 Z" fill="#7f8c8d"/>
@@ -257,7 +606,7 @@ _paginate: skip
 <text x="853" y="54" class="tb" fill="#c0392b" text-anchor="middle">5</text>
 <text x="853" y="140" class="t"  fill="#ffffff" text-anchor="middle">闭环</text>
 <text x="853" y="168" class="sm" fill="#ffffff" text-anchor="middle" opacity=".85">持续演进</text>
-<line x1="85" y1="252" x2="853" y2="252" stroke="#c0392b" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#a2_d6)"/>
+<line x1="85" y1="252" x2="853" y2="252" stroke="#c0392b" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#a2_d8)"/>
 <text x="469" y="282" class="sm" fill="#7f8c8d" text-anchor="middle">每一步都有可交付物</text>
 </svg>
 
@@ -270,10 +619,10 @@ _paginate: skip
 
 <svg viewBox="0 0 1020 470" width="100%">
 <defs>
-<marker id="a1_d7" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/></marker>
+<marker id="a1_d9" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/></marker>
 </defs>
 <text x="20" y="30" class="sm" fill="#c0392b" font-weight="700">能力成熟度递进 →</text>
-<line x1="20" y1="48" x2="990" y2="48" stroke="#c0392b" stroke-width="2" marker-end="url(#a1_d7)"/>
+<line x1="20" y1="48" x2="990" y2="48" stroke="#c0392b" stroke-width="2" marker-end="url(#a1_d9)"/>
 <line x1="10" y1="420" x2="1010" y2="420" stroke="#dcdcdc" stroke-width="1.5"/>
 <rect x="20"  y="330" width="176" height="90"  fill="#95a5a6"/>
 <rect x="216" y="270" width="176" height="150" fill="#7f8c8d"/>
@@ -303,15 +652,15 @@ _paginate: skip
 
 <svg viewBox="0 0 1020 530" width="100%">
 <defs>
-<marker id="a3x_d8" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1a1a2e"/></marker>
-<marker id="a3y_d8" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1a1a2e"/></marker>
+<marker id="a3x_d10" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1a1a2e"/></marker>
+<marker id="a3y_d10" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1a1a2e"/></marker>
 </defs>
 <rect x="120" y="70"  width="375" height="200" fill="#f2f7fa"/>
 <rect x="495" y="70"  width="375" height="200" fill="#fdecea"/>
 <rect x="120" y="270" width="375" height="200" fill="#f7f7f7"/>
 <rect x="495" y="270" width="375" height="200" fill="#fdf6e8"/>
-<line x1="120" y1="470" x2="895" y2="470" stroke="#1a1a2e" stroke-width="2" marker-end="url(#a3x_d8)"/>
-<line x1="120" y1="470" x2="120" y2="55"  stroke="#1a1a2e" stroke-width="2" marker-end="url(#a3y_d8)"/>
+<line x1="120" y1="470" x2="895" y2="470" stroke="#1a1a2e" stroke-width="2" marker-end="url(#a3x_d10)"/>
+<line x1="120" y1="470" x2="120" y2="55"  stroke="#1a1a2e" stroke-width="2" marker-end="url(#a3y_d10)"/>
 <line x1="495" y1="70" x2="495" y2="470" stroke="#ffffff" stroke-width="3"/>
 <line x1="120" y1="270" x2="870" y2="270" stroke="#ffffff" stroke-width="3"/>
 <text x="500" y="505" class="sm" fill="#1a1a2e" text-anchor="middle" font-weight="700">相对市场份额 →</text>
@@ -359,7 +708,7 @@ _paginate: skip
 <text x="364" y="153" class="sm" fill="#ffffff" text-anchor="middle">安全</text>
 </svg>
 
-<!-- 连线落在径向上：起点 R-r_n，终点 r_c。手估端点会留缝 -->
+<!-- 连线落在径向上：起点 R-r_n，终点 r_c。阵营节点 y 必须跟跨阵营主连线 y 共线 -->
 
 ---
 <!-- _class: diagram -->
@@ -367,17 +716,17 @@ _paginate: skip
 ## 变体 B：关系网 Network Graph
 
 <svg viewBox="0 0 1020 460" width="100%">
-<line x1="300" y1="170" x2="700" y2="170" stroke="#c0392b" stroke-width="2.5"/>
-<line x1="300" y1="200" x2="480" y2="330" stroke="#7f8c8d" stroke-width="1.5"/>
-<line x1="700" y1="200" x2="540" y2="330" stroke="#7f8c8d" stroke-width="1.5"/>
-<circle cx="230" cy="120" r="34" fill="#2c3e50"/><text x="230" y="127" class="sm" fill="#ffffff" text-anchor="middle">A1</text>
-<circle cx="320" cy="120" r="34" fill="#2c3e50"/><text x="320" y="127" class="sm" fill="#ffffff" text-anchor="middle">A2</text>
-<circle cx="700" cy="120" r="34" fill="#c0392b"/><text x="700" y="127" class="sm" fill="#ffffff" text-anchor="middle">B1</text>
-<circle cx="790" cy="120" r="34" fill="#c0392b"/><text x="790" y="127" class="sm" fill="#ffffff" text-anchor="middle">B2</text>
+<line x1="294" y1="200" x2="726" y2="200" stroke="#c0392b" stroke-width="2.5"/>
+<line x1="300" y1="240" x2="480" y2="350" stroke="#7f8c8d" stroke-width="1.5"/>
+<line x1="700" y1="240" x2="540" y2="350" stroke="#7f8c8d" stroke-width="1.5"/>
+<circle cx="230" cy="200" r="34" fill="#2c3e50"/><text x="230" y="207" class="sm" fill="#ffffff" text-anchor="middle">A1</text>
+<circle cx="320" cy="200" r="34" fill="#2c3e50"/><text x="320" y="207" class="sm" fill="#ffffff" text-anchor="middle">A2</text>
+<circle cx="700" cy="200" r="34" fill="#c0392b"/><text x="700" y="207" class="sm" fill="#ffffff" text-anchor="middle">B1</text>
+<circle cx="790" cy="200" r="34" fill="#c0392b"/><text x="790" y="207" class="sm" fill="#ffffff" text-anchor="middle">B2</text>
 <circle cx="510" cy="370" r="34" fill="#7f8c8d"/><text x="510" y="377" class="sm" fill="#ffffff" text-anchor="middle">C1</text>
 </svg>
 
-<!-- 连线落在径向上：起点 R-r_n，终点 r_c。手估端点会留缝 -->
+<!-- 连线落在径向上：起点 R-r_n，终点 r_c。阵营节点 y 必须跟跨阵营主连线 y 共线 -->
 
 ---
 <!-- _class: diagram -->
@@ -446,13 +795,50 @@ _paginate: skip
 <!-- 没有连线；便当格必须有一个 hero 格，对比矩阵高亮须等于一整列 -->
 
 ---
+<!-- _class: diagram -->
+
+## 变体：起伏波浪大事记
+
+<svg viewBox="0 0 1020 500" width="100%">
+<defs>
+<marker id="a1_d15" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/></marker>
+</defs>
+<path d="M60,350
+         C120,300 160,260 220,290
+         C280,320 320,260 380,230
+         C440,200 480,270 540,250
+         C600,230 640,180 700,170
+         C760,160 800,210 860,160
+         C920,110 940,90 960,80"
+      fill="none" stroke="#c0392b" stroke-width="2.5"/>
+<circle cx="60"  cy="350" r="14" fill="#7f8c8d"/>
+<text x="60"  y="386" class="sm" fill="#7f8c8d" text-anchor="middle">起点 2022</text>
+<circle cx="960" cy="80"  r="14" fill="#c0392b"/>
+<text x="960" y="56"  class="tb" fill="#c0392b" text-anchor="middle">今天</text>
+<line x1="220" y1="290" x2="220" y2="170" stroke="#dcdcdc" stroke-width="1"/>
+<circle cx="220" cy="290" r="10" fill="#c0392b"/>
+<text x="220" y="156" class="sm" fill="#1a1a2e" text-anchor="middle">里程碑 1</text>
+<line x1="380" y1="230" x2="380" y2="110" stroke="#dcdcdc" stroke-width="1"/>
+<circle cx="380" cy="230" r="10" fill="#c0392b"/>
+<text x="380" y="96"  class="sm" fill="#1a1a2e" text-anchor="middle">里程碑 2</text>
+<line x1="700" y1="170" x2="700" y2="60"  stroke="#dcdcdc" stroke-width="1"/>
+<circle cx="700" cy="170" r="10" fill="#c0392b"/>
+<text x="700" y="46"  class="sm" fill="#1a1a2e" text-anchor="middle">里程碑 3</text>
+<text x="510" y="460" class="lbl" text-anchor="middle">三起三落，今日收官</text>
+</svg>
+
+<!-- 整体 y 单调不降，5–7 峰；节点最多 5–6 个；起终点各一节点 -->
+
+---
 <!-- _class: divider -->
 
 # ② 隐喻外壳
 
 ## 叙事意图决定语气
 
-骨架定了之后换壳。**一页只讲一个隐喻。**
+<!--
+骨架定了之后换壳。**一页只讲一个隐喻**。
+-->
 ---
 
 ---
@@ -461,44 +847,43 @@ _paginate: skip
 ## 1. Pyramid 金字塔
 
 <svg viewBox="0 0 1020 400" width="100%">
-<rect x="410" y="60"  width="200" height="56" rx="4" fill="#1a1a2e"/>
-<text x="510" y="96"  class="tb" fill="#ffffff" text-anchor="middle">愿景</text>
+<path d="M510,16 L610,72 L410,72 Z" fill="#1a1a2e"/>
+<text x="510" y="68" class="tb" fill="#ffffff" text-anchor="middle">愿景</text>
 <rect x="370" y="134" width="280" height="56" rx="4" fill="#2c3e50"/>
 <text x="510" y="170" class="tb" fill="#ffffff" text-anchor="middle">战略</text>
 <rect x="330" y="208" width="360" height="56" rx="4" fill="#5d7d95"/>
 <text x="510" y="244" class="tb" fill="#ffffff" text-anchor="middle">举措</text>
 <rect x="290" y="282" width="440" height="56" rx="4" fill="#95a5a6"/>
 <text x="510" y="318" class="tb" fill="#ffffff" text-anchor="middle">执行动作</text>
-<text x="510" y="374" class="lbl" text-anchor="middle">自上而下拆解，越往下越具体</text>
+<text x="510" y="378" class="lbl" text-anchor="middle">自上而下拆解，越往下越具体</text>
 </svg>
 
-<!-- 顶层最窄（收敛到一点）——与基础块方向相反，别搞混 -->
+<!-- 顶层三角形 + 三层梯形 = 正三角金字塔；强调「收敛到顶点」 -->
 
 ---
 <!-- _class: diagram -->
 
 ## 2. Flywheel 飞轮
 
-<svg viewBox="0 0 1020 500" width="100%">
+<svg viewBox="0 0 1020 460" width="100%">
 <defs>
-<marker id="a1_d14" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="10" refX="12" refY="5" orient="auto"><path d="M0,0 L13,5 L0,10 z" fill="#c0392b"/></marker>
-<marker id="a2_d14" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="11" refX="14" refY="5.5" orient="auto"><path d="M0,0 L15,5.5 L0,11 z" fill="#c0392b"/></marker>
-<marker id="a3_d14" markerUnits="userSpaceOnUse" markerWidth="17" markerHeight="12" refX="16" refY="6" orient="auto"><path d="M0,0 L17,6 L0,12 z" fill="#c0392b"/></marker>
-<marker id="a4_d14" markerUnits="userSpaceOnUse" markerWidth="19" markerHeight="14" refX="18" refY="7" orient="auto"><path d="M0,0 L19,7 L0,14 z" fill="#c0392b"/></marker>
+<marker id="a1_d17" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="10" refX="12" refY="5" orient="auto"><path d="M0,0 L13,5 L0,10 z" fill="#c0392b"/></marker>
+<marker id="a2_d17" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="11" refX="14" refY="5.5" orient="auto"><path d="M0,0 L15,5.5 L0,11 z" fill="#c0392b"/></marker>
+<marker id="a3_d17" markerUnits="userSpaceOnUse" markerWidth="17" markerHeight="12" refX="16" refY="6" orient="auto"><path d="M0,0 L17,6 L0,12 z" fill="#c0392b"/></marker>
+<marker id="a4_d17" markerUnits="userSpaceOnUse" markerWidth="19" markerHeight="14" refX="18" refY="7" orient="auto"><path d="M0,0 L19,7 L0,14 z" fill="#c0392b"/></marker>
 </defs>
-<path d="M598.6,395.1 A170,170 0 0 1 421.2,394.9" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1_d14)"/>
-<path d="M365.1,338.8 A170,170 0 0 1 360.6,168.9" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a2_d14)"/>
-<path d="M421.4,104.9 A170,170 0 0 1 591.1,100.6" fill="none" stroke="#c0392b" stroke-width="5.5" marker-end="url(#a3_d14)"/>
-<path d="M654.9,161.2 A170,170 0 0 1 659.4,331.1" fill="none" stroke="#c0392b" stroke-width="7" marker-end="url(#a4_d14)"/>
-<circle cx="630" cy="130" r="40" fill="#2c3e50"/><text x="630" y="137" class="sm" fill="#ffffff" text-anchor="middle">用户</text>
-<circle cx="630" cy="370" r="40" fill="#34495e"/><text x="630" y="377" class="sm" fill="#ffffff" text-anchor="middle">价值</text>
-<circle cx="390" cy="370" r="40" fill="#5d7d95"/><text x="390" y="377" class="sm" fill="#ffffff" text-anchor="middle">规模</text>
-<circle cx="390" cy="130" r="40" fill="#95a5a6"/><text x="390" y="137" class="sm" fill="#ffffff" text-anchor="middle">效率</text>
-<text x="510" y="258" class="t" fill="#1a1a2e" text-anchor="middle">飞轮</text>
-<text x="510" y="470" class="lbl" text-anchor="middle">线宽与箭头同步递增 = 势能自我积累；弧段切于节点圆</text>
+<path d="M669.2,143.9 A150,150 0 0 1 669.2,336.1" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1_d17)"/>
+<path d="M606.1,399.2 A150,150 0 0 1 413.9,399.2" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a2_d17)"/>
+<path d="M350.8,336.1 A150,150 0 0 1 350.8,143.9" fill="none" stroke="#c0392b" stroke-width="5.5" marker-end="url(#a3_d17)"/>
+<path d="M413.9,80.8 A150,150 0 0 1 606.1,80.8" fill="none" stroke="#c0392b" stroke-width="7" marker-end="url(#a4_d17)"/>
+<circle cx="610" cy="140" r="36" fill="#2c3e50"/><text x="610" y="146" class="sm" fill="#ffffff" text-anchor="middle">用户</text>
+<circle cx="610" cy="340" r="36" fill="#34495e"/><text x="610" y="346" class="sm" fill="#ffffff" text-anchor="middle">价值</text>
+<circle cx="410" cy="340" r="36" fill="#5d7d95"/><text x="410" y="346" class="sm" fill="#ffffff" text-anchor="middle">规模</text>
+<circle cx="410" cy="140" r="36" fill="#95a5a6"/><text x="410" y="146" class="sm" fill="#ffffff" text-anchor="middle">效率</text>
+<text x="510" y="248" class="t" fill="#1a1a2e" text-anchor="middle">飞轮</text>
 </svg>
 
-<!-- 线宽逐段递增是「势能自我积累」的唯一识别特征；弧段切于节点圆 -->
+<!-- 线宽与箭头同步递增（2.5→7）；弧段切于节点圆；markerUnits 必须 userSpaceOnUse -->
 
 ---
 <!-- _class: diagram -->
@@ -507,16 +892,22 @@ _paginate: skip
 
 <svg viewBox="0 0 1020 510" width="100%">
 <text x="510" y="34" class="sm" fill="#7f8c8d" text-anchor="middle">显性成本只占冰山一角</text>
-<path d="M330,180 L510,60 L690,180 Z" fill="#B5DEDE"/>
+<path d="M340,180 L510,60 L680,180 Z" fill="#B5DEDE"/>
 <text x="510" y="150" class="sm" fill="#1a1a2e" text-anchor="middle">显性：预算 / 人力 / 迁移</text>
 <rect x="20" y="179" width="980" height="2" fill="#2563EB"/>
-<path d="M330,180 L690,180 L770,290 L620,450 L400,450 L250,290 Z" fill="#1E3A5F"/>
+<!-- 规整六边形版本 -->
+<path d="M340,180 L680,180 L760,290 L610,450 L410,450 L260,290 Z" fill="#1E3A5F"/>
+<!-- 不规则山形版本（替换上面这一行）：-->
+<!--
+<path d="M340,180 L680,180 L760,250 L740,310 L800,360 L720,420 L660,460
+         L500,470 L380,455 L280,420 L240,360 L290,300 L310,240 Z" fill="#1E3A5F"/>
+-->
 <text x="510" y="235" class="sm" fill="#93C5FD">隐性：组织惯性 / 切换成本 / 学习曲线</text>
 <text x="510" y="285" class="sm" fill="#93C5FD">数据一致性风险 / 长期运维债</text>
 <text x="510" y="410" class="tb" fill="#FFFFFF" text-anchor="middle">水下体积约为水上的 5 倍</text>
 </svg>
 
-<!-- 等腰三角形 + 6 边多边形；水下面积约为水上 5 倍 -->
+<!-- 水上等腰三角，水下 5 边以上多边形；两种画法：规整六边形 / 不规则山形 -->
 
 ---
 <!-- _class: diagram -->
@@ -535,7 +926,7 @@ _paginate: skip
 <text x="510" y="436" class="lbl" text-anchor="middle">越往内越核心</text>
 </svg>
 
-<!-- 用椭圆不用圆角矩形——圆角矩形会读成套娃盒子 -->
+<!-- 用椭圆不用圆角矩形——同心椭圆，递减；层数 ≤ 4 -->
 
 ---
 <!-- _class: diagram -->
@@ -563,16 +954,16 @@ _paginate: skip
 
 <svg viewBox="0 0 1020 380" width="100%">
 <defs>
-<marker id="a1_d18" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/></marker>
+<marker id="a1_d21" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/></marker>
 </defs>
-<path d="M150,80 Q340,80 500,190" fill="none" stroke="#95a5a6" stroke-width="2.5" marker-end="url(#a1_d18)"/>
-<path d="M150,190 Q340,190 500,190" fill="none" stroke="#5d7d95" stroke-width="2.5" marker-end="url(#a1_d18)"/>
-<path d="M150,300 Q340,300 500,190" fill="none" stroke="#2c3e50" stroke-width="2.5" marker-end="url(#a1_d18)"/>
+<path d="M150,80 Q340,80 500,190" fill="none" stroke="#95a5a6" stroke-width="2.5" marker-end="url(#a1_d21)"/>
+<path d="M150,190 Q340,190 500,190" fill="none" stroke="#5d7d95" stroke-width="2.5" marker-end="url(#a1_d21)"/>
+<path d="M150,300 Q340,300 500,190" fill="none" stroke="#2c3e50" stroke-width="2.5" marker-end="url(#a1_d21)"/>
 <circle cx="500" cy="190" r="44" fill="#c0392b"/>
 <text x="500" y="197" class="t" fill="#ffffff" text-anchor="middle">汇聚</text>
-<path d="M544,190 Q640,90 850,90" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1_d18)"/>
-<path d="M544,190 Q640,190 850,190" fill="none" stroke="#e74c3c" stroke-width="2.5" marker-end="url(#a1_d18)"/>
-<path d="M544,190 Q640,290 850,290" fill="none" stroke="#a93226" stroke-width="2.5" marker-end="url(#a1_d18)"/>
+<path d="M544,190 Q640,90 850,90" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1_d21)"/>
+<path d="M544,190 Q640,190 850,190" fill="none" stroke="#e74c3c" stroke-width="2.5" marker-end="url(#a1_d21)"/>
+<path d="M544,190 Q640,290 850,290" fill="none" stroke="#a93226" stroke-width="2.5" marker-end="url(#a1_d21)"/>
 <circle cx="880" cy="90"  r="28" fill="#eef1f4"/><text x="880" y="97" class="sm" fill="#1a1a2e" text-anchor="middle">A</text>
 <circle cx="880" cy="190" r="28" fill="#eef1f4"/><text x="880" y="197" class="sm" fill="#1a1a2e" text-anchor="middle">B</text>
 <circle cx="880" cy="290" r="28" fill="#eef1f4"/><text x="880" y="297" class="sm" fill="#1a1a2e" text-anchor="middle">C</text>
@@ -590,16 +981,19 @@ _paginate: skip
 
 ## 配色与字阶
 
-同一张图横排对比才看得出差别。**默认选第一个（deck 调色板）。**
+<!--
+同一张图横排对比才看得出差别。**默认选第一个（UPerform deck 默认）**。
+6 套备选风格只在整份 deck 都是那个调性、或用户点名时才启用。
+-->
 ---
 
 ---
 <div class="cols cols-2">
 <div class="col">
 
-### deck 默认（UPerform）
+### UPerform deck 默认
 
-<div class="stylewrap" style="--s-hero:#1a1a2e;--s-on-hero:#ffffff;--s-accent:#c0392b;--s-on-accent:#ffffff;--s-neutral:#eef1f4;--s-ink:#1a1a2e;--s-rule:#c0392b">
+<div class="stylewrap" style="--s-hero:#1a1a2e;--s-on-hero:#ffffff;--s-accent:#E87461;--s-on-accent:#ffffff;--s-neutral:#eef1f4;--s-ink:#1a1a2e;--s-rule:#F0A050">
 <svg viewBox="0 0 480 300" width="100%">
 <rect x="12" y="12" width="250" height="160" rx="6" fill="var(--s-hero)"/>
 <text x="32" y="62" class="t" fill="var(--s-on-hero)">核心结论</text>
@@ -645,7 +1039,7 @@ _paginate: skip
 </div>
 </div>
 
-<!-- 跟随 style-bootstrap，图与正文同源。默认选它。 ／ 数据自信、圆形签名、超大数字 -->
+<!-- 深蓝 + 粉橙 + 金黄。默认选它。 ／ 青绿主导，数据自信、圆形签名、超大数字 -->
 
 ---
 <div class="cols cols-2">
@@ -677,7 +1071,7 @@ _paginate: skip
 
 ### tricon-infographic
 
-<div class="stylewrap" style="--s-hero:#8B1A2B;--s-on-hero:#ffffff;--s-accent:#C41E3A;--s-on-accent:#ffffff;--s-neutral:#F5F5F5;--s-ink:#1A1A1A;--s-rule:#C41E3A">
+<div class="stylewrap" style="--s-hero:#2c3e50;--s-on-hero:#ffffff;--s-accent:#c0392b;--s-on-accent:#ffffff;--s-neutral:#f5f5f5;--s-ink:#1a1a2e;--s-rule:#e74c3c">
 <svg viewBox="0 0 480 300" width="100%">
 <rect x="12" y="12" width="250" height="160" rx="6" fill="var(--s-hero)"/>
 <text x="32" y="62" class="t" fill="var(--s-on-hero)">核心结论</text>
@@ -699,7 +1093,7 @@ _paginate: skip
 </div>
 </div>
 
-<!-- 咨询蓝、衬线标题、行动式标题 ／ 出版物红、锐利、极简 -->
+<!-- 咨询蓝，行动式标题、衬线双字族 ／ 红色主调 + 深藏青标题，openclaw 课件主题 -->
 
 ---
 <div class="cols cols-2">
@@ -753,7 +1147,7 @@ _paginate: skip
 </div>
 </div>
 
-<!-- 工程精度、琥珀高亮、白底图纸 ／ 灰阶线框、中性克制 -->
+<!-- 深蓝工程图、琥珀高亮、白底网格 ／ 灰阶线框、中性克制 -->
 
 ---
 <div class="cols cols-2">
@@ -783,13 +1177,102 @@ _paginate: skip
 </div>
 </div>
 
-<!-- 多线路色、45°/90° 折线 -->
+<!-- 多线路色、45°/90° 折线、站点圆点 -->
 
 ---
 <!-- _class: divider -->
 
 # 用法
 
-## 四层依次过
+## 4 步从选型到出图
+---
 
-**体裁 → 语气 → 配色 → 笔法**
+---
+## 1. 选题——这份内容能画哪几张图
+
+读文档，扫一遍下面的表，找出内容里出现了哪几种结构：
+
+| 信息结构（15 种） | → 骨架 | 适合 |
+|---|---|---|
+| network 关系网络 | [network-hub](#) | 影响、相互作用 |
+| hierarchy 层次 | [hierarchy-tree](#) | 由…组成、下设、从属 |
+| argument 论证 | [evidence](#) | 主张 + 证据 + 推理 |
+| cycle 循环 | [flow-cycle](#) | 周而复始、反馈回路 |
+| flow 流量 | [flow-cycle](#) 桑基 | X% 流向了… |
+| timeline 时间 | [linear-sequence](#) 箭头串 | 从…到… |
+| parallel-evolution 并行 | [lanes](#) | 与此同时… |
+| two-dimensional 二维 | [matrix-quadrant](#) | 高 X 低 Y |
+| multi-dimensional 多维 | [structure-block](#) 对比矩阵 | 在 X 方面优秀但 Y 不足 |
+| landscape 全景 | [structure-block](#) 便当格 | 主要分为… |
+| concept-decomposition 概念 | [hierarchy-tree](#) 关系树 | 该理论包含… |
+| stakeholder 利益相关方 | [structure-block](#) 或 quadrant | 多方参与 |
+| debate / semantic-opposition 对立 | [structure-block](#) | 支持 vs 反对 |
+| geographic 地理 | [structure-block](#) 便当格 | 多地区对比 |
+
+<!-- 详见 references/infographics-svg/structures.md -->
+
+---
+## 2. 骨架——选什么图形承载
+
+| 关系 | 判定问句 | 骨架 |
+|---|---|---|
+| Sequence 时序 | A 发生在 B 之后？ | 箭头串 |
+| Hierarchy 层级 | A 包含 B？A 是 B 的上级？ | 关系树 |
+| Matrix 矩阵 | 两个维度交叉分类？ | 2×2 |
+| Growth 演进 | 我们在哪，下一步去哪？ | 阶梯 |
+| Flow 流量 | X 从哪来，流向哪，带多少量？ | 桑基 |
+| Parallel 并行 | 多实体同步推进？ | 泳道 |
+| Network 网络 | 多对多关系？ | 网络图 |
+| Argument 论证 | 主张 + 证据？ | 图尔敏 |
+| 罗列 | 3–6 项并列属性？ | icon-rail |
+| 展示 | 3–5 张图文卡片？ | card-row |
+| 起伏叙事 | 过程曲折但最终成功？ | wave-timeline |
+
+<!-- 详见 references/infographics-svg/skeletons/INDEX.md -->
+
+---
+## 3. 隐喻——换什么叙事外壳
+
+骨架定了之后问"这页要什么情绪"。同一副骨架换壳，不改路由。
+
+| 隐喻 | 适合叙事 | 改动量 |
+|---|---|---|
+| Staircase 阶梯 | 逐级跃迁、进阶 | 原生 |
+| Pyramid 金字塔 | 战略层 → 执行层收敛 | 小（顶层改三角） |
+| Flywheel 飞轮 | 势能自我积累 | 中（线宽递增） |
+| Cycle 循环 | PDCA、持续改进 | 原生 |
+| Iceberg 冰山 | 显性 vs 隐性成本 | 中（水下 5+ 边） |
+| Funnel 漏斗 | 大量到少量、转化 | 中（四边共线） |
+| Convergence 汇聚 | 多流合一 | 小 |
+| Foundation 基础 | 能力垫底 | 小（方向相反于金字塔） |
+| Onion 洋葱 | 层层包裹 | 小（同心椭圆） |
+| Wave timeline 波浪 | 过程曲折、收官 | 原生 |
+
+<!-- 详见 references/infographics-svg/metaphor.md。一页只讲一个隐喻。 -->
+
+---
+## 4. 风格——什么配色
+
+默认用 deck 自己的调色板（UPerform = 深蓝 + 粉橙 + 金黄）。
+6 套备选风格只在整份 deck 那个调性、或用户点名时启用。
+
+| 风格 | 主色 | 适合 |
+|---|---|---|
+| UPerform 默认 | 深蓝 + 粉橙 + 金黄 | 默认；商务、技术、教育 |
+| clean-analytics | 青绿 | 数据自信、量化分析 |
+| mckinsey-report | 咨询蓝 | 战略咨询、趋势分析 |
+| tricon-infographic | 红色 + 深藏青 | openclaw 课件、议题图解 |
+| technical-schematic | 深蓝 + 琥珀 | 工程图、系统设计 |
+| ui-wireframe | 灰阶 | 产品原型、界面说明 |
+| subway-map | 多线路色 | 路线图、流程路径 |
+
+<!-- 详见 references/infographics-svg/styles/INDEX.md -->
+
+## 5. 笔法——画之前要知道的
+
+- **viewBox 1020 × (300–540)**：所有模板统一宽度
+- **字号走 class**：`.t / .tb / .qt / .sm / .lbl`，不写 font-size 属性
+- **marker id 唯一**：第 N 张图用 `aN` 前缀，避免合并导出时串号
+- **每张图限 7 个节点**：超了就拆页、聚合、或降级成表格
+- **lint + 渲染两道关**：`node scripts/svg-lint.mjs deck.marp.md` 然后 marp 渲染肉眼过
+<!-- 详见 references/infographics-svg/craft/ -->

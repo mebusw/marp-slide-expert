@@ -37,18 +37,41 @@
 </defs>
 <rect x="425" y="12" width="200" height="62" rx="6" fill="#1a1a2e"/>
 <text x="525" y="52" class="t" fill="#ffffff" text-anchor="middle">企业价值</text>
-<rect x="175" y="150" width="160" height="56" rx="6" fill="#2c3e50"/>
-<text x="255" y="186" class="tb" fill="#ffffff" text-anchor="middle">客户价值</text>
-<path d="M525,74 V108 H255 V146" fill="none" stroke="#b9c3cc" stroke-width="2"/>
-<path d="M525,74 V108 H795 V146" fill="none" stroke="#b9c3cc" stroke-width="2"/>
+<rect x="60"  y="150" width="160" height="56" rx="6" fill="#2c3e50"/>
+<text x="140" y="186" class="tb" fill="#ffffff" text-anchor="middle">客户价值</text>
+<rect x="280" y="150" width="160" height="56" rx="6" fill="#2c3e50"/>
+<text x="360" y="186" class="tb" fill="#ffffff" text-anchor="middle">业务增长</text>
+<rect x="500" y="150" width="160" height="56" rx="6" fill="#2c3e50"/>
+<text x="580" y="186" class="tb" fill="#ffffff" text-anchor="middle">组织能力</text>
+<rect x="720" y="150" width="160" height="56" rx="6" fill="#2c3e50"/>
+<text x="800" y="186" class="tb" fill="#ffffff" text-anchor="middle">资金效率</text>
+<path d="M525,74 V108 H140 V146" fill="none" stroke="#b9c3cc" stroke-width="2"/>
+<path d="M525,74 V108 H360 V146" fill="none" stroke="#b9c3cc" stroke-width="2"/>
+<path d="M525,74 V108 H580 V146" fill="none" stroke="#b9c3cc" stroke-width="2"/>
+<path d="M525,74 V108 H800 V146" fill="none" stroke="#b9c3cc" stroke-width="2"/>
 <rect x="40"  y="290" width="130" height="54" rx="4" fill="#fdecea" stroke="#e74c3c" stroke-width="1.5"/>
 <text x="105" y="323" class="sm" fill="#1a1a2e" text-anchor="middle">客户洞察</text>
 <rect x="180" y="290" width="130" height="54" rx="4" fill="#fdecea" stroke="#e74c3c" stroke-width="1.5"/>
 <text x="245" y="323" class="sm" fill="#1a1a2e" text-anchor="middle">品牌资产</text>
-<path d="M255,206 V238 H105 V284" fill="none" stroke="#b9c3cc" stroke-width="2"/>
-<path d="M255,206 V238 H245 V284" fill="none" stroke="#b9c3cc" stroke-width="2"/>
-<line x1="255" y1="392" x2="780" y2="392" stroke="#c0392b" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#a4)"/>
-<text x="510" y="422" class="lbl" text-anchor="middle">闭环：客户反馈 → 能力迭代</text>
+<rect x="320" y="290" width="130" height="54" rx="4" fill="#eef1f4" stroke="#7f8c8d" stroke-width="1.5"/>
+<text x="385" y="323" class="sm" fill="#1a1a2e" text-anchor="middle">客户成功</text>
+<rect x="460" y="290" width="130" height="54" rx="4" fill="#fdecea" stroke="#e74c3c" stroke-width="1.5"/>
+<text x="525" y="323" class="sm" fill="#1a1a2e" text-anchor="middle">营收增长</text>
+<rect x="600" y="290" width="130" height="54" rx="4" fill="#eef1f4" stroke="#7f8c8d" stroke-width="1.5"/>
+<text x="665" y="323" class="sm" fill="#1a1a2e" text-anchor="middle">研发效能</text>
+<rect x="740" y="290" width="130" height="54" rx="4" fill="#eef1f4" stroke="#7f8c8d" stroke-width="1.5"/>
+<text x="805" y="323" class="sm" fill="#1a1a2e" text-anchor="middle">人才密度</text>
+<rect x="860" y="290" width="100" height="54" rx="4" fill="#eef1f4" stroke="#7f8c8d" stroke-width="1.5"/>
+<text x="910" y="323" class="sm" fill="#1a1a2e" text-anchor="middle">资本回报</text>
+<path d="M140,206 V238 H105 V284" fill="none" stroke="#b9c3cc" stroke-width="2"/>
+<path d="M140,206 V238 H245 V284" fill="none" stroke="#b9c3cc" stroke-width="2"/>
+<path d="M360,206 V238 H385 V284" fill="none" stroke="#b9c3cc" stroke-width="2"/>
+<path d="M580,206 V238 H525 V284" fill="none" stroke="#b9c3cc" stroke-width="2"/>
+<path d="M580,206 V238 H665 V284" fill="none" stroke="#b9c3cc" stroke-width="2"/>
+<path d="M800,206 V238 H805 V284" fill="none" stroke="#b9c3cc" stroke-width="2"/>
+<path d="M800,206 V238 H910 V284" fill="none" stroke="#b9c3cc" stroke-width="2"/>
+<line x1="140" y1="392" x2="910" y2="392" stroke="#c0392b" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#a4)"/>
+<text x="525" y="422" class="lbl" text-anchor="middle">闭环：业务反馈 → 价值迭代</text>
 </svg>
 ```
 
@@ -68,6 +91,40 @@
 ### 闭环叠加
 
 底部加虚线（`y=392`，文字 `y=422`）把静态的树变成「反馈驱动的迭代」。
+
+### 变体：组织架构式（含侧分叉）
+
+真实组织架构里经常出现「助理 / 秘书挂在某位高管下」这种**侧分叉**——它和正父子关系不一样：从父节点的**底部右侧**拉出一根细线到一个同层的小方块，没有更深的孩子。
+
+```
+侧分叉 y  = 父块底 y_父 + 6
+侧分叉 cx = 父块右 cx_父 + 父宽/2 + 24
+侧块宽   = 100，h = 38（比正方块矮一档）
+侧块文字 .sm，居中
+侧分叉线 stroke="#b9c3cc" stroke-width="1.5"，**无箭头**
+```
+
+```html
+<rect x="425" y="12"  width="200" height="62" rx="6" fill="#1a1a2e"/>
+<text x="525" y="52" class="t" fill="#ffffff" text-anchor="middle">企业价值</text>
+<rect x="175" y="150" width="160" height="56" rx="6" fill="#2c3e50"/>
+<text x="255" y="186" class="tb" fill="#ffffff" text-anchor="middle">客户价值</text>
+<!-- 从「客户价值」底部的右侧拉一根线到助理方块 -->
+<line x1="335" y1="206" x2="830" y2="230" stroke="#b9c3cc" stroke-width="1.5"/>
+<rect x="830" y="212" width="100" height="38" rx="4" fill="none" stroke="#7f8c8d" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="880" y="236" class="sm" fill="#1a1a2e" text-anchor="middle">助理</text>
+```
+
+**什么时候用**：
+- 组织架构图：高管 + 助理/秘书
+- 项目负责人 + 协助角色（PM + Tech Lead）
+- 系统组件 + 旁路工具
+
+**不要用**：
+- 真正的从属关系（应该用普通的父子连线）
+- 旁系分支 > 2 个（太多会让图变乱，改成单独的图）
+
+侧分叉的颜色用浅灰虚线（`#b9c3cc` + `stroke-dasharray="3 3"`），和主父子连线（实线）视觉上分得开。
 
 ---
 

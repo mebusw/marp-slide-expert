@@ -94,20 +94,31 @@ viewBox     0 0 1020 460
 | L3 | 206–278 | 431 | 270 | 294 → 375 |
 | L4 | 284–356 | 257 | 96 | 382 → 462 |
 
+**底层建议画成三角形**（不是矩形）——`L1→L2→L3` 三层是等宽梯形，最后一层收成尖角，整体就是一个**正三角漏斗**，比 4 块梯形堆叠更像漏斗。下面这个模板就是正三角版本（最后一层画成尖三角）：
+
 ```html
 <svg viewBox="0 0 1020 460" width="100%">
 <path d="M120,50 L900,50 L820,122 L200,122 Z" fill="#2c3e50"/>
 <text x="510" y="94" class="tb" fill="#ffffff" text-anchor="middle">线索 10,000</text>
 <path d="M207,128 L813,128 L732,200 L288,200 Z" fill="#34495e"/>
 <text x="510" y="172" class="tb" fill="#ffffff" text-anchor="middle">商机 1,200</text>
-<path d="M294,206 L726,206 L645,278 L375,278 Z" fill="#7f8c8d"/>
+<path d="M294,206 L726,206 L645,278 L375,278 Z" fill="#7f8d8d"/>
 <text x="510" y="250" class="tb" fill="#ffffff" text-anchor="middle">提案 380</text>
-<path d="M382,284 L638,284 L558,356 L462,356 Z" fill="#c0392b"/>
+<path d="M382,284 L638,284 L510,370 Z" fill="#c0392b"/>
 <text x="510" y="328" class="tb" fill="#ffffff" text-anchor="middle">96</text>
-<text x="510" y="392" class="lbl" text-anchor="middle">成交 96 · 整体转化率 0.96%</text>
-<text x="510" y="420" class="lbl" text-anchor="middle">层宽为示意形状，量级以数字为准</text>
+<text x="510" y="402" class="lbl" text-anchor="middle">成交 96 · 整体转化率 0.96%</text>
+<text x="510" y="428" class="lbl" text-anchor="middle">层宽为示意形状，量级以数字为准</text>
 </svg>
 ```
+
+**两种画法的取舍**：
+
+| 画法 | 形状 | 适合 |
+|---|---|---|
+| **正三角漏斗**（本模板） | 底层收成尖角，整体是一个三角形 | 强调「逐级收敛到一个点」的叙事——转化、过滤、淘汰 |
+| **倒梯形漏斗**（旧版本） | 每层都是梯形，最后一层也保留底边 | 强调「每层都有可测量的产出」——销售线索、漏斗留资、招聘漏斗 |
+
+正三角适合「结论驱动」——目标是最后那个尖。倒梯形适合「过程驱动」——关注每一层发生了什么。
 
 ### 宽度不等于量级——必须说明
 

@@ -85,17 +85,24 @@
 
 阶梯镜像，层宽递减，顶部最窄。`w_i = 220 - i*40`，层高 `56`，`y_i = 60 + i*74`。
 
+**顶层建议画成三角形**（不是矩形）——四层正三角叠起来就是完整的金字塔，识别度比四块矩形堆叠强得多。两种画法：
+
+| 画法 | 怎么搭 | 适合 |
+|---|---|---|
+| **正三角金字塔**（本模板） | 顶层用三角，其余三层是等宽梯形 | 强调「收敛到顶点的方向」——战略屋、能力金字塔、价值链 |
+| **四层矩形**（保留版本） | 四层都是矩形 | 强调「每一层都是可读的整体」——4 大能力模型、4 大原则 |
+
 ```html
 <svg viewBox="0 0 1020 400" width="100%">
-<rect x="410" y="60"  width="200" height="56" rx="4" fill="#1a1a2e"/>
-<text x="510" y="96"  class="tb" fill="#ffffff" text-anchor="middle">愿景</text>
+<path d="M510,16 L610,72 L410,72 Z" fill="#1a1a2e"/>
+<text x="510" y="68" class="tb" fill="#ffffff" text-anchor="middle">愿景</text>
 <rect x="370" y="134" width="280" height="56" rx="4" fill="#2c3e50"/>
 <text x="510" y="170" class="tb" fill="#ffffff" text-anchor="middle">战略</text>
 <rect x="330" y="208" width="360" height="56" rx="4" fill="#5d7d95"/>
 <text x="510" y="244" class="tb" fill="#ffffff" text-anchor="middle">举措</text>
 <rect x="290" y="282" width="440" height="56" rx="4" fill="#95a5a6"/>
 <text x="510" y="318" class="tb" fill="#ffffff" text-anchor="middle">执行动作</text>
-<text x="510" y="374" class="lbl" text-anchor="middle">自上而下拆解，越往下越具体</text>
+<text x="510" y="378" class="lbl" text-anchor="middle">自上而下拆解，越往下越具体</text>
 </svg>
 ```
 
@@ -113,23 +120,22 @@
 **⚠️ `markerUnits` 必须显式写 `"userSpaceOnUse"`。** 它默认是 `"strokeWidth"`——marker 会按线的粗细整体缩放。`stroke-width="7"` 那段箭头会被放大 7 倍，变成一个比节点圆还大的红色三角，把整张图压垮。这个坑很隐蔽：线越粗箭头越大，看起来「像是故意的」，其实完全失控。
 
 ```html
-<svg viewBox="0 0 1020 500" width="100%">
+<svg viewBox="0 0 1020 460" width="100%">
 <defs>
 <marker id="a1" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="10" refX="12" refY="5" orient="auto"><path d="M0,0 L13,5 L0,10 z" fill="#c0392b"/></marker>
 <marker id="a2" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="11" refX="14" refY="5.5" orient="auto"><path d="M0,0 L15,5.5 L0,11 z" fill="#c0392b"/></marker>
 <marker id="a3" markerUnits="userSpaceOnUse" markerWidth="17" markerHeight="12" refX="16" refY="6" orient="auto"><path d="M0,0 L17,6 L0,12 z" fill="#c0392b"/></marker>
 <marker id="a4" markerUnits="userSpaceOnUse" markerWidth="19" markerHeight="14" refX="18" refY="7" orient="auto"><path d="M0,0 L19,7 L0,14 z" fill="#c0392b"/></marker>
 </defs>
-<path d="M598.6,395.1 A170,170 0 0 1 421.2,394.9" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1)"/>
-<path d="M365.1,338.8 A170,170 0 0 1 360.6,168.9" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a2)"/>
-<path d="M421.4,104.9 A170,170 0 0 1 591.1,100.6" fill="none" stroke="#c0392b" stroke-width="5.5" marker-end="url(#a3)"/>
-<path d="M654.9,161.2 A170,170 0 0 1 659.4,331.1" fill="none" stroke="#c0392b" stroke-width="7" marker-end="url(#a4)"/>
-<circle cx="630" cy="130" r="40" fill="#2c3e50"/><text x="630" y="137" class="sm" fill="#ffffff" text-anchor="middle">用户</text>
-<circle cx="630" cy="370" r="40" fill="#34495e"/><text x="630" y="377" class="sm" fill="#ffffff" text-anchor="middle">价值</text>
-<circle cx="390" cy="370" r="40" fill="#5d7d95"/><text x="390" y="377" class="sm" fill="#ffffff" text-anchor="middle">规模</text>
-<circle cx="390" cy="130" r="40" fill="#95a5a6"/><text x="390" y="137" class="sm" fill="#ffffff" text-anchor="middle">效率</text>
-<text x="510" y="258" class="t" fill="#1a1a2e" text-anchor="middle">飞轮</text>
-<text x="510" y="470" class="lbl" text-anchor="middle">线宽与箭头同步递增 = 势能自我积累；弧段切于节点圆</text>
+<path d="M669.2,143.9 A150,150 0 0 1 669.2,336.1" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1)"/>
+<path d="M606.1,399.2 A150,150 0 0 1 413.9,399.2" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a2)"/>
+<path d="M350.8,336.1 A150,150 0 0 1 350.8,143.9" fill="none" stroke="#c0392b" stroke-width="5.5" marker-end="url(#a3)"/>
+<path d="M413.9,80.8 A150,150 0 0 1 606.1,80.8" fill="none" stroke="#c0392b" stroke-width="7" marker-end="url(#a4)"/>
+<circle cx="610" cy="140" r="36" fill="#2c3e50"/><text x="610" y="146" class="sm" fill="#ffffff" text-anchor="middle">用户</text>
+<circle cx="610" cy="340" r="36" fill="#34495e"/><text x="610" y="346" class="sm" fill="#ffffff" text-anchor="middle">价值</text>
+<circle cx="410" cy="340" r="36" fill="#5d7d95"/><text x="410" y="346" class="sm" fill="#ffffff" text-anchor="middle">规模</text>
+<circle cx="410" cy="140" r="36" fill="#95a5a6"/><text x="410" y="146" class="sm" fill="#ffffff" text-anchor="middle">效率</text>
+<text x="510" y="248" class="t" fill="#1a1a2e" text-anchor="middle">飞轮</text>
 </svg>
 ```
 
@@ -140,20 +146,33 @@
 - 水下部分用 **5 边以上的多边形**，不是简单的梯形或倒三角。真实冰山在水下是先外扩再收尖，梯形看不出来
 - **水下面积要明显大于水上（通常 3–5 倍）**，否则隐喻反了——变成「大部分是显性的」
 
+**两种画法**：
+
+| 画法 | 水上 | 水下 | 识别度 | 适合 |
+|---|---|---|---|---|
+| **规整六边形**（默认） | 等腰三角形 | 对称六边形（水面 → 外扩 → 收尖 → 底 → 外扩） | 强 | 商务汇报、成本分析、风险议题——重点是「量」 |
+| **不规则山形** | 不规则等腰三角形 | 不规则 7–9 边形，斜边不对称、起伏明显 | 极强 | 讲「过程曲折、隐形成本藏得很深」的叙事——天然冰山感 |
+
 ```html
 <svg viewBox="0 0 1020 510" width="100%">
 <text x="510" y="34" class="sm" fill="#7f8c8d" text-anchor="middle">显性成本只占冰山一角</text>
-<path d="M330,180 L510,60 L690,180 Z" fill="#B5DEDE"/>
+<path d="M340,180 L510,60 L680,180 Z" fill="#B5DEDE"/>
 <text x="510" y="150" class="sm" fill="#1a1a2e" text-anchor="middle">显性：预算 / 人力 / 迁移</text>
 <rect x="20" y="179" width="980" height="2" fill="#2563EB"/>
-<path d="M330,180 L690,180 L770,290 L620,450 L400,450 L250,290 Z" fill="#1E3A5F"/>
+<!-- 规整六边形版本 -->
+<path d="M340,180 L680,180 L760,290 L610,450 L410,450 L260,290 Z" fill="#1E3A5F"/>
+<!-- 不规则山形版本（替换上面这一行）：-->
+<!--
+<path d="M340,180 L680,180 L760,250 L740,310 L800,360 L720,420 L660,460
+         L500,470 L380,455 L280,420 L240,360 L290,300 L310,240 Z" fill="#1E3A5F"/>
+-->
 <text x="510" y="235" class="sm" fill="#93C5FD">隐性：组织惯性 / 切换成本 / 学习曲线</text>
 <text x="510" y="285" class="sm" fill="#93C5FD">数据一致性风险 / 长期运维债</text>
 <text x="510" y="410" class="tb" fill="#FFFFFF" text-anchor="middle">水下体积约为水上的 5 倍</text>
 </svg>
 ```
 
-**六边形的读法**：`330,180 → 690,180`（水面宽）→ `770,290`（水下外扩）→ `620,450`（收尖）→ `400,450`（底）→ `250,290`（外扩）→ 闭合。外扩再收尖的两段折线是冰山的识别特征，直接用倒三角会看成一座山。
+**不规则多边形写法**：水面两边 + 7–9 个起伏点（`L x,y`），每个点的 x 和 y 都允许偏差 ±20–40。规律是：**水面附近最宽，往下波浪起伏，最后收尖**。完全对称反而失真——真实冰山从来不长成对称形状。
 
 ## 4. Onion 洋葱
 
