@@ -30,14 +30,30 @@
 
 ## 安装
 
+**① 安装 skill 本体**（一条命令，从 GitHub 拉取）：
+
 ```bash
-# 1. 安装 marp CLI（用于 PDF 导出）
+npx skills add mebusw/marp-slide-expert       # 装到当前项目
+npx skills add -g mebusw/marp-slide-expert    # 或全局安装（所有项目可用）
+```
+
+不用 CLI 就手动装——克隆进本地 skills 目录：
+
+```bash
+git clone https://github.com/mebusw/marp-slide-expert ~/.claude/skills/marp-slide-expert
+```
+
+skill 由 Agent Skills 消费：装好后 Claude Code / Cursor 等会自动加载，做 marp 的会话里说一句「用 marp-slide-expert 出图」即可。
+
+**② 安装依赖：marp CLI**（渲染 PDF / PPTX / 图片用）：
+
+```bash
 npm install -g @marp-team/marp-cli
 # 如果 npm -g 失败，降级为：
 npx -y @marp-team/marp-cli --version
 ```
 
-skill 由 Agent Skills 消费。把它放到 `~/.claude/skills/marp-slide-expert/`，需要做 marp 的 Claude session 会自动加载。
+> GitHub 仓库：[mebusw/marp-slide-expert](https://github.com/mebusw/marp-slide-expert)
 
 ## 快速开始
 

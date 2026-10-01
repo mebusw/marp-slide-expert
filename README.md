@@ -29,14 +29,30 @@
 
 ## Install
 
+**1. Install the skill** (one command, straight from GitHub):
+
 ```bash
-# 1. Install marp CLI (for PDF export)
+npx skills add mebusw/marp-slide-expert       # into the current project
+npx skills add -g mebusw/marp-slide-expert    # or globally (all projects)
+```
+
+No CLI? Clone into your local skills directory instead:
+
+```bash
+git clone https://github.com/mebusw/marp-slide-expert ~/.claude/skills/marp-slide-expert
+```
+
+This skill is consumed by Agent Skills: once installed, Claude Code / Cursor pick it up automatically — in a marp session, just say "use marp-slide-expert".
+
+**2. Install the dependency: marp CLI** (for PDF / PPTX / image export):
+
+```bash
 npm install -g @marp-team/marp-cli
 # If npm -g fails, fall back to:
 npx -y @marp-team/marp-cli --version
 ```
 
-This skill is consumed by Agent Skills. Place it under `~/.claude/skills/marp-slide-expert/`, then any Claude session that needs marp authoring picks it up automatically.
+> GitHub: [mebusw/marp-slide-expert](https://github.com/mebusw/marp-slide-expert)
 
 ## Quick start
 
