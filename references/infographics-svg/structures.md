@@ -1,6 +1,6 @@
 # structures — 内容层：这份内容该画什么图
 
-> **本文件自足**：当用户丢来一篇文章、一段材料、一次会议记录，说「帮我画图」时，先在这里判断**画几张、每张画什么**。判断完直接进 [skeletons/INDEX.md](skeletons/INDEX.md) 或 [metaphor.md](metaphor.md) 出图。
+> **本文件自足**：当用户丢来一篇文章、一段材料、一次会议记录，说「帮我画图」时，先在这里判断**画几张、每张画什么**。判断完直接进 [skeletons/INDEX.md](skeletons/INDEX.md) 或 [metaphors.md](metaphors.md) 出图。
 
 ## 两种入口的区别
 
@@ -46,7 +46,7 @@
    - 信息充分 → 进第 4 步
    - 信息不足（比如 flow 结构但材料里没有具体数值）→ **不画**。桑基和漏斗没有数字就是装饰
 4. **给每种结构配骨架**（用上表的映射列）
-5. **给每张图定一个叙事隐喻**（见 [metaphor.md](metaphor.md)）
+5. **给每张图定一个叙事隐喻**（见 [metaphors.md](metaphors.md)）
 6. **默认用 deck 调色板**（见 [styles/INDEX.md](styles/INDEX.md)）
 
 ## 数量控制

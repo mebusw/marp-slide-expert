@@ -191,7 +191,7 @@ y_i       = y_0 + i*(h + 18)
 | **Foundation blocks 基础块** | 底部一层最宽，向上递减 | 变体 B 层宽递减 |
 | **Strategic house 战略屋** | 顶层加屋顶三角，底层加地基矩形 | 变体 B + 上下各加一形状 |
 
-完整隐喻表见 [../metaphor.md](../metaphor.md)。
+完整隐喻表见 [../metaphors.md](../metaphors.md)。
 
 ## 连线
 

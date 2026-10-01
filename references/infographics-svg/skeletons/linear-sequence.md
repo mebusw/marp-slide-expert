@@ -150,7 +150,7 @@ y_i       = 420 - height_i     ← 基线固定在 420
 - **Mountain**（攻坚到高点再回落）— 三角折线 + 顶点强调
 - **Bridge / Gap jump**（跨越鸿沟）— 水平带 + 缺口 + 跃起曲线
 
-完整隐喻表见 [../metaphor.md](../metaphor.md)。
+完整隐喻表见 [../metaphors.md](../metaphors.md)。
 
 ---
 

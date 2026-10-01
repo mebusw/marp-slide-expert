@@ -17,7 +17,7 @@
       ↓
 ② skeletons   体裁     用什么图形承载这个关系？
       ↓
-③ metaphor    语气     在同一副骨架上换什么叙事外壳？
+③ metaphors    语气     在同一副骨架上换什么叙事外壳？
       ↓
 ④ styles      配色     什么颜色、什么字阶？
    ─────────────────────────────────
@@ -25,9 +25,9 @@
               怎么画才不翻车？（横切所有层）
 ```
 
-一次对照：**structures 是选题，skeletons 是体裁，metaphor 是语气，styles 是配色，craft 是笔法。**
+一次对照：**structures 是选题，skeletons 是体裁，metaphors 是语气，styles 是配色，craft 是笔法。**
 
-②③ 分开的价值：骨架层可以随需求无限扩充，而 metaphor 表**永远不用动**——新骨架自动继承全部隐喻。
+②③ 分开的价值：骨架层可以随需求无限扩充，而 metaphors 表**永远不用动**——新骨架自动继承全部隐喻。
 
 ## 文件地图
 
@@ -35,7 +35,7 @@
 |---|---|
 | [structures.md](structures.md) | 拿到一份文档/材料，不知道能画什么 |
 | [skeletons/INDEX.md](skeletons/INDEX.md) | **先读这个**——关系类型 → 骨架的路由表 |
-| [metaphor.md](metaphor.md) | 骨架定完之后，选叙事外壳 |
+| [metaphors.md](metaphors.md) | 骨架定完之后，选叙事外壳 |
 | [styles/INDEX.md](styles/INDEX.md) | 选配色（默认用 deck 调色板，这里是备选） |
 | [craft/marp-compat.md](craft/marp-compat.md) | 内联 SVG 的硬约束与静默失败模式 |
 | [craft/canvas.md](craft/canvas.md) | 画布坐标系、间距尺度、节点预算 |
@@ -48,7 +48,7 @@
 ```
 1. 读骨架路由        问：这些节点之间到底是什么关系？
 2. 选骨架文件        拿到坐标公式和完整模板
-3. （可选）换外壳     问：这页要什么情绪？查 metaphor 表
+3. （可选）换外壳     问：这页要什么情绪？查 metaphors 表
 4. 填内容            按 craft/typography 的字宽规则估节点尺寸
 5. 配色              默认 deck 调色板
 6. lint              node scripts/svg-lint.mjs deck.marp.md

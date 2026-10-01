@@ -1,4 +1,4 @@
-# metaphor — 叙事外壳层
+# metaphorss — 叙事外壳层
 
 > **本文件自足**：骨架决定「这些节点是什么关系」，隐喻决定「这页要讲什么故事」。两者正交：**同一副骨架换壳，不改变路由。**
 
@@ -94,8 +94,8 @@
 
 ```html
 <svg viewBox="0 0 1020 400" width="100%">
-<path d="M510,16 L610,72 L410,72 Z" fill="#1a1a2e"/>
-<text x="510" y="68" class="tb" fill="#ffffff" text-anchor="middle">愿景</text>
+<path d="M510,90 L600,118 L420,118 Z" fill="#1a1a2e"/>
+<text x="510" y="115" class="tb" fill="#ffffff" text-anchor="middle">愿景</text>
 <rect x="370" y="134" width="280" height="56" rx="4" fill="#2c3e50"/>
 <text x="510" y="170" class="tb" fill="#ffffff" text-anchor="middle">战略</text>
 <rect x="330" y="208" width="360" height="56" rx="4" fill="#5d7d95"/>
@@ -110,27 +110,57 @@
 
 ## 2. Flywheel 飞轮
 
-环形，**弧线 `stroke-width` 逐段递增**（2.5 → 4 → 5.5 → 7）——线宽递增是「势能自我积累」的唯一识别特征，不能省。
+环形 — 4 段弧线表示一个自我强化的循环。两套画法：
+
+| 画法 | 视觉特征 | 叙事 |
+|---|---|---|
+| **统一粗细**（推荐） | 4 段弧粗细一致（stroke-width=4） | 平稳的循环——「这事就这么转起来了」，强调稳态 |
+| **渐变粗细** | 弧线 `stroke-width` 逐段递增（2.5→4→5.5→7） | 势能自我积累——「越转越快」 |
+
+两种都合法，但**视觉上的强识别特征是：所有弧头都有明确箭头**（飞轮的"持续转动"必须看得见）。粗细一致也不影响这一点的表达。
 
 **几何要点**：
-- 圆心 `(510, 250)`，弧半径 `R = 170`，节点半径 `40`，节点中心**也在半径 170 上**
+- 圆心 `(510, 250)`，弧半径 `R = 170`，节点半径 `40`
 - 弧段两端**切于节点圆**，不穿过圆心。切点角偏移 `asin(40/170) ≈ 13.6°`
-- **四段弧要用四个独立的 marker**，尺寸随线宽递增（13 → 15 → 17 → 19），视觉上箭头和线一起变重
+- **四段弧共用一个 marker**（统一粗细版本），marker `markerUnits="userSpaceOnUse"` 防止箭头被 strokeWidth 缩放
 
-**⚠️ `markerUnits` 必须显式写 `"userSpaceOnUse"`。** 它默认是 `"strokeWidth"`——marker 会按线的粗细整体缩放。`stroke-width="7"` 那段箭头会被放大 7 倍，变成一个比节点圆还大的红色三角，把整张图压垮。这个坑很隐蔽：线越粗箭头越大，看起来「像是故意的」，其实完全失控。
+**⚠️ `markerUnits` 必须显式写 `"userSpaceOnUse"`。** 它默认是 `"strokeWidth"`——marker 会按线的粗细整体缩放。如果用 `stroke-width="4"` 但忘了写，箭头会变成预期 4 倍大，把整张图压垮。统一粗细版本特别容易忽视这条警告——因为不写暂时也能正常，但只要线粗改一改就崩。
+
+### 统一粗细版本（推荐）
 
 ```html
 <svg viewBox="0 0 1020 460" width="100%">
 <defs>
-<marker id="a1" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="10" refX="12" refY="5" orient="auto"><path d="M0,0 L13,5 L0,10 z" fill="#c0392b"/></marker>
-<marker id="a2" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="11" refX="14" refY="5.5" orient="auto"><path d="M0,0 L15,5.5 L0,11 z" fill="#c0392b"/></marker>
-<marker id="a3" markerUnits="userSpaceOnUse" markerWidth="17" markerHeight="12" refX="16" refY="6" orient="auto"><path d="M0,0 L17,6 L0,12 z" fill="#c0392b"/></marker>
-<marker id="a4" markerUnits="userSpaceOnUse" markerWidth="19" markerHeight="14" refX="18" refY="7" orient="auto"><path d="M0,0 L19,7 L0,14 z" fill="#c0392b"/></marker>
+<marker id="a1" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="10" refX="13" refY="5" orient="auto"><path d="M0,0 L14,5 L0,10 z" fill="#c0392b"/></marker>
+</defs>
+<path d="M669.2,143.9 A150,150 0 0 1 669.2,336.1" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a1)"/>
+<path d="M606.1,399.2 A150,150 0 0 1 413.9,399.2" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a1)"/>
+<path d="M350.8,336.1 A150,150 0 0 1 350.8,143.9" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a1)"/>
+<path d="M413.9,80.8 A150,150 0 0 1 606.1,80.8" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a1)"/>
+<circle cx="610" cy="140" r="36" fill="#2c3e50"/><text x="610" y="146" class="sm" fill="#ffffff" text-anchor="middle">用户</text>
+<circle cx="610" cy="340" r="36" fill="#34495e"/><text x="610" y="346" class="sm" fill="#ffffff" text-anchor="middle">价值</text>
+<circle cx="410" cy="340" r="36" fill="#5d7d95"/><text x="410" y="346" class="sm" fill="#ffffff" text-anchor="middle">规模</text>
+<circle cx="410" cy="140" r="36" fill="#95a5a6"/><text x="410" y="146" class="sm" fill="#ffffff" text-anchor="middle">效率</text>
+<text x="510" y="248" class="t" fill="#1a1a2e" text-anchor="middle">飞轮</text>
+</svg>
+```
+
+### 渐变粗细版本（备选）
+
+需要"线宽递增 = 势能积累"语义时用。要点是**线粗细的渐变要足够明显**，否则肉眼分不出来——建议梯度（2.5 / 4 / 6 / 8），比（2.5 / 4 / 5.5 / 7）更容易看出。
+
+```html
+<svg viewBox="0 0 1020 460" width="100%">
+<defs>
+<marker id="a1" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="9"  refX="12" refY="4.5" orient="auto"><path d="M0,0 L13,4.5 L0,9 z"  fill="#c0392b"/></marker>
+<marker id="a2" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="10" refX="13" refY="5"   orient="auto"><path d="M0,0 L14,5 L0,10 z"   fill="#c0392b"/></marker>
+<marker id="a3" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="11" refX="14" refY="5.5" orient="auto"><path d="M0,0 L15,5.5 L0,11 z" fill="#c0392b"/></marker>
+<marker id="a4" markerUnits="userSpaceOnUse" markerWidth="16" markerHeight="12" refX="15" refY="6"   orient="auto"><path d="M0,0 L16,6 L0,12 z"   fill="#c0392b"/></marker>
 </defs>
 <path d="M669.2,143.9 A150,150 0 0 1 669.2,336.1" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1)"/>
-<path d="M606.1,399.2 A150,150 0 0 1 413.9,399.2" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a2)"/>
-<path d="M350.8,336.1 A150,150 0 0 1 350.8,143.9" fill="none" stroke="#c0392b" stroke-width="5.5" marker-end="url(#a3)"/>
-<path d="M413.9,80.8 A150,150 0 0 1 606.1,80.8" fill="none" stroke="#c0392b" stroke-width="7" marker-end="url(#a4)"/>
+<path d="M606.1,399.2 A150,150 0 0 1 413.9,399.2" fill="none" stroke="#c0392b" stroke-width="4"   marker-end="url(#a2)"/>
+<path d="M350.8,336.1 A150,150 0 0 1 350.8,143.9" fill="none" stroke="#c0392b" stroke-width="6"   marker-end="url(#a3)"/>
+<path d="M413.9,80.8 A150,150 0 0 1 606.1,80.8" fill="none" stroke="#c0392b" stroke-width="8"   marker-end="url(#a4)"/>
 <circle cx="610" cy="140" r="36" fill="#2c3e50"/><text x="610" y="146" class="sm" fill="#ffffff" text-anchor="middle">用户</text>
 <circle cx="610" cy="340" r="36" fill="#34495e"/><text x="610" y="346" class="sm" fill="#ffffff" text-anchor="middle">价值</text>
 <circle cx="410" cy="340" r="36" fill="#5d7d95"/><text x="410" y="346" class="sm" fill="#ffffff" text-anchor="middle">规模</text>
@@ -150,8 +180,10 @@
 
 | 画法 | 水上 | 水下 | 识别度 | 适合 |
 |---|---|---|---|---|
-| **规整六边形**（默认） | 等腰三角形 | 对称六边形（水面 → 外扩 → 收尖 → 底 → 外扩） | 强 | 商务汇报、成本分析、风险议题——重点是「量」 |
-| **不规则山形** | 不规则等腰三角形 | 不规则 7–9 边形，斜边不对称、起伏明显 | 极强 | 讲「过程曲折、隐形成本藏得很深」的叙事——天然冰山感 |
+| **不规则山形**（默认，推荐） | 不规则等腰三角形 | 不规则 7–9 边形，**左右斜边不对称、起伏明显** | 极强 | 讲「过程曲折、隐形成本藏得很深」的叙事——天然冰山感 |
+| **规整六边形** | 等腰三角形 | 对称六边形（水面 → 外扩 → 收尖 → 底 → 外扩） | 强 | 商务汇报、成本分析、风险议题——重点是「量」 |
+
+**默认推荐不规则山形**——规整六边形太对称，看不出"藏得很深"；不规则的起伏才像真正的冰山。
 
 ```html
 <svg viewBox="0 0 1020 510" width="100%">
@@ -159,12 +191,12 @@
 <path d="M340,180 L510,60 L680,180 Z" fill="#B5DEDE"/>
 <text x="510" y="150" class="sm" fill="#1a1a2e" text-anchor="middle">显性：预算 / 人力 / 迁移</text>
 <rect x="20" y="179" width="980" height="2" fill="#2563EB"/>
-<!-- 规整六边形版本 -->
-<path d="M340,180 L680,180 L760,290 L610,450 L410,450 L260,290 Z" fill="#1E3A5F"/>
-<!-- 不规则山形版本（替换上面这一行）：-->
-<!--
+<!-- 不规则山形版本（默认） -->
 <path d="M340,180 L680,180 L760,250 L740,310 L800,360 L720,420 L660,460
          L500,470 L380,455 L280,420 L240,360 L290,300 L310,240 Z" fill="#1E3A5F"/>
+<!-- 规整六边形版本（替换上面这一行）： -->
+<!--
+<path d="M340,180 L680,180 L760,290 L610,450 L410,450 L260,290 Z" fill="#1E3A5F"/>
 -->
 <text x="510" y="235" class="sm" fill="#93C5FD">隐性：组织惯性 / 切换成本 / 学习曲线</text>
 <text x="510" y="285" class="sm" fill="#93C5FD">数据一致性风险 / 长期运维债</text>

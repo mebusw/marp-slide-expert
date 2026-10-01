@@ -14,7 +14,6 @@ style: |-
   svg .qt  { font-size:20px; font-weight:700; }
   svg .sm  { font-size:15px; }
   svg .lbl { font-size:15px; fill:#7f8c8d; }
-  /* 分栏版式——分栏不需要 --html，只有内联 SVG 才需要 */
   .cols { display:grid; align-items:start; }
   .cols-2 { grid-template-columns:1fr 1fr; gap:24px; }
   .cols-3 { grid-template-columns:repeat(3,1fr); gap:20px; }
@@ -52,37 +51,163 @@ _paginate: skip
   改完模板重跑一次即可，不要手改。
 
   svg-lint-ignore: viewbox-width
-  ③ 风格预览用 480 宽的紧凑 viewBox（两栏并排需要），正文模板统一 1020。
+  ⑤ 风格预览用 480 宽的紧凑 viewBox（两栏并排需要），正文模板统一 1020。
 -->
 
+
 ---
+
 <!-- _class: cover -->
 
 # marp-slide-expert 图例总览
 
-## 分栏版式 · 图形骨架 · 隐喻外壳 · 风格预览
-
-> 选型时一翻到底，复制时一拿就走
+## 56 页演示 · 选型时一翻到底 · 复制时一拿就走
 
 <!-- A 全幅页走 marp 自带的 _class: cover/divider，CSS 已在 style-bootstrap 里。
-     B 单栏 = 默认 C 分栏 = .cols-*  D 混合 = 文字 + bg 图片（见后） -->
----
+     B 单栏 = 默认 C 分栏 = .cols-*  D 混合 = 文字 + bg 图片 -->
 
 ---
+
+
+---
+
 <!-- _class: divider -->
 
-# 页级版式
+# ① 用法
+
+## 4 步从选型到出图
+
+---
+
+## 1. 选题——这份内容能画哪几张图
+
+读文档，扫下面的表，找出内容里出现了哪几种结构：
+
+| 信息结构（15 种） | → 骨架 | 适合 |
+|---|---|---|
+| network 关系网络 | [network-hub](#) | 影响、相互作用 |
+| hierarchy 层次 | [hierarchy-tree](#) | 由…组成、下设、从属 |
+| argument 论证 | [evidence](#) | 主张 + 证据 + 推理 |
+| cycle 循环 | [flow-cycle](#) | 周而复始、反馈回路 |
+| flow 流量 | [flow-cycle](#) 桑基 | X% 流向了… |
+| timeline 时间 | [linear-sequence](#) 箭头串 | 从…到… |
+| parallel-evolution 并行 | [lanes](#) | 与此同时… |
+| two-dimensional 二维 | [matrix-quadrant](#) | 高 X 低 Y |
+| multi-dimensional 多维 | [structure-block](#) 对比矩阵 | 在 X 方面优秀但 Y 不足 |
+| landscape 全景 | [structure-block](#) 便当格 | 主要分为… |
+| concept-decomposition 概念 | [hierarchy-tree](#) 关系树 | 该理论包含… |
+| stakeholder 利益相关方 | [structure-block](#) 或 quadrant | 多方参与 |
+| debate / semantic-opposition 对立 | [structure-block](#) | 支持 vs 反对 |
+| geographic 地理 | [structure-block](#) 便当格 | 多地区对比 |
+| 起伏叙事 / 复盘 | [wave-timeline](#) | 过程曲折、最终成功 |
+| 罗列属性 | [icon-rail](#) | 3–6 项并列 |
+| 展示卡片 | [card-row](#) | 3–5 张图文卡 |
+
+详见 [references/infographics-svg/structures.md](#)。
+
+---
+
+## 2. 骨架——选什么图形承载
+
+| 关系 | 判定问句 | 骨架 |
+|---|---|---|
+| Sequence 时序 | A 发生在 B 之后？ | 箭头串 |
+| Hierarchy 层级 | A 包含 B？A 是 B 的上级？ | 关系树 |
+| Matrix 矩阵 | 两个维度交叉分类？ | 2×2 |
+| Growth 演进 | 我们在哪，下一步去哪？ | 阶梯 |
+| Flow 流量 | X 从哪来，流向哪，带多少量？ | 桑基 |
+| Parallel 并行 | 多实体同步推进？ | 泳道 |
+| Network 网络 | 多对多关系？ | 网络图 |
+| Argument 论证 | 主张 + 证据？ | 图尔敏 |
+| 罗列 | 3–6 项并列属性？ | icon-rail |
+| 展示 | 3–5 张图文卡片？ | card-row |
+| 起伏叙事 | 过程曲折但最终成功？ | wave-timeline |
+
+详见 [references/infographics-svg/skeletons/INDEX.md](#)。
+
+---
+
+## 3. 隐喻——换什么叙事外壳
+
+骨架定了之后问"这页要什么情绪"。同一副骨架换壳，不改路由。
+
+| 隐喻 | 适合叙事 | 改动量 |
+|---|---|---|
+| Staircase 阶梯 | 逐级跃迁、进阶 | 原生 |
+| Pyramid 金字塔 | 战略层 → 执行层收敛 | 小（顶层改三角） |
+| Flywheel 飞轮 | 势能自我积累 / 持续循环 | 中 |
+| Cycle 循环 | PDCA、持续改进 | 原生 |
+| Iceberg 冰山 | 显性 vs 隐性成本 | 中（水下 5+ 边） |
+| Funnel 漏斗 | 大量到少量、转化 | 中（四边共线） |
+| Convergence 汇聚 | 多流合一 | 小 |
+| Foundation 基础 | 能力垫底 | 小（方向相反于金字塔） |
+| Onion 洋葱 | 层层包裹 | 小（同心椭圆） |
+
+详见 [references/infographics-svg/metaphors.md](#)。一页只讲一个隐喻。
+
+---
+
+## 4. 风格——什么配色
+
+默认用 deck 自己的调色板（UPerform = 深蓝 + 粉橙 + 金黄）。
+6 套备选风格只在整份 deck 那个调性、或用户点名时启用。
+
+| 风格 | 主色 | 适合 |
+|---|---|---|
+| UPerform 默认 | 深蓝 + 粉橙 + 金黄 | 默认；商务、技术、教育 |
+| clean-analytics | 青绿 | 数据自信、量化分析 |
+| mckinsey-report | 咨询蓝 | 战略咨询、趋势分析 |
+| tricon-infographic | 红色 + 深藏青 | openclaw 课件、议题图解 |
+| technical-schematic | 深蓝 + 琥珀 | 工程图、系统设计 |
+| ui-wireframe | 灰阶 | 产品原型、界面说明 |
+
+详见 [references/infographics-svg/styles/INDEX.md](#)。
+
+---
+
+## 5. 笔法——画之前要知道的
+
+- **viewBox 1020 × (300–540)**：所有模板统一宽度
+- **字号走 class**：`.t / .tb / .qt / .sm / .lbl`，不写 font-size 属性
+- **marker id 唯一**：第 N 张图用 `aN` 前缀，避免合并导出时串号
+- **每张图限 7 个节点**：超了就拆页、聚合，或降级成表格
+- **lint + 渲染两道关**：`node scripts/svg-lint.mjs deck.marp.md` 然后 marp 渲染肉眼过
+
+详见 [references/infographics-svg/craft/](#)。
+
+---
+
+## 6. 怎么判断：这一页该排版式还是画图？
+
+| | 排版式 | 画图 |
+|---|---|---|
+| 排的是什么 | 一页的内容块 | 一张图内部的节点和连线 |
+| 手段 | CSS grid + 分栏 div | 内联 SVG |
+| 要 `--html` 吗 | **不需要** | **需要** |
+| 适合 | 并列内容、并置对比 | 依赖、演进、循环、定位 |
+
+判断问句：**这一页要表达「内容之间的结构关系」吗？**
+- 是 → 画图
+- 否 → 排版式
+
+
+---
+
+<!-- _class: divider -->
+
+# ② 页级版式
 
 ## 一页的内容块怎么排
 
-<!--
-四族：A 全幅 / B 单栏 / C 分栏 / D 混合
-默认走 B（单栏）。超 15 行再考虑 C，有图再进 D。
-A 全幅用 marp 自带的 _class: cover / divider / 收尾页。
--->
 ---
 
+四族：A 全幅 / B 单栏 / C 分栏 / D 混合
+默认走 B（单栏）。超 15 行再考虑 C，有图再进 D。
+A 全幅用 marp 自带的 `<!-- _class: cover -->` / `<!-- _class: divider -->`，CSS 已在 style-bootstrap 里。
+
+
 ---
+
 ## B 单栏：默认解
 
 内容线性、一次读完，就用最朴素的写法。
@@ -93,7 +218,9 @@ A 全幅用 marp 自带的 _class: cover / divider / 收尾页。
 
 <!-- 单栏能解决就别分栏。判断问句：读者会来回看两栏做比较吗？ -->
 
+
 ---
+
 ## C 分栏 · cols-2
 
 <div class="cols cols-2">
@@ -123,7 +250,9 @@ A 全幅用 marp 自带的 _class: cover / divider / 收尾页。
 
 <!-- 每栏约 7 行预算（扣掉标题那 1 行）。div 前后各留空行。 -->
 
+
 ---
+
 ## C 分栏 · cols-3
 
 <div class="cols cols-3">
@@ -158,7 +287,9 @@ A 全幅用 marp 自带的 _class: cover / divider / 收尾页。
 
 <!-- 三栏每栏只剩约 5 行预算（15 行是整页的，不是每栏的）。 -->
 
+
 ---
+
 ## C 分栏 · cols-main（最常用）
 
 <div class="cols cols-main">
@@ -186,7 +317,9 @@ A 全幅用 marp 自带的 _class: cover / divider / 收尾页。
 
 <!-- 左边 2 份宽放要点，右边 1 份放佐证表。反过来写 1fr 2fr。 -->
 
+
 ---
+
 ## C 分栏 · split-h
 
 <div class="split-h">
@@ -208,43 +341,25 @@ A 全幅用 marp 自带的 _class: cover / divider / 收尾页。
 
 <!-- 上结论下证据、上现状下目标。 -->
 
+
 ---
+
 <!-- _class: divider -->
 
-# 图片布局
+# ②·D 混合
 
-## marp 天然支持 `![bg ...]`
+## marp 背景图（\`![bg ...]\`）
 
-<!--
-marp 的图片是背景图，所以一图占一页。要做「左右各半」「上下分区」这种
-多图共存，用 split / vertical 关键字。
--->
----
+marp 的图片是 slide 级背景图。
+下面四张示例**用同一张图**（assets/marp.png）演示 marp 图片排版的四种典型 layout——
+你自己的 deck 里换成真实图片即可。
 
----
-<!--
-D 混合 = marp 背景图能力。marp 的 `![bg ...]` 是 slide 级背景图，
-需要真实图片文件才能演示。读这部分时，注意看注释里的语法说明。
--->
-<!-- _class: divider -->
-
-# D 混合
-
-## marp 背景图（`![bg ...]`）
-
-<!--
-marp 把图片当背景图处理，所以一图占一页。要做"左右各半"、"上下两图叠"、
-"上半文下半图"这种多图共存，用 split / vertical 关键字。
-
-下面三张示例**不会真的渲染图片**（需要 PNG 文件），但展示的是正确语法。
-复制到你的 deck 时，把路径换成你的真实图片即可。
--->
----
 
 ---
-## D 混合 · 左右各半：一张图占右半
 
-![bg right vertical](<chapter-01.png>)
+## D 混合 · 左右各半：图在右，文在左
+
+![bg right vertical](<../assets/marp.png>)
 
 ### 章节主题
 
@@ -259,11 +374,13 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 背景图需要在 slide 同目录，或用 URL。
 -->
 
+
 ---
+
 ## D 混合 · 上下两图叠一文
 
-![bg](<shot-1.png>)
-![bg](<shot-2.png>)
+![bg](<../assets/marp.png>)
+![bg](<../assets/marp.png>)
 
 ### 实施过程
 
@@ -274,59 +391,38 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 要横向并排多图，把 vertical 去掉即可。
 -->
 
----
-## D 混合 · 图文分区：上下两栏
 
-![bg](<full-width-shot.png>)
+---
+
+## D 混合 · 图文分区：上半文下半图
+
+![bg](<../assets/marp.png>)
 
 ### 上半区文字
 
 要点放在这里。
 
-![bg](<wide-diagram.png>)
+![bg](<../assets/marp.png>)
 
 下半区放图，背景图会自动铺满整页剩余区域。
 
 <!-- 这种排版适合「一图配一段短说明」，全文一页。 -->
 
+
 ---
+
 <!-- _class: divider -->
 
-# 排版式 vs 画图
+# ③ 图形骨架
 
-## 什么时候用哪个
----
+## 16 个关系类型，每个都有现成坐标
 
----
-## 问一句：这一页要表达「内容之间的结构关系」吗？
-
-| | 排版式 | 画图 |
-|---|---|---|
-| 排的是什么 | 一页的内容块 | 一张图内部的节点和连线 |
-| 手段 | CSS grid + 分栏 div | 内联 SVG |
-| 要 `--html` 吗 | **不需要** | **需要** |
-| 适合 | 并列内容、并置对比 | 依赖、演进、循环、定位 |
-
-<!--
-排版式 → references/layout-patterns.md
-画图 → references/infographics-svg/
--->
-
-
----
-<!-- _class: divider -->
-
-# ① 骨架
-
-## 关系类型决定图形
-
-<!--
 每个骨架的坐标公式在 references/infographics-svg/skeletons/ 下。
-选骨架先问"节点之间是什么关系"，再问"这页要什么情绪"（metaphor）。
--->
----
+选骨架先问"节点之间是什么关系"，再问"这页要什么情绪"（见下文 ④ 隐喻）。
+
 
 ---
+
 <!-- _class: diagram -->
 
 ## 变体：图文卡片组
@@ -356,7 +452,9 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 
 <!-- 3–5 卡水平对齐；图区 60–70%，文字 30–40%；卡间距 20px -->
 
+
 ---
+
 <!-- _class: diagram -->
 
 ## 变体：图尔敏论证 Toulmin
@@ -391,7 +489,9 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 
 <!-- 箭头一律向上/向内；Warrant 用菱形（推理≠事实） -->
 
+
 ---
+
 <!-- _class: diagram -->
 
 ## 变体 A：环形循环 Circular Flow
@@ -418,7 +518,9 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 
 <!-- 环形弧段切于节点圆；漏斗四条斜边共线（母线 s=1.118）；两种画法：正三角 / 倒梯形 -->
 
+
 ---
+
 <!-- _class: diagram -->
 
 ## 变体 B：漏斗 Funnel
@@ -438,7 +540,9 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 
 <!-- 环形弧段切于节点圆；漏斗四条斜边共线（母线 s=1.118）；两种画法：正三角 / 倒梯形 -->
 
+
 ---
+
 <!-- _class: diagram -->
 
 ## 变体 A：关系树 Value Tree
@@ -488,7 +592,9 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 
 <!-- 直角连接器 M 父cx,父底 V 中继y H 子cx V 子顶；可加侧分叉表示助理/秘书 -->
 
+
 ---
+
 <!-- _class: diagram -->
 
 ## 变体 B：分层框架 Layered Framework
@@ -507,7 +613,9 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 
 <!-- 直角连接器 M 父cx,父底 V 中继y H 子cx V 子顶；可加侧分叉表示助理/秘书 -->
 
+
 ---
+
 <!-- _class: diagram -->
 
 ## 变体：水平属性列表
@@ -539,7 +647,9 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 
 <!-- 3–6 项水平对齐；每个图标一色；无连线 -->
 
+
 ---
+
 <!-- _class: diagram -->
 
 ## 变体：并行泳道 Swimlanes
@@ -572,7 +682,9 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 
 <!-- 阶段竖线必须与事件列对齐；同泳道事件加水平连线，先画线再画圆 -->
 
+
 ---
+
 <!-- _class: diagram -->
 
 ## 变体 A：箭头串 Arrow Chain
@@ -612,7 +724,9 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 
 <!-- 步距 192、箭头宽 184、尖长 34；文字居中于矩形部分 x_i+75，不是整个外框 -->
 
+
 ---
+
 <!-- _class: diagram -->
 
 ## 变体 B：阶梯 Staircase
@@ -645,7 +759,9 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 
 <!-- 步距 192、箭头宽 184、尖长 34；文字居中于矩形部分 x_i+75，不是整个外框 -->
 
+
 ---
+
 <!-- _class: diagram -->
 
 ## 变体：双维矩阵 2×2
@@ -680,7 +796,9 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 
 <!-- 两个轴必须独立；四条象限都必须有名字，位置要反映真实数值 -->
 
+
 ---
+
 <!-- _class: diagram -->
 
 ## 变体 A：中心辐射 Hub & Spoke
@@ -710,7 +828,9 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 
 <!-- 连线落在径向上：起点 R-r_n，终点 r_c。阵营节点 y 必须跟跨阵营主连线 y 共线 -->
 
+
 ---
+
 <!-- _class: diagram -->
 
 ## 变体 B：关系网 Network Graph
@@ -728,7 +848,9 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 
 <!-- 连线落在径向上：起点 R-r_n，终点 r_c。阵营节点 y 必须跟跨阵营主连线 y 共线 -->
 
+
 ---
+
 <!-- _class: diagram -->
 
 ## 变体 A：便当格 Bento Grid
@@ -760,7 +882,9 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 
 <!-- 没有连线；便当格必须有一个 hero 格，对比矩阵高亮须等于一整列 -->
 
+
 ---
+
 <!-- _class: diagram -->
 
 ## 变体 C：对比矩阵 Comparison Matrix
@@ -794,7 +918,9 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 
 <!-- 没有连线；便当格必须有一个 hero 格，对比矩阵高亮须等于一整列 -->
 
+
 ---
+
 <!-- _class: diagram -->
 
 ## 变体：起伏波浪大事记
@@ -829,26 +955,27 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 
 <!-- 整体 y 单调不降，5–7 峰；节点最多 5–6 个；起终点各一节点 -->
 
+
 ---
+
 <!-- _class: divider -->
 
-# ② 隐喻外壳
+# ④ 隐喻外壳
 
 ## 叙事意图决定语气
 
-<!--
-骨架定了之后换壳。**一页只讲一个隐喻**。
--->
----
+骨架定了之后换壳。**一页只讲一个隐喻。**
+
 
 ---
+
 <!-- _class: diagram -->
 
 ## 1. Pyramid 金字塔
 
 <svg viewBox="0 0 1020 400" width="100%">
-<path d="M510,16 L610,72 L410,72 Z" fill="#1a1a2e"/>
-<text x="510" y="68" class="tb" fill="#ffffff" text-anchor="middle">愿景</text>
+<path d="M510,90 L600,118 L420,118 Z" fill="#1a1a2e"/>
+<text x="510" y="115" class="tb" fill="#ffffff" text-anchor="middle">愿景</text>
 <rect x="370" y="134" width="280" height="56" rx="4" fill="#2c3e50"/>
 <text x="510" y="170" class="tb" fill="#ffffff" text-anchor="middle">战略</text>
 <rect x="330" y="208" width="360" height="56" rx="4" fill="#5d7d95"/>
@@ -860,22 +987,21 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 
 <!-- 顶层三角形 + 三层梯形 = 正三角金字塔；强调「收敛到顶点」 -->
 
+
 ---
+
 <!-- _class: diagram -->
 
 ## 2. Flywheel 飞轮
 
 <svg viewBox="0 0 1020 460" width="100%">
 <defs>
-<marker id="a1_d17" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="10" refX="12" refY="5" orient="auto"><path d="M0,0 L13,5 L0,10 z" fill="#c0392b"/></marker>
-<marker id="a2_d17" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="11" refX="14" refY="5.5" orient="auto"><path d="M0,0 L15,5.5 L0,11 z" fill="#c0392b"/></marker>
-<marker id="a3_d17" markerUnits="userSpaceOnUse" markerWidth="17" markerHeight="12" refX="16" refY="6" orient="auto"><path d="M0,0 L17,6 L0,12 z" fill="#c0392b"/></marker>
-<marker id="a4_d17" markerUnits="userSpaceOnUse" markerWidth="19" markerHeight="14" refX="18" refY="7" orient="auto"><path d="M0,0 L19,7 L0,14 z" fill="#c0392b"/></marker>
+<marker id="a1_d17" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="10" refX="13" refY="5" orient="auto"><path d="M0,0 L14,5 L0,10 z" fill="#c0392b"/></marker>
 </defs>
-<path d="M669.2,143.9 A150,150 0 0 1 669.2,336.1" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1_d17)"/>
-<path d="M606.1,399.2 A150,150 0 0 1 413.9,399.2" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a2_d17)"/>
-<path d="M350.8,336.1 A150,150 0 0 1 350.8,143.9" fill="none" stroke="#c0392b" stroke-width="5.5" marker-end="url(#a3_d17)"/>
-<path d="M413.9,80.8 A150,150 0 0 1 606.1,80.8" fill="none" stroke="#c0392b" stroke-width="7" marker-end="url(#a4_d17)"/>
+<path d="M669.2,143.9 A150,150 0 0 1 669.2,336.1" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a1_d17)"/>
+<path d="M606.1,399.2 A150,150 0 0 1 413.9,399.2" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a1_d17)"/>
+<path d="M350.8,336.1 A150,150 0 0 1 350.8,143.9" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a1_d17)"/>
+<path d="M413.9,80.8 A150,150 0 0 1 606.1,80.8" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a1_d17)"/>
 <circle cx="610" cy="140" r="36" fill="#2c3e50"/><text x="610" y="146" class="sm" fill="#ffffff" text-anchor="middle">用户</text>
 <circle cx="610" cy="340" r="36" fill="#34495e"/><text x="610" y="346" class="sm" fill="#ffffff" text-anchor="middle">价值</text>
 <circle cx="410" cy="340" r="36" fill="#5d7d95"/><text x="410" y="346" class="sm" fill="#ffffff" text-anchor="middle">规模</text>
@@ -883,9 +1009,38 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 <text x="510" y="248" class="t" fill="#1a1a2e" text-anchor="middle">飞轮</text>
 </svg>
 
-<!-- 线宽与箭头同步递增（2.5→7）；弧段切于节点圆；markerUnits 必须 userSpaceOnUse -->
+<!-- 两种画法：统一粗细（推荐）/ 渐变粗细；markerUnits 必须 userSpaceOnUse -->
+
 
 ---
+
+<!-- _class: diagram -->
+
+## 2. Flywheel 飞轮
+
+<svg viewBox="0 0 1020 460" width="100%">
+<defs>
+<marker id="a1_d18" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="9"  refX="12" refY="4.5" orient="auto"><path d="M0,0 L13,4.5 L0,9 z"  fill="#c0392b"/></marker>
+<marker id="a2_d18" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="10" refX="13" refY="5"   orient="auto"><path d="M0,0 L14,5 L0,10 z"   fill="#c0392b"/></marker>
+<marker id="a3_d18" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="11" refX="14" refY="5.5" orient="auto"><path d="M0,0 L15,5.5 L0,11 z" fill="#c0392b"/></marker>
+<marker id="a4_d18" markerUnits="userSpaceOnUse" markerWidth="16" markerHeight="12" refX="15" refY="6"   orient="auto"><path d="M0,0 L16,6 L0,12 z"   fill="#c0392b"/></marker>
+</defs>
+<path d="M669.2,143.9 A150,150 0 0 1 669.2,336.1" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1_d18)"/>
+<path d="M606.1,399.2 A150,150 0 0 1 413.9,399.2" fill="none" stroke="#c0392b" stroke-width="4"   marker-end="url(#a2_d18)"/>
+<path d="M350.8,336.1 A150,150 0 0 1 350.8,143.9" fill="none" stroke="#c0392b" stroke-width="6"   marker-end="url(#a3_d18)"/>
+<path d="M413.9,80.8 A150,150 0 0 1 606.1,80.8" fill="none" stroke="#c0392b" stroke-width="8"   marker-end="url(#a4_d18)"/>
+<circle cx="610" cy="140" r="36" fill="#2c3e50"/><text x="610" y="146" class="sm" fill="#ffffff" text-anchor="middle">用户</text>
+<circle cx="610" cy="340" r="36" fill="#34495e"/><text x="610" y="346" class="sm" fill="#ffffff" text-anchor="middle">价值</text>
+<circle cx="410" cy="340" r="36" fill="#5d7d95"/><text x="410" y="346" class="sm" fill="#ffffff" text-anchor="middle">规模</text>
+<circle cx="410" cy="140" r="36" fill="#95a5a6"/><text x="410" y="146" class="sm" fill="#ffffff" text-anchor="middle">效率</text>
+<text x="510" y="248" class="t" fill="#1a1a2e" text-anchor="middle">飞轮</text>
+</svg>
+
+<!-- 两种画法：统一粗细（推荐）/ 渐变粗细；markerUnits 必须 userSpaceOnUse -->
+
+
+---
+
 <!-- _class: diagram -->
 
 ## 3. Iceberg 冰山
@@ -895,21 +1050,23 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 <path d="M340,180 L510,60 L680,180 Z" fill="#B5DEDE"/>
 <text x="510" y="150" class="sm" fill="#1a1a2e" text-anchor="middle">显性：预算 / 人力 / 迁移</text>
 <rect x="20" y="179" width="980" height="2" fill="#2563EB"/>
-<!-- 规整六边形版本 -->
-<path d="M340,180 L680,180 L760,290 L610,450 L410,450 L260,290 Z" fill="#1E3A5F"/>
-<!-- 不规则山形版本（替换上面这一行）：-->
-<!--
+<!-- 不规则山形版本（默认） -->
 <path d="M340,180 L680,180 L760,250 L740,310 L800,360 L720,420 L660,460
          L500,470 L380,455 L280,420 L240,360 L290,300 L310,240 Z" fill="#1E3A5F"/>
+<!-- 规整六边形版本（替换上面这一行）： -->
+<!--
+<path d="M340,180 L680,180 L760,290 L610,450 L410,450 L260,290 Z" fill="#1E3A5F"/>
 -->
 <text x="510" y="235" class="sm" fill="#93C5FD">隐性：组织惯性 / 切换成本 / 学习曲线</text>
 <text x="510" y="285" class="sm" fill="#93C5FD">数据一致性风险 / 长期运维债</text>
 <text x="510" y="410" class="tb" fill="#FFFFFF" text-anchor="middle">水下体积约为水上的 5 倍</text>
 </svg>
 
-<!-- 水上等腰三角，水下 5 边以上多边形；两种画法：规整六边形 / 不规则山形 -->
+<!-- 默认不规则山形，水下 7+ 边起伏；规整六边形备选 -->
+
 
 ---
+
 <!-- _class: diagram -->
 
 ## 4. Onion 洋葱
@@ -928,7 +1085,9 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 
 <!-- 用椭圆不用圆角矩形——同心椭圆，递减；层数 ≤ 4 -->
 
+
 ---
+
 <!-- _class: diagram -->
 
 ## 5. Focus / Spotlight 聚焦
@@ -947,23 +1106,25 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 
 <!-- 高亮用 fill-opacity=0.10，不透明色块会挡住内容 -->
 
+
 ---
+
 <!-- _class: diagram -->
 
 ## 6. Convergence / Divergence 汇聚与发散
 
 <svg viewBox="0 0 1020 380" width="100%">
 <defs>
-<marker id="a1_d21" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/></marker>
+<marker id="a1_d22" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/></marker>
 </defs>
-<path d="M150,80 Q340,80 500,190" fill="none" stroke="#95a5a6" stroke-width="2.5" marker-end="url(#a1_d21)"/>
-<path d="M150,190 Q340,190 500,190" fill="none" stroke="#5d7d95" stroke-width="2.5" marker-end="url(#a1_d21)"/>
-<path d="M150,300 Q340,300 500,190" fill="none" stroke="#2c3e50" stroke-width="2.5" marker-end="url(#a1_d21)"/>
+<path d="M150,80 Q340,80 500,190" fill="none" stroke="#95a5a6" stroke-width="2.5" marker-end="url(#a1_d22)"/>
+<path d="M150,190 Q340,190 500,190" fill="none" stroke="#5d7d95" stroke-width="2.5" marker-end="url(#a1_d22)"/>
+<path d="M150,300 Q340,300 500,190" fill="none" stroke="#2c3e50" stroke-width="2.5" marker-end="url(#a1_d22)"/>
 <circle cx="500" cy="190" r="44" fill="#c0392b"/>
 <text x="500" y="197" class="t" fill="#ffffff" text-anchor="middle">汇聚</text>
-<path d="M544,190 Q640,90 850,90" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1_d21)"/>
-<path d="M544,190 Q640,190 850,190" fill="none" stroke="#e74c3c" stroke-width="2.5" marker-end="url(#a1_d21)"/>
-<path d="M544,190 Q640,290 850,290" fill="none" stroke="#a93226" stroke-width="2.5" marker-end="url(#a1_d21)"/>
+<path d="M544,190 Q640,90 850,90" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1_d22)"/>
+<path d="M544,190 Q640,190 850,190" fill="none" stroke="#e74c3c" stroke-width="2.5" marker-end="url(#a1_d22)"/>
+<path d="M544,190 Q640,290 850,290" fill="none" stroke="#a93226" stroke-width="2.5" marker-end="url(#a1_d22)"/>
 <circle cx="880" cy="90"  r="28" fill="#eef1f4"/><text x="880" y="97" class="sm" fill="#1a1a2e" text-anchor="middle">A</text>
 <circle cx="880" cy="190" r="28" fill="#eef1f4"/><text x="880" y="197" class="sm" fill="#1a1a2e" text-anchor="middle">B</text>
 <circle cx="880" cy="290" r="28" fill="#eef1f4"/><text x="880" y="297" class="sm" fill="#1a1a2e" text-anchor="middle">C</text>
@@ -974,20 +1135,21 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 
 <!-- 控制点在两端连线的垂直平分线上，曲度才对称 -->
 
+
 ---
+
 <!-- _class: divider -->
 
-# ③ 风格
+# ⑤ 风格
 
-## 配色与字阶
+## 7 套配色与字阶
 
-<!--
 同一张图横排对比才看得出差别。**默认选第一个（UPerform deck 默认）**。
 6 套备选风格只在整份 deck 都是那个调性、或用户点名时才启用。
--->
----
+
 
 ---
+
 <div class="cols cols-2">
 <div class="col">
 
@@ -1041,7 +1203,9 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 
 <!-- 深蓝 + 粉橙 + 金黄。默认选它。 ／ 青绿主导，数据自信、圆形签名、超大数字 -->
 
+
 ---
+
 <div class="cols cols-2">
 <div class="col">
 
@@ -1095,7 +1259,9 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 
 <!-- 咨询蓝，行动式标题、衬线双字族 ／ 红色主调 + 深藏青标题，openclaw 课件主题 -->
 
+
 ---
+
 <div class="cols cols-2">
 <div class="col">
 
@@ -1149,7 +1315,9 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 
 <!-- 深蓝工程图、琥珀高亮、白底网格 ／ 灰阶线框、中性克制 -->
 
+
 ---
+
 <div class="cols cols-2">
 <div class="col">
 
@@ -1178,101 +1346,3 @@ marp 把图片当背景图处理，所以一图占一页。要做"左右各半"�
 </div>
 
 <!-- 多线路色、45°/90° 折线、站点圆点 -->
-
----
-<!-- _class: divider -->
-
-# 用法
-
-## 4 步从选型到出图
----
-
----
-## 1. 选题——这份内容能画哪几张图
-
-读文档，扫一遍下面的表，找出内容里出现了哪几种结构：
-
-| 信息结构（15 种） | → 骨架 | 适合 |
-|---|---|---|
-| network 关系网络 | [network-hub](#) | 影响、相互作用 |
-| hierarchy 层次 | [hierarchy-tree](#) | 由…组成、下设、从属 |
-| argument 论证 | [evidence](#) | 主张 + 证据 + 推理 |
-| cycle 循环 | [flow-cycle](#) | 周而复始、反馈回路 |
-| flow 流量 | [flow-cycle](#) 桑基 | X% 流向了… |
-| timeline 时间 | [linear-sequence](#) 箭头串 | 从…到… |
-| parallel-evolution 并行 | [lanes](#) | 与此同时… |
-| two-dimensional 二维 | [matrix-quadrant](#) | 高 X 低 Y |
-| multi-dimensional 多维 | [structure-block](#) 对比矩阵 | 在 X 方面优秀但 Y 不足 |
-| landscape 全景 | [structure-block](#) 便当格 | 主要分为… |
-| concept-decomposition 概念 | [hierarchy-tree](#) 关系树 | 该理论包含… |
-| stakeholder 利益相关方 | [structure-block](#) 或 quadrant | 多方参与 |
-| debate / semantic-opposition 对立 | [structure-block](#) | 支持 vs 反对 |
-| geographic 地理 | [structure-block](#) 便当格 | 多地区对比 |
-
-<!-- 详见 references/infographics-svg/structures.md -->
-
----
-## 2. 骨架——选什么图形承载
-
-| 关系 | 判定问句 | 骨架 |
-|---|---|---|
-| Sequence 时序 | A 发生在 B 之后？ | 箭头串 |
-| Hierarchy 层级 | A 包含 B？A 是 B 的上级？ | 关系树 |
-| Matrix 矩阵 | 两个维度交叉分类？ | 2×2 |
-| Growth 演进 | 我们在哪，下一步去哪？ | 阶梯 |
-| Flow 流量 | X 从哪来，流向哪，带多少量？ | 桑基 |
-| Parallel 并行 | 多实体同步推进？ | 泳道 |
-| Network 网络 | 多对多关系？ | 网络图 |
-| Argument 论证 | 主张 + 证据？ | 图尔敏 |
-| 罗列 | 3–6 项并列属性？ | icon-rail |
-| 展示 | 3–5 张图文卡片？ | card-row |
-| 起伏叙事 | 过程曲折但最终成功？ | wave-timeline |
-
-<!-- 详见 references/infographics-svg/skeletons/INDEX.md -->
-
----
-## 3. 隐喻——换什么叙事外壳
-
-骨架定了之后问"这页要什么情绪"。同一副骨架换壳，不改路由。
-
-| 隐喻 | 适合叙事 | 改动量 |
-|---|---|---|
-| Staircase 阶梯 | 逐级跃迁、进阶 | 原生 |
-| Pyramid 金字塔 | 战略层 → 执行层收敛 | 小（顶层改三角） |
-| Flywheel 飞轮 | 势能自我积累 | 中（线宽递增） |
-| Cycle 循环 | PDCA、持续改进 | 原生 |
-| Iceberg 冰山 | 显性 vs 隐性成本 | 中（水下 5+ 边） |
-| Funnel 漏斗 | 大量到少量、转化 | 中（四边共线） |
-| Convergence 汇聚 | 多流合一 | 小 |
-| Foundation 基础 | 能力垫底 | 小（方向相反于金字塔） |
-| Onion 洋葱 | 层层包裹 | 小（同心椭圆） |
-| Wave timeline 波浪 | 过程曲折、收官 | 原生 |
-
-<!-- 详见 references/infographics-svg/metaphor.md。一页只讲一个隐喻。 -->
-
----
-## 4. 风格——什么配色
-
-默认用 deck 自己的调色板（UPerform = 深蓝 + 粉橙 + 金黄）。
-6 套备选风格只在整份 deck 那个调性、或用户点名时启用。
-
-| 风格 | 主色 | 适合 |
-|---|---|---|
-| UPerform 默认 | 深蓝 + 粉橙 + 金黄 | 默认；商务、技术、教育 |
-| clean-analytics | 青绿 | 数据自信、量化分析 |
-| mckinsey-report | 咨询蓝 | 战略咨询、趋势分析 |
-| tricon-infographic | 红色 + 深藏青 | openclaw 课件、议题图解 |
-| technical-schematic | 深蓝 + 琥珀 | 工程图、系统设计 |
-| ui-wireframe | 灰阶 | 产品原型、界面说明 |
-| subway-map | 多线路色 | 路线图、流程路径 |
-
-<!-- 详见 references/infographics-svg/styles/INDEX.md -->
-
-## 5. 笔法——画之前要知道的
-
-- **viewBox 1020 × (300–540)**：所有模板统一宽度
-- **字号走 class**：`.t / .tb / .qt / .sm / .lbl`，不写 font-size 属性
-- **marker id 唯一**：第 N 张图用 `aN` 前缀，避免合并导出时串号
-- **每张图限 7 个节点**：超了就拆页、聚合、或降级成表格
-- **lint + 渲染两道关**：`node scripts/svg-lint.mjs deck.marp.md` 然后 marp 渲染肉眼过
-<!-- 详见 references/infographics-svg/craft/ -->

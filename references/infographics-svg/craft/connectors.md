@@ -31,7 +31,7 @@
 - **`orient="auto"` 不能省**——箭头会跟着线的方向转，少了它所有箭头都朝右。
 - **`fill` 要和线同色**，否则会出现灰线配红箭头这种不协调的接缝。
 - 常用 `markerWidth/markerHeight` = `13/10`；强调路径用 `17/12`。
-- **线宽递增的弧段要用不同尺寸的 marker。** 一个 marker 管不了递增的线宽——递增弧要写 3–4 个，见 [../metaphor.md](../metaphor.md) 飞轮。
+- **线宽递增的弧段要用不同尺寸的 marker。** 一个 marker 管不了递增的线宽——递增弧要写 3–4 个，见 [../metaphors.md](../metaphors.md) 飞轮。
 
 ## 3. 几何公式
 

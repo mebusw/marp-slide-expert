@@ -69,11 +69,11 @@ marp deck.marp.md --html --pdf --allow-local-files
 |---|---|---|
 | ① structures 选题 | 这份内容能画哪几张图？ | [structures.md](references/infographics-svg/structures.md) |
 | ② skeletons 体裁 | 用什么图形承载这个关系？ | [skeletons/INDEX.md](references/infographics-svg/skeletons/INDEX.md) |
-| ③ metaphor 语气 | 在同一副骨架上换什么叙事外壳？ | [metaphor.md](references/infographics-svg/metaphor.md) |
+| ③ metaphors 语气 | 在同一副骨架上换什么叙事外壳？ | [metaphors.md](references/infographics-svg/metaphors.md) |
 | ④ styles 配色 | 什么颜色、什么字阶？ | [styles/INDEX.md](references/infographics-svg/styles/INDEX.md) |
 | craft 笔法 | 画布多大？线怎么连？字怎么排？ | [craft/](references/infographics-svg/craft/canvas.md) |
 
-**Pick the skeleton in two steps: relationship first, then metaphor.** Relationship families (hierarchy / sequence / cycle / comparison / matrix / framework / strategy / mapping / growth) route to a skeleton. The narrative layer — staircase, pyramid, flywheel, iceberg, funnel, bridge, mountain — swaps the *shell* on that same skeleton without changing the routing. That separation is what lets the skeleton library grow without the metaphor table ever changing.
+**Pick the skeleton in two steps: relationship first, then metaphors.** Relationship families (hierarchy / sequence / cycle / comparison / matrix / framework / strategy / mapping / growth) route to a skeleton. The narrative layer — staircase, pyramid, flywheel, iceberg, funnel, bridge, mountain — swaps the *shell* on that same skeleton without changing the routing. That separation is what lets the skeleton library grow without the metaphors table ever changing.
 
 | Relationship | Answers | Skeleton |
 |---|---|---|
@@ -105,7 +105,7 @@ marp deck.marp.md --html --images png -o check          # render and actually lo
 
 Trust the **rendered PNG**, never the SVG source.
 
-Full templates with coordinate formulas, connector-semantics table, visual-hierarchy rules, and QA checklist: **[references/infographics-svg/](references/infographics-svg/INDEX.md)**. Every skeleton, metaphor and style, one per slide: **[examples/infographic-gallery.marp.md](examples/infographic-gallery.marp.md)**.
+Full templates with coordinate formulas, connector-semantics table, visual-hierarchy rules, and QA checklist: **[references/infographics-svg/](references/infographics-svg/INDEX.md)**. Every skeleton, metaphors and style, one per slide: **[examples/infographic-gallery.marp.md](examples/infographic-gallery.marp.md)**.
 
 ## Content density — the 15-line hard cap
 
@@ -208,7 +208,7 @@ Rules:
    - Never split mid-sentence, mid-bullet, or mid-table-row. Cut at paragraph boundaries.
    - Image placement per the cheat sheet above.
    - For column layouts, use the `cols-*` / `split-h` classes in [references/layout-patterns.md](references/layout-patterns.md) — remember the 15-line cap is per slide, so a 3-column slide gets ~5 lines per column.
-   - For relationship diagrams, route by relationship type → pick the skeleton in [references/infographics-svg/skeletons/INDEX.md](references/infographics-svg/skeletons/INDEX.md) → optionally swap the shell via [metaphor.md](references/infographics-svg/metaphor.md) → mark the slide `<!-- _class: diagram -->`.
+   - For relationship diagrams, route by relationship type → pick the skeleton in [references/infographics-svg/skeletons/INDEX.md](references/infographics-svg/skeletons/INDEX.md) → optionally swap the shell via [metaphors.md](references/infographics-svg/metaphors.md) → mark the slide `<!-- _class: diagram -->`.
 4. Count lines on every generated slide before rendering. Any slide > 15 → fix now.
 5. Lint and render: `node scripts/svg-lint.mjs deck.marp.md`, then `marp deck.marp.md --pdf --allow-local-files` (add `--html` if the deck contains inline SVG) and visually check first 5 pages plus a sample from middle/end. For a deck with diagrams, render **every** page to PNG (`--images png`) — SVG geometry is not verifiable from the source.
 6. Iterate on overflow / awkward layout.
