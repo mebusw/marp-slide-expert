@@ -70,6 +70,7 @@
 
 | 文件 | 内容 |
 |---|---|
-| [../../examples/infographics-gallery.html](../../examples/infographics-gallery.html) | 各骨架 + 各隐喻 + 8 套风格的横向总览，选型时先扫这个 |
-| [../../examples/smart-drawing-deck.marp.md](../../examples/smart-drawing-deck.marp.md) | 8 页 deck，四张图，验证内联 SVG 在 marp 里的集成 |
-| [../../examples/infographic-columns.marp.md](../../examples/infographic-columns.marp.md) | 页级分栏版式（非本模块，但常和图一起用） |
+| [../../examples/infographic-diagrams.marp.md](../../examples/infographic-diagrams.marp.md) | **图形与风格总览**——每个骨架、每个隐喻、每套风格一页，选型时先翻这个 |
+| [../../examples/infographic-columns.marp.md](../../examples/infographic-columns.marp.md) | 页级分栏版式（属另一个模块，但常和图一起用） |
+
+> 图形 deck 由 `node scripts/build-diagram-deck.mjs` 从本目录生成。改完模板重跑一次即可，不要手改。

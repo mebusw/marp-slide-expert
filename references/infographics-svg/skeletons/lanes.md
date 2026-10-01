@@ -21,7 +21,9 @@
 
 ---
 
-## 坐标公式（N 条泳道，M 个阶段）
+## 变体：并行泳道 Swimlanes
+
+### 坐标公式（N 条泳道，M 个阶段）
 
 ```
 时间轴       y = 50，x 从 150 → 980
@@ -54,6 +56,7 @@ viewBox       0 0 1020 (66 + N*100 + 34)
 <rect x="150" y="166" width="830" height="86" fill="#f7f8f9"/>
 <text x="130" y="118" class="tb" fill="#1a1a2e" text-anchor="end">基础设施</text>
 <text x="130" y="218" class="tb" fill="#1a1a2e" text-anchor="end">业务应用</text>
+<line x1="290" y1="106" x2="565" y2="106" stroke="#c9ced4" stroke-width="2"/>
 <circle cx="290" cy="106" r="18" fill="#2c3e50"/>
 <text x="290" y="113" class="sm" fill="#ffffff" text-anchor="middle">P1</text>
 <text x="290" y="140" class="lbl" text-anchor="middle">试点</text>
@@ -72,6 +75,7 @@ viewBox       0 0 1020 (66 + N*100 + 34)
 - **事件标签放节点下方**（`y = cy + 37`），不要放圆内——圆太小放不下中文。
 - 泳道名右对齐到 `x=130`，与时间轴之间留 20px。
 - **里程碑事件用强调色**（`#c0392b`），普通事件用中性色。眼睛会先找到里程碑，这通常正是你要的。
+- **同泳道的事件之间加一条水平连线**，线要画在圆的下面。没有这条线，事件看起来是散落的；有了它，整条泳道才读成「一条时间线上的推进」。
 
 ### 变体：Roadmap 路线图
 
@@ -96,6 +100,7 @@ viewBox       0 0 1020 (66 + N*100 + 34)
 | 时间推进 | 顶部横线 + 箭头（`stroke-width="2"`） |
 | 阶段分隔 | 竖直虚线 `#dcdcdc` `stroke-dasharray="3 4"`，无箭头 |
 | 事件 → 时间轴 | 短竖线 `stroke="#dcdcdc"`，无箭头 |
+| 同泳道事件相连 | 水平细线 `stroke="#c9ced4" stroke-width="2"`，**先画线再画圆**（圆压在线上，读起来是「事件串在一条时间线上」而不是「线穿过圆」） |
 | 跨泳道依赖 | 横向连线 + 虚线箭头（`depends_on`） |
 
 ## 文字排布

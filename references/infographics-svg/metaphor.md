@@ -105,55 +105,75 @@
 
 环形，**弧线 `stroke-width` 逐段递增**（2.5 → 4 → 5.5 → 7）——线宽递增是「势能自我积累」的唯一识别特征，不能省。
 
+**几何要点**：
+- 圆心 `(510, 250)`，弧半径 `R = 170`，节点半径 `40`，节点中心**也在半径 170 上**
+- 弧段两端**切于节点圆**，不穿过圆心。切点角偏移 `asin(40/170) ≈ 13.6°`
+- **四段弧要用四个独立的 marker**，尺寸随线宽递增（13 → 15 → 17 → 19），视觉上箭头和线一起变重
+
+**⚠️ `markerUnits` 必须显式写 `"userSpaceOnUse"`。** 它默认是 `"strokeWidth"`——marker 会按线的粗细整体缩放。`stroke-width="7"` 那段箭头会被放大 7 倍，变成一个比节点圆还大的红色三角，把整张图压垮。这个坑很隐蔽：线越粗箭头越大，看起来「像是故意的」，其实完全失控。
+
 ```html
-<svg viewBox="0 0 1020 400" width="100%">
+<svg viewBox="0 0 1020 500" width="100%">
 <defs>
-<marker id="a1" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/></marker>
+<marker id="a1" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="10" refX="12" refY="5" orient="auto"><path d="M0,0 L13,5 L0,10 z" fill="#c0392b"/></marker>
+<marker id="a2" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="11" refX="14" refY="5.5" orient="auto"><path d="M0,0 L15,5.5 L0,11 z" fill="#c0392b"/></marker>
+<marker id="a3" markerUnits="userSpaceOnUse" markerWidth="17" markerHeight="12" refX="16" refY="6" orient="auto"><path d="M0,0 L17,6 L0,12 z" fill="#c0392b"/></marker>
+<marker id="a4" markerUnits="userSpaceOnUse" markerWidth="19" markerHeight="14" refX="18" refY="7" orient="auto"><path d="M0,0 L19,7 L0,14 z" fill="#c0392b"/></marker>
 </defs>
-<path d="M556,110 A160,160 0 0 1 670,230" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1)"/>
-<path d="M670,230 A160,160 0 0 1 556,350" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a1)"/>
-<path d="M556,350 A160,160 0 0 1 450,230" fill="none" stroke="#c0392b" stroke-width="5.5" marker-end="url(#a1)"/>
-<path d="M450,230 A160,160 0 0 1 556,110" fill="none" stroke="#c0392b" stroke-width="7" marker-end="url(#a1)"/>
-<circle cx="560" cy="150" r="34" fill="#2c3e50"/><text x="560" y="157" class="sm" fill="#ffffff" text-anchor="middle">用户</text>
-<circle cx="640" cy="270" r="34" fill="#34495e"/><text x="640" y="277" class="sm" fill="#ffffff" text-anchor="middle">价值</text>
-<circle cx="480" cy="270" r="34" fill="#5d7d95"/><text x="480" y="277" class="sm" fill="#ffffff" text-anchor="middle">规模</text>
-<circle cx="560" cy="310" r="34" fill="#95a5a6"/><text x="560" y="317" class="sm" fill="#ffffff" text-anchor="middle">效率</text>
-<text x="560" y="238" class="t" fill="#1a1a2e" text-anchor="middle">飞轮</text>
-<text x="510" y="386" class="lbl" text-anchor="middle">线宽递增 = 势能自我积累</text>
+<path d="M598.6,395.1 A170,170 0 0 1 421.2,394.9" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1)"/>
+<path d="M365.1,338.8 A170,170 0 0 1 360.6,168.9" fill="none" stroke="#c0392b" stroke-width="4" marker-end="url(#a2)"/>
+<path d="M421.4,104.9 A170,170 0 0 1 591.1,100.6" fill="none" stroke="#c0392b" stroke-width="5.5" marker-end="url(#a3)"/>
+<path d="M654.9,161.2 A170,170 0 0 1 659.4,331.1" fill="none" stroke="#c0392b" stroke-width="7" marker-end="url(#a4)"/>
+<circle cx="630" cy="130" r="40" fill="#2c3e50"/><text x="630" y="137" class="sm" fill="#ffffff" text-anchor="middle">用户</text>
+<circle cx="630" cy="370" r="40" fill="#34495e"/><text x="630" y="377" class="sm" fill="#ffffff" text-anchor="middle">价值</text>
+<circle cx="390" cy="370" r="40" fill="#5d7d95"/><text x="390" y="377" class="sm" fill="#ffffff" text-anchor="middle">规模</text>
+<circle cx="390" cy="130" r="40" fill="#95a5a6"/><text x="390" y="137" class="sm" fill="#ffffff" text-anchor="middle">效率</text>
+<text x="510" y="258" class="t" fill="#1a1a2e" text-anchor="middle">飞轮</text>
+<text x="510" y="470" class="lbl" text-anchor="middle">线宽与箭头同步递增 = 势能自我积累；弧段切于节点圆</text>
 </svg>
 ```
 
 ## 3. Iceberg 冰山
 
-**水下面积必须明显大于水上（通常 3:1）**，否则隐喻反了——变成「大部分是显性的」。
+**几何要点**：
+- 水上部分用**等腰三角形**（两侧斜率相同，`斜率 = 半宽 / 水上高`），否则左右不对称
+- 水下部分用 **5 边以上的多边形**，不是简单的梯形或倒三角。真实冰山在水下是先外扩再收尖，梯形看不出来
+- **水下面积要明显大于水上（通常 3–5 倍）**，否则隐喻反了——变成「大部分是显性的」
 
 ```html
-<svg viewBox="0 0 1020 460" width="100%">
+<svg viewBox="0 0 1020 510" width="100%">
 <text x="510" y="34" class="sm" fill="#7f8c8d" text-anchor="middle">显性成本只占冰山一角</text>
-<path d="M300,150 L470,60 L600,150 Z" fill="#B5DEDE"/>
-<text x="510" y="128" class="sm" fill="#1a1a2e" text-anchor="middle">显性：预算 / 人力 / 迁移</text>
-<rect x="20" y="150" width="980" height="2" fill="#2563EB"/>
-<path d="M300,152 L190,430 L830,430 L720,152 Z" fill="#1E3A5F"/>
-<text x="510" y="240" class="sm" fill="#93C5FD">隐性：组织惯性 / 切换成本 / 学习曲线</text>
-<text x="510" y="290" class="sm" fill="#93C5FD">数据一致性风险 / 长期运维债</text>
-<text x="510" y="360" class="tb" fill="#FFFFFF" text-anchor="middle">水下 3 倍于水上</text>
+<path d="M330,180 L510,60 L690,180 Z" fill="#B5DEDE"/>
+<text x="510" y="150" class="sm" fill="#1a1a2e" text-anchor="middle">显性：预算 / 人力 / 迁移</text>
+<rect x="20" y="179" width="980" height="2" fill="#2563EB"/>
+<path d="M330,180 L690,180 L770,290 L620,450 L400,450 L250,290 Z" fill="#1E3A5F"/>
+<text x="510" y="235" class="sm" fill="#93C5FD">隐性：组织惯性 / 切换成本 / 学习曲线</text>
+<text x="510" y="285" class="sm" fill="#93C5FD">数据一致性风险 / 长期运维债</text>
+<text x="510" y="410" class="tb" fill="#FFFFFF" text-anchor="middle">水下体积约为水上的 5 倍</text>
 </svg>
 ```
 
+**六边形的读法**：`330,180 → 690,180`（水面宽）→ `770,290`（水下外扩）→ `620,450`（收尖）→ `400,450`（底）→ `250,290`（外扩）→ 闭合。外扩再收尖的两段折线是冰山的识别特征，直接用倒三角会看成一座山。
+
 ## 4. Onion 洋葱
 
-同心圆角矩形递减，层间距 8–12px，层数 ≤ 4。
+**用椭圆，不用圆角矩形。** 洋葱是圆的——圆角矩形会读成「套娃盒子」，不是洋葱。同心椭圆从外到内等距递减，层数 ≤ 4。
+
+- 外层 `rx=250 ry=170`，中层 `rx=205 ry=135`，内层 `rx=152 ry=98`，核心 `r=64`
+- 每一层的 `ry` 按固定比例递减（0.79 / 0.73），保持视觉同心
+- 中心圆用**实色**（本 deck 用 `#c0392b`），和外层描边形成对比
 
 ```html
-<svg viewBox="0 0 1020 440" width="100%">
-<rect x="260" y="50" width="500" height="340" rx="14" fill="#eef1f4" stroke="#9CA3AF" stroke-width="1.5"/>
-<rect x="300" y="86" width="420" height="268" rx="12" fill="#CDDDD8" stroke="#7f8c8d" stroke-width="1.5"/>
-<rect x="340" y="122" width="340" height="196" rx="10" fill="#2c3e50"/>
-<text x="510" y="212" class="sm" fill="#ffffff" text-anchor="middle">动机</text>
-<text x="510" y="248" class="tb" fill="#ffffff" text-anchor="middle">核心价值</text>
-<text x="510" y="182" class="sm" fill="#1a1a2e" text-anchor="middle">手段</text>
-<text x="510" y="116" class="sm" fill="#1a1a2e" text-anchor="middle">外层语境</text>
-<text x="510" y="416" class="lbl" text-anchor="middle">越往内越核心</text>
+<svg viewBox="0 0 1020 460" width="100%">
+<ellipse cx="510" cy="230" rx="250" ry="170" fill="#eef1f4" stroke="#9CA3AF" stroke-width="1.5"/>
+<ellipse cx="510" cy="230" rx="205" ry="135" fill="#CDDDD8" stroke="#7f8c8d" stroke-width="1.5"/>
+<ellipse cx="510" cy="230" rx="152" ry="98" fill="#5d7d95" stroke="#4a6fa5" stroke-width="1.5"/>
+<circle cx="510" cy="230" r="64" fill="#c0392b"/>
+<text x="510" y="222" class="tb" fill="#ffffff" text-anchor="middle">核心价值</text>
+<text x="510" y="252" class="sm" fill="#ffd9d4" text-anchor="middle">动机</text>
+<text x="510" y="122" class="sm" fill="#1a1a2e" text-anchor="middle">手段</text>
+<text x="510" y="88"  class="sm" fill="#1a1a2e" text-anchor="middle">外层语境</text>
+<text x="510" y="436" class="lbl" text-anchor="middle">越往内越核心</text>
 </svg>
 ```
 
@@ -200,3 +220,9 @@
 <circle cx="110" cy="300" r="26" fill="#eef1f4"/><text x="110" y="307" class="sm" fill="#1a1a2e" text-anchor="middle">x3</text>
 </svg>
 ```
+
+<!--
+  svg-lint-ignore: duplicate-id
+  本文件是模板库：各模板故意复用 a1 这类占位 id，
+  实际放进 deck 时由 scripts/build-diagram-deck.mjs 按图序自动重编号。
+-->

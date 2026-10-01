@@ -105,7 +105,7 @@ marp deck.marp.md --html --images png -o check          # render and actually lo
 
 Trust the **rendered PNG**, never the SVG source.
 
-Full templates with coordinate formulas, connector-semantics table, visual-hierarchy rules, and QA checklist: **[references/infographics-svg/](references/infographics-svg/INDEX.md)**. A browsable gallery of every skeleton, metaphor and style: **[examples/infographics-gallery.html](examples/infographics-gallery.html)**. A verified 8-page runnable deck: **[examples/smart-drawing-deck.marp.md](examples/smart-drawing-deck.marp.md)**.
+Full templates with coordinate formulas, connector-semantics table, visual-hierarchy rules, and QA checklist: **[references/infographics-svg/](references/infographics-svg/INDEX.md)**. Every skeleton, metaphor and style, one per slide: **[examples/infographic-diagrams.marp.md](examples/infographic-diagrams.marp.md)**.
 
 ## Content density — the 15-line hard cap
 

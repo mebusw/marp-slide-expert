@@ -94,4 +94,6 @@ marp deck.marp.md --html --images png -o check
 
 预览更快（不用跑 marp），改一个字刷新就看到。但**最终仍要过 marp 渲染那一步**——deck 环境里的 CSS 继承和 standalone 不完全一样，尤其是 `section` 的字号基准。
 
-`examples/infographics-gallery.html` 就是这样组织的，可以直接当模板抄。
+**最省事的做法其实是用 marp 自己当预览器**：新建一个只放一张图的 `.marp.md`，渲染出来就是 1:1 的真实效果——`marp one.marp.md --html -o one.pdf`，改一个字重跑一次。这比手搓 standalone HTML 更快，也不会有 CSS 继承差异。
+
+看全部模板用 [../../../examples/infographic-diagrams.marp.md](../../../examples/infographic-diagrams.marp.md)（每个骨架/隐喻/风格一页，由 `node scripts/build-diagram-deck.mjs` 生成）。

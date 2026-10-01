@@ -17,8 +17,11 @@ const useColor = process.stdout.isTTY && !process.env.NO_COLOR;
 const c = (k, s) => (useColor ? INK[k] + s + INK.x : s);
 
 const findings = [];
-const add = (level, file, line, code, msg, hint) =>
+let skipCodes = new Set();
+const add = (level, file, line, code, msg, hint) => {
+  if (skipCodes.has(code)) return;   // 文件内显式豁免（见 svg-lint-ignore 注释）
   findings.push({ level, file, line, code, msg, hint });
+};
 
 // ---------- 解析 ----------
 
@@ -180,14 +183,41 @@ function checkIds(text, file) {
   }
 }
 
+// 豁免写法（代码写在指令行的逗号列表里，其余行写理由）：
+//   <!-- svg-lint-ignore: duplicate-id
+//        理由写在这里 -->
+// 显式豁免某些检查。
+// 用途：references/ 里的模板故意复用 a1 这类占位 id（实际使用时按图序重编号），
+// 紧凑预览图故意用非 1020 宽度。豁免必须写在文件里，不做静默跳过。
+function parseIgnores(text) {
+  const out = new Set();
+  // 指令可以出现在注释的任何位置，不要求紧跟 <!--
+  for (const d of text.match(/<!--[\s\S]*?svg-lint-ignore:[\s\S]*?-->/g) || []) {
+    // 只取指令行的逗号列表；其余行是给人看的理由
+    const body = d.replace(/<!--[\s\S]*?svg-lint-ignore:/, '').trim().split('\n')[0];
+    for (const code of body.split(',')) {
+      const t = code.replace(/[*_`]/g, '').trim();
+      if (t) out.add(t);
+    }
+  }
+  return out;
+}
+
 // ---------- 主流程 ----------
 
 const files = process.argv.slice(2);
 if (!files.length) {
   console.error('用法: node scripts/svg-lint.mjs <file.marp.md|file.html> [更多文件...]');
+  console.error('豁免：在文件里写 <!-- svg-lint-ignore: duplicate-id, viewbox-width -->');
   process.exit(2);
 }
 
+// 豁免写法（代码写在指令行的逗号列表里，其余行写理由）：
+//   <!-- svg-lint-ignore: duplicate-id
+//        理由写在这里 -->
+// 显式豁免某些检查。
+// 用途：references/ 里的模板故意复用 a1 这类占位 id（实际使用时按图序重编号），
+// 紧凑预览图故意用非 1020 宽度。豁免必须显式写出来，不做静默跳过。
 let total = 0;
 for (const file of files) {
   let text;
@@ -198,12 +228,15 @@ for (const file of files) {
     process.exit(2);
   }
   const before = findings.length;
+  const prevSkip = skipCodes;
+  skipCodes = parseIgnores(text);
 
   const re = /<svg\b[\s\S]*?<\/svg>/g;
   let m;
   while ((m = re.exec(text))) checkBlock(text, file, m.index, m.index + m[0].length);
   checkIds(text, file);
 
+  skipCodes = prevSkip;
   const n = findings.length - before;
   total += n;
   // 数实际的 svg 块，而不是 <svg 字符串出现次数——正文里提到 `<svg>` 不算图

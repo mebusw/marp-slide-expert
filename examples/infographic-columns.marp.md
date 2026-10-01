@@ -62,8 +62,7 @@ _paginate: skip
   表现为分栏失效、配色全丢，而且不报任何错。
 
   这一份演示「页级版式」——一页的内容块怎么排。
-  画图（内联 SVG 信息图）见 examples/infographics-gallery.html
-  和 examples/smart-drawing-deck.marp.md。
+  画图（内联 SVG 信息图）见 examples/infographic-diagrams.marp.md。
 -->
 
 <!-- _class: cover -->
@@ -295,6 +294,6 @@ align-items:start 不能省，否则短栏被拉高、底部参差。
 
 ## SVG 信息图见另一个文件
 
-> `examples/infographics-gallery.html`
+> `examples/infographic-diagrams.marp.md`
 
-用浏览器直接打开，那里有 13 个骨架、6 个隐喻外壳、9 套风格的横向总览。
+那一页页翻过去就是全部模板：13 个骨架、6 个隐喻外壳、7 套风格横向对比。

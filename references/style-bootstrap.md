@@ -246,7 +246,7 @@ The `svg` / `svg text` / type-scale rules and the `section.diagram footer` rule 
 - **Inline SVG only renders with the `--html` flag.** `marp deck.marp.md --html --pdf --allow-local-files`. Without it Marp escapes the markup and the diagram shows up as a page of source code. Write the required command into a comment at the top of any deck that ships diagrams.
 - **Column layouts (`.cols-*` / `.split-h`) do NOT need `--html`.** Tested on marp-cli v4.5.1: block-level `<div>` wrappers render identically with and without the flag. Only inline `<svg>` is affected. A text-and-tables deck that uses columns can therefore stay on the default render path and export from Obsidian without a plugin.
 
-Templates and coordinate formulas: [infographics-svg/](infographics-svg/INDEX.md). Runnable deck: `../examples/smart-drawing-deck.marp.md`.
+Templates and coordinate formulas: [infographics-svg/](infographics-svg/INDEX.md). Runnable deck: `../examples/infographic-diagrams.marp.md`.
 
 ## Known differences vs the openclaw reference
 

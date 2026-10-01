@@ -20,16 +20,18 @@
 
 ```html
 <defs>
-  <marker id="a1" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
-    <path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/>
+  <marker id="a1" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="10" refX="12" refY="5" orient="auto">
+    <path d="M0,0 L13,5 L0,10 z" fill="#c0392b"/>
   </marker>
 </defs>
 ```
 
+- **`markerUnits="userSpaceOnUse"` 必须显式写。** 它默认是 `"strokeWidth"`，marker 会按线的粗细整体缩放——`stroke-width="7"` 的线配默认 marker，箭头被放大 7 倍，变成一个比节点还大的三角。这个坑很隐蔽：线越粗箭头越大，看起来「像是有意的」，其实完全失控。
 - **`id` 必须带图表前缀**（`a1` / `a2` / `a3`…）。这是每张图唯一、不能重复的标识，见 [marp-compat.md](marp-compat.md) §2。
 - **`orient="auto"` 不能省**——箭头会跟着线的方向转，少了它所有箭头都朝右。
 - **`fill` 要和线同色**，否则会出现灰线配红箭头这种不协调的接缝。
-- 常用 `markerWidth/markerHeight` = `10/8`；强调路径用 `12/10`。
+- 常用 `markerWidth/markerHeight` = `13/10`；强调路径用 `17/12`。
+- **线宽递增的弧段要用不同尺寸的 marker。** 一个 marker 管不了递增的线宽——递增弧要写 3–4 个，见 [../metaphor.md](../metaphor.md) 飞轮。
 
 ## 3. 几何公式
 
