@@ -1,6 +1,6 @@
 ---
 name: marp-slide-expert
-description: Convert or create Marp slide decks from Markdown sources. Use when working with .marp.md / .md files meant for marp CLI rendering, designing page-level slide layouts (cover, divider, text, tables, multi-column / split layouts), drawing infographics and relation diagrams as inline SVG (staircase, arrow chain, 2x2 matrix, value tree, sankey, funnel, swimlanes, bento grid, icon-rail, card-row, wave-timeline, argument map, pie / radar / balance-wheel charts), splitting long content into slides (15-line per-slide cap), writing speaker notes as invisible HTML comments, preparing image assets, or troubleshooting marp syntax errors and content overflow. Applies to marp / marpit slide format.
+description: Convert or create Marp slide decks from Markdown sources. Use when working with .marp.md / .md files meant for marp CLI rendering, designing page-level slide layouts (cover, divider, text, tables, multi-column / split layouts), drawing infographics and relation diagrams as inline SVG (staircase, arrow chain, 2x2 matrix, value tree, sankey, funnel, swimlanes, bento grid, icon-rail, card-row, wave-timeline, argument map, pie / radar / balance-wheel charts), splitting long content into slides (15-line per-slide cap), writing speaker notes as invisible HTML comments, preparing image assets, or troubleshooting marp syntax errors, content overflow, and blank pages (slides that are only speaker notes / HTML comments, duplicated `---` breaks, or inline-SVG pages that come out empty without `html: true`). Applies to marp / marpit slide format.
 ---
 
 # Marp Expert
@@ -15,6 +15,7 @@ These break rendering silently if violated:
 - **Wrap paths containing spaces in `<...>`**: `![bg](<path with spaces.png>)`. Without the brackets, marp silently treats the space as URL terminator.
 - **Inline SVG requires `--html`.** Marp escapes HTML by default, so a `<svg>` diagram renders as a page of visible source code. Any deck containing inline SVG must be rendered with `marp deck.marp.md --html --pdf --allow-local-files`. See "Smart drawing" below.
 - **Slides overflow when content is too dense.** Marp has no auto-shrink. Split proactively.
+- **Never ship a slide whose only content is an HTML comment.** A page made only of a speaker note / `<!-- _class: ... -->` is *not blank in the source* but *is a white screen to the reader*. The usual cause is a duplicated page break: `---\n\n---\n` around an inserted block emits an extra empty slide. See "空白页" below.
 - **Max 15 visible lines per slide.** Count every rendered line — paragraph lines, bullet items, table rows (including the header row), code block lines, quote/callout-box lines. Over 15 and the bottom of the slide gets cut off in the PDF. See "15-line hard cap" below.
 
 ## 先分清：页级版式 vs 图级版式
@@ -103,6 +104,7 @@ marp deck.marp.md --html --pdf --allow-local-files
 
 ```bash
 node scripts/svg-lint.mjs deck.marp.md                 # 6 deterministic checks
+node scripts/blank-slide-lint.mjs deck.marp.md         # no comment-only / empty slides
 marp deck.marp.md --html --images png -o check          # render and actually look
 ```
 
@@ -128,7 +130,7 @@ Count each of these as one line:
 
 A slide is a **budget of 15 total**, not 15 per element. `##` title (1) + table 6 rows (6) + 2 bullets (2) + closing paragraph (2 lines) = 11 → fine. Add a 5-line code block and you're at 16 → split.
 
-**Speaker notes and other HTML comments do not count** — they never render. So an overflowing slide can often be fixed by moving detail into a note rather than cutting it.
+**Speaker notes and other HTML comments do not count** — they never render, so a slide made *entirely* of comments counts as 0 lines, i.e. a blank page. See [空白页](#空白页--只有注释的页对读者等于不存在). So an overflowing slide can often be fixed by moving detail into a note rather than cutting it.
 
 Corollary limits that follow from the 15-line cap:
 
@@ -200,6 +202,78 @@ Rules:
 - Marpit directives (`<!-- _class: ... -->`, `<!-- _paginate: -->`) also use `<!-- -->` but start with `_` and stay active. Speaker notes must not start with `_`.
 - **First fix for an over-15-line slide:** ask "is this for the audience or for me?" If it's for you, move the whole thing into a comment — it costs no lines. Only content the audience genuinely needs to read is worth a new slide.
 
+## 空白页 — 只有注释的页，对读者等于不存在
+
+**这是最容易被自己骗过去的错误**：源码里看，每一页都有内容；投影出来，中间夹着几张全白。
+
+### 为什么脚本抓不到、眼睛也容易漏
+
+Marp 按**行首的 `---`** 切页。于是这一段：
+
+```markdown
+...上一页的内容
+
+---
+
+<!--
+【老师 · 话术】
+这一页只有注释。
+-->
+
+---
+
+## 真正的下一页
+```
+
+会切出**三页**，中间那页只有一段注释。源码读起来完全正常 —— 因为它确实有内容，只不过那个内容不渲染。
+
+同一个错误还有一个兄弟版本：**重复的分页符**。往既有页面中间插内容时，如果插入块的结尾又带一个 `---`，而锚点前面本来已经有一个 `---`，就会变成 `---
+
+---
+`，凭空多出一张空白页。这正是批量插入若干页时最常见的失手方式。
+
+### 判定标准：去掉注释之后还剩什么
+
+一页是不是空白，标准只有一条：
+
+> **把 HTML 注释、围栏标记、空行全去掉之后，这一页还剩不剩读者能看见的东西。**
+
+不剩 → 空白页，必须处理。剩下的处理方式：
+
+| 情况 | 处理 |
+| --- | --- |
+| 重复 `---` 造成的多余页 | 删掉多余的那个分页符 |
+| 真的想留一页讲课提示 | 补一行可见文字，别只放注释 |
+| 整页只想放 speaker note | 并进相邻页的注释里，不要单独占一页 |
+
+### 第二类：只剩内联 HTML 的页
+
+还有一种页去掉注释后不空，但**只剩 `<svg>` / `<div>` 这类 HTML 块**。它能不能显示，完全取决于渲染器有没有开 html：
+
+- 命令行 `marp` 不加 `--html` → SVG 被转义成一屏源码
+- **Obsidian 的 Marp 插件导出命令默认不带 `--html`** → 整页看起来就是空的
+
+这类页不是 bug，但要让使用者知道开关在哪。**含内联 SVG 的 deck，建议直接在 frontmatter 写死 `html: true`**，这样无论谁用什么工具导出都不用记着加参数：
+
+```yaml
+---
+marp: true
+theme: default
+html: true
+---
+```
+
+### 交付前跑这一关
+
+```bash
+node scripts/blank-slide-lint.mjs deck.marp.md
+```
+
+- `EMPTY-SLIDE`（error）—— 只有注释/空行，必须修
+- `RENDER-ONLY`（warning）—— 去掉注释只剩 HTML 块，提示确认 html 开关
+
+退出码非 0 表示有空白页，阻断交付。这一关是纯字符串扫描，比渲染快几个数量级，**放在 svg-lint 旁边一起跑**。
+
 ## Workflow
 
 1. Read source markdown; identify cover, dividers (H1/H2), and content sections (H3+).
@@ -213,7 +287,7 @@ Rules:
    - For column layouts, use the `cols-*` / `split-h` classes in [references/layout-patterns.md](references/layout-patterns.md) — remember the 15-line cap is per slide, so a 3-column slide gets ~5 lines per column.
    - For relationship diagrams, route by relationship type → pick the skeleton in [references/infographics-svg/skeletons/INDEX.md](references/infographics-svg/skeletons/INDEX.md) → optionally swap the shell via [metaphors.md](references/infographics-svg/metaphors.md) → mark the slide `<!-- _class: diagram -->`.
 4. Count lines on every generated slide before rendering. Any slide > 15 → fix now.
-5. Lint and render: `node scripts/svg-lint.mjs deck.marp.md`, then `marp deck.marp.md --pdf --allow-local-files` (add `--html` if the deck contains inline SVG) and visually check first 5 pages plus a sample from middle/end. For a deck with diagrams, render **every** page to PNG (`--images png`) — SVG geometry is not verifiable from the source.
+5. Lint and render: `node scripts/svg-lint.mjs deck.marp.md` and `node scripts/blank-slide-lint.mjs deck.marp.md` (no comment-only / empty slides), then `marp deck.marp.md --pdf --allow-local-files` (add `--html` if the deck contains inline SVG) and visually check first 5 pages plus a sample from middle/end. For a deck with diagrams, render **every** page to PNG (`--images png`) — SVG geometry is not verifiable from the source.
 6. Iterate on overflow / awkward layout.
 
 ## Quick troubleshooting
@@ -235,6 +309,8 @@ Rules:
 | Obsidian's Marp plugin exports SVG as source | Its export command omits `--html`; patch `main.js` (2 sites in the `il()` function) — see [references/infographics-svg/craft/marp-compat.md](references/infographics-svg/craft/marp-compat.md) §4.1 |
 | SVG diagram disappeared entirely | A blank line inside the SVG block split the HTML block — remove it |
 | One slide split into two | A `---` inside the SVG or inside an HTML comment |
+| Blank white page in the middle of the deck | A slide whose only content is an HTML comment — usually a duplicated `---` around an inserted block. `node scripts/blank-slide-lint.mjs deck.marp.md` |
+| A whole SVG page comes out empty in Obsidian's export | The Marp plugin's export omits `--html`; put `html: true` in the frontmatter so the deck is renderer-independent |
 | All diagrams' arrowheads look identical | Duplicate `marker` id across SVGs in one merged HTML export — suffix per diagram |
 | White text invisible on an arrow shape | Drawn as a hollow chevron — use a 5-point path (rectangle + right tip) and centre text on the rectangle |
 | Chinese label overflows its node | SVG `<text>` does not wrap — shorten the label or split it across `<tspan>` lines |
