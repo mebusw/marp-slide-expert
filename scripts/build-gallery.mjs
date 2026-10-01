@@ -20,14 +20,28 @@ const out = join(root, 'examples/infographic-gallery.marp.md');
 // ---------- 提取每个 <svg> 块 + 前面最近的 ## 二级标题做变体名 ----------
 
 function extract(file) {
+  // 策略：每个二级标题下的第一个 SVG 入 deck，其他都跳过。
+  // 模板文件里同一标题下常有"推荐版 / 备选版"两个 SVG（备选用代码块展示），
+  // 这里只取第一个，避免 deck 出现重复页面。
   const src = readFileSync(file, 'utf8');
+
+  const headings = [];
+  const headingRe = /^##\s+(.+)$/gm;
+  let h;
+  while ((h = headingRe.exec(src))) headings.push({ pos: h.index, name: h[1].trim() });
+
   const items = [];
-  const re = /<svg[\s\S]*?<\/svg>/g;
+  const svgRe = /<svg[\s\S]*?<\/svg>/g;
+  const seen = new Set();
   let m;
-  while ((m = re.exec(src))) {
-    const before = src.slice(0, m.index);
-    const heads = [...before.matchAll(/^##\s+(.+)$/gm)];
-    items.push({ name: heads.length ? heads[heads.length - 1][1].trim() : '未命名', svg: m[0] });
+  while ((m = svgRe.exec(src))) {
+    // 找到这个 SVG 之前最近的二级标题
+    let curName = '未命名';
+    for (const h of headings) if (h.pos < m.index) curName = h.name;
+    const key = curName;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    items.push({ name: curName, svg: m[0] });
   }
   return items;
 }
@@ -164,6 +178,10 @@ style: |-
   .cols-3 { grid-template-columns:repeat(3,1fr); gap:20px; }
   .cols-main { grid-template-columns:2fr 1fr; gap:24px; }
   .split-h { display:grid; grid-template-rows:auto auto; gap:24px; align-items:start; }
+  .split-v { display:flex; flex-direction:column; gap:18px; min-height:380px; }
+  .split-v > div { border-radius:6px; padding:16px 20px; }
+  .split-v .up { background:#eef1f4; flex:1; }
+  .split-v .down { background:#1a1a2e; color:#fff; text-align:center; flex:1; display:flex; flex-direction:column; justify-content:center; }
   .cols h3, .split-h h3 { color:#c0392b; font-size:1.05em; margin:0 0 6px; }
   .cols p, .split-h p   { font-size:0.8em; line-height:1.5; margin:0 0 8px; }
   .cols ul, .split-h ul { font-size:0.82em; margin:0 0 8px; }
@@ -200,9 +218,10 @@ _paginate: skip
 -->
 `;
 
-const parts = [HEAD];
+const parts = [];
 
 // ===== 封面 =====
+// 不带前后 --- —— join 时只插入一次
 parts.push(`<!-- _class: cover -->
 
 # marp-slide-expert 图例总览
@@ -211,8 +230,6 @@ parts.push(`<!-- _class: cover -->
 
 <!-- A 全幅页走 marp 自带的 _class: cover/divider，CSS 已在 style-bootstrap 里。
      B 单栏 = 默认 C 分栏 = .cols-*  D 混合 = 文字 + bg 图片 -->
-
----
 `);
 
 // ===== ① 用法 =====
@@ -471,61 +488,80 @@ parts.push(`## C 分栏 · split-h
 <!-- 上结论下证据、上现状下目标。 -->
 `);
 
-// ===== D 混合（marp 的图片排版）=====
+// ===== D 混合 =====
 parts.push(`<!-- _class: divider -->
 
 # ②·D 混合
 
-## marp 背景图（\\\`![bg ...]\\\`）
+## 图 + 文混排的两种 marp 模式
 
-marp 的图片是 slide 级背景图。
-下面四张示例**用同一张图**（assets/marp.png）演示 marp 图片排版的四种典型 layout——
-你自己的 deck 里换成真实图片即可。
+A 族全幅页（封面/分隔/收尾）和 B/C 族文字版式都用 marp 自带样式。
+本节是第三种：**图 + 文混排**——两种 marp 模式各有所长，分清场景用对模式。
 `);
-parts.push(`## D 混合 · 左右各半：图在右，文在左
+parts.push(`## D · marp 模式：\\\`![bg ...]\\\` 背景图
 
+marp 的图片是**slide 级背景图**。一图占一页，要做左右半图或上下分区靠 marp 自带的关键字。
+
+<div class="cols cols-main">
+<div class="col">
+
+### 典型用法
+
+- \`![bg left]\`：图在左，文在右
+- \`![bg right vertical]\`：图在右（窄图），文在左
+- \`![bg]\`：图铺满整页，文浮在上面
+- 多张 \`![bg]\` 叠写 = **层叠**（不是并排）
+
+</div>
+<div class="col">
+
+### 不适合
+
+- 同一页里同时放 2 张以上图——marp 不会排版，层叠成「一张压在另一张上面」
+- 上下分区（文上 / 图下）——marp 没有这个关键字
+- 列宽自适应——marp 用 \`bg right/left\` 是预定义区域，CSS 分栏能精细控制
+
+**上下分区的场景用 div + flex 写**（见下页）
+
+</div>
+</div>
+
+<!-- D 模式实际渲染示例：图放右、文放左，用 marp 自带关键字 -->
 ![bg right vertical](<../assets/marp.png>)
 
-### 章节主题
+### D · marp 模式示例：图在右，文在左
 
-这一页右半放图，左半放文字。要点：
+> 这是用 \`![bg right vertical](<assets/marp.png>)\` 渲染的——
+> 红色块占右半幅，左半幅是文字内容。
+> marp 自带 \`bg right\`/\`bg left\`/\`bg\` 三种关键字，垂直版用 \`vertical\`。
 
-- 文字依然以 markdown 正常渲染
-- 图片占据右半幅（vertical 让窄图正确显示）
-- 内容区读起来是「图陪文」
-
-<!--
-要换成左图右文，把 bg right 换成 bg left。
-背景图需要在 slide 同目录，或用 URL。
--->
+### 这页的标题
 `);
-parts.push(`## D 混合 · 上下两图叠一文
+parts.push(`## D · CSS 模式：\\\`<div>\`\\\` + flex 上下分区
 
-![bg](<../assets/marp.png>)
-![bg](<../assets/marp.png>)
+D 模式搞不定的（多图分区、上下分区），**用 \`<div>\` 自定义分栏**——和 C 族同源，只是不用 CSS grid 而用 flex column。
 
-### 实施过程
-
-同一页叠两张背景图，下面那张先画、上面那张后画。
-图片是层叠的（不是横向并排），文字叠在最上层。
-
-<!--
-要横向并排多图，把 vertical 去掉即可。
--->
-`);
-parts.push(`## D 混合 · 图文分区：上半文下半图
-
-![bg](<../assets/marp.png>)
+<div class="split-v">
+<div class="up">
 
 ### 上半区文字
 
-要点放在这里。
+要点放这里。短说明、引言、标题。
 
-![bg](<../assets/marp.png>)
+</div>
+<div class="down">
 
-下半区放图，背景图会自动铺满整页剩余区域。
+### 下半区（图位）
 
-<!-- 这种排版适合「一图配一段短说明」，全文一页。 -->
+**图位用色块占位**——这里演示用 dark navy 背景。真实场景换成 \`<img src="...">\` 即可。
+
+</div>
+</div>
+
+<!--
+\`flex-direction:column\` 决定上下分区，\`gap\` 是上下间距，
+\`flex:1\` 让上下等高。背景图换成 \`<img>\` 即可。
+-->
 `);
 
 // ===== ③ 图形骨架 =====
@@ -594,7 +630,8 @@ for (let i = 0; i < STYLES.length; i += 2) {
 }
 
 // ----- 写入 -----
-writeFileSync(out, parts.join('\n\n---\n\n'));
+// HEAD 是独立段（以 --- 结尾），不参与 join
+writeFileSync(out, HEAD + parts.join('\n\n---\n\n'));
 console.log(`✓ examples/infographic-gallery.marp.md — ${skeletons.length} 骨架 + ${metaphors.length} 隐喻 + ${STYLES.length} 风格`);
 
 if (process.argv.includes('--pdf')) {

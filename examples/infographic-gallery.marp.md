@@ -19,6 +19,10 @@ style: |-
   .cols-3 { grid-template-columns:repeat(3,1fr); gap:20px; }
   .cols-main { grid-template-columns:2fr 1fr; gap:24px; }
   .split-h { display:grid; grid-template-rows:auto auto; gap:24px; align-items:start; }
+  .split-v { display:flex; flex-direction:column; gap:18px; min-height:380px; }
+  .split-v > div { border-radius:6px; padding:16px 20px; }
+  .split-v .up { background:#eef1f4; flex:1; }
+  .split-v .down { background:#1a1a2e; color:#fff; text-align:center; flex:1; display:flex; flex-direction:column; justify-content:center; }
   .cols h3, .split-h h3 { color:#c0392b; font-size:1.05em; margin:0 0 6px; }
   .cols p, .split-h p   { font-size:0.8em; line-height:1.5; margin:0 0 8px; }
   .cols ul, .split-h ul { font-size:0.82em; margin:0 0 8px; }
@@ -53,10 +57,6 @@ _paginate: skip
   svg-lint-ignore: viewbox-width
   ⑤ 风格预览用 480 宽的紧凑 viewBox（两栏并排需要），正文模板统一 1020。
 -->
-
-
----
-
 <!-- _class: cover -->
 
 # marp-slide-expert 图例总览
@@ -65,8 +65,6 @@ _paginate: skip
 
 <!-- A 全幅页走 marp 自带的 _class: cover/divider，CSS 已在 style-bootstrap 里。
      B 单栏 = 默认 C 分栏 = .cols-*  D 混合 = 文字 + bg 图片 -->
-
----
 
 
 ---
@@ -348,65 +346,87 @@ A 全幅用 marp 自带的 `<!-- _class: cover -->` / `<!-- _class: divider -->`
 
 # ②·D 混合
 
-## marp 背景图（\`![bg ...]\`）
+## 图 + 文混排的两种 marp 模式
 
-marp 的图片是 slide 级背景图。
-下面四张示例**用同一张图**（assets/marp.png）演示 marp 图片排版的四种典型 layout——
-你自己的 deck 里换成真实图片即可。
-
-
----
-
-## D 混合 · 左右各半：图在右，文在左
-
-![bg right vertical](<../assets/marp.png>)
-
-### 章节主题
-
-这一页右半放图，左半放文字。要点：
-
-- 文字依然以 markdown 正常渲染
-- 图片占据右半幅（vertical 让窄图正确显示）
-- 内容区读起来是「图陪文」
-
-<!--
-要换成左图右文，把 bg right 换成 bg left。
-背景图需要在 slide 同目录，或用 URL。
--->
+A 族全幅页（封面/分隔/收尾）和 B/C 族文字版式都用 marp 自带样式。
+本节是第三种：**图 + 文混排**——两种 marp 模式各有所长，分清场景用对模式。
 
 
 ---
 
-## D 混合 · 上下两图叠一文
+## D · marp 模式：\`![bg ...]\` 背景图
 
-![bg](<../assets/marp.png>)
-![bg](<../assets/marp.png>)
+![bg cover opacity:.3](<../assets/marp.png>)
 
-### 实施过程
+marp 的图片是**slide 级背景图**。一图占一页，要做左右半图或上下分区靠 marp 自带的关键字。
 
-同一页叠两张背景图，下面那张先画、上面那张后画。
-图片是层叠的（不是横向并排），文字叠在最上层。
+<div class="cols cols-main">
+<div class="col">
 
-<!--
-要横向并排多图，把 vertical 去掉即可。
--->
+### 典型用法
+
+- `![bg left]`：图在左，文在右
+- `![bg right vertical]`：图在右（窄图），文在左
+- `![bg]`：图铺满整页，文浮在上面
+- 多张 `![bg]` 叠写 = **层叠**（不是并排）
+
+</div>
+<div class="col">
+
+### 不适合
+
+- 同一页里同时放 2 张以上图——marp 不会排版，层叠成「一张压在另一张上面」
+- 上下分区（文上 / 图下）——marp 没有这个关键字
+- 列宽自适应——marp 用 `bg right/left` 是预定义区域，CSS 分栏能精细控制
+
+**上下分区的场景用 div + flex 写**（见下页）
+
+</div>
+</div>
+
+
+---
+<!-- D 模式实际渲染示例：图放右、文放左，用 marp 自带关键字 -->
+![bg right vertical contain](<../assets/marp.png>)
+
+
+### D · marp 模式示例：图在右，文在左
+
+> 这是用 `![bg right vertical](<assets/marp.png>)` 渲染的——
+> 图占右半幅，左半幅是文字内容。
+> marp 自带 `bg right`/`bg left`/`bg` 三种关键字，垂直版用 `vertical`。
+
+### 这页的标题
 
 
 ---
 
-## D 混合 · 图文分区：上半文下半图
+## D · CSS 模式：\`<div>`\` + flex 上下分区
 
-![bg](<../assets/marp.png>)
+D 模式搞不定的（多图分区、上下分区），**用 `<div>` 自定义分栏**——和 C 族同源，只是不用 CSS grid 而用 flex column。
+
+<div class="split-v">
+<div class="up">
 
 ### 上半区文字
 
-要点放在这里。
+要点放这里。短说明、引言、标题。
 
-![bg](<../assets/marp.png>)
+</div>
+<div class="down">
 
-下半区放图，背景图会自动铺满整页剩余区域。
+### 下半区（图位）
 
-<!-- 这种排版适合「一图配一段短说明」，全文一页。 -->
+**图位用色块占位**——这里演示用 dark navy 背景。真实场景换成 `<img src="...">` 即可。
+
+</div>
+
+</div>
+
+<!--
+`flex-direction:column` 决定上下分区，`gap` 是上下间距，
+`flex:1` 让上下等高。背景图换成 `<img>` 即可。
+-->
 
 
 ---
@@ -533,7 +553,7 @@ marp 的图片是 slide 级背景图。
 <path d="M294,206 L726,206 L645,278 L375,278 Z" fill="#7f8d8d"/>
 <text x="510" y="250" class="tb" fill="#ffffff" text-anchor="middle">提案 380</text>
 <path d="M382,284 L638,284 L510,370 Z" fill="#c0392b"/>
-<text x="510" y="328" class="tb" fill="#ffffff" text-anchor="middle">96</text>
+<text x="510" y="328" class="tb" fill="#ffffff" text-anchor="middle">成交 96</text>
 <text x="510" y="402" class="lbl" text-anchor="middle">成交 96 · 整体转化率 0.96%</text>
 <text x="510" y="428" class="lbl" text-anchor="middle">层宽为示意形状，量级以数字为准</text>
 </svg>
@@ -1016,33 +1036,6 @@ marp 的图片是 slide 级背景图。
 
 <!-- _class: diagram -->
 
-## 2. Flywheel 飞轮
-
-<svg viewBox="0 0 1020 460" width="100%">
-<defs>
-<marker id="a1_d18" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="9"  refX="12" refY="4.5" orient="auto"><path d="M0,0 L13,4.5 L0,9 z"  fill="#c0392b"/></marker>
-<marker id="a2_d18" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="10" refX="13" refY="5"   orient="auto"><path d="M0,0 L14,5 L0,10 z"   fill="#c0392b"/></marker>
-<marker id="a3_d18" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="11" refX="14" refY="5.5" orient="auto"><path d="M0,0 L15,5.5 L0,11 z" fill="#c0392b"/></marker>
-<marker id="a4_d18" markerUnits="userSpaceOnUse" markerWidth="16" markerHeight="12" refX="15" refY="6"   orient="auto"><path d="M0,0 L16,6 L0,12 z"   fill="#c0392b"/></marker>
-</defs>
-<path d="M669.2,143.9 A150,150 0 0 1 669.2,336.1" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1_d18)"/>
-<path d="M606.1,399.2 A150,150 0 0 1 413.9,399.2" fill="none" stroke="#c0392b" stroke-width="4"   marker-end="url(#a2_d18)"/>
-<path d="M350.8,336.1 A150,150 0 0 1 350.8,143.9" fill="none" stroke="#c0392b" stroke-width="6"   marker-end="url(#a3_d18)"/>
-<path d="M413.9,80.8 A150,150 0 0 1 606.1,80.8" fill="none" stroke="#c0392b" stroke-width="8"   marker-end="url(#a4_d18)"/>
-<circle cx="610" cy="140" r="36" fill="#2c3e50"/><text x="610" y="146" class="sm" fill="#ffffff" text-anchor="middle">用户</text>
-<circle cx="610" cy="340" r="36" fill="#34495e"/><text x="610" y="346" class="sm" fill="#ffffff" text-anchor="middle">价值</text>
-<circle cx="410" cy="340" r="36" fill="#5d7d95"/><text x="410" y="346" class="sm" fill="#ffffff" text-anchor="middle">规模</text>
-<circle cx="410" cy="140" r="36" fill="#95a5a6"/><text x="410" y="146" class="sm" fill="#ffffff" text-anchor="middle">效率</text>
-<text x="510" y="248" class="t" fill="#1a1a2e" text-anchor="middle">飞轮</text>
-</svg>
-
-<!-- 两种画法：统一粗细（推荐）/ 渐变粗细；markerUnits 必须 userSpaceOnUse -->
-
-
----
-
-<!-- _class: diagram -->
-
 ## 3. Iceberg 冰山
 
 <svg viewBox="0 0 1020 510" width="100%">
@@ -1115,16 +1108,16 @@ marp 的图片是 slide 级背景图。
 
 <svg viewBox="0 0 1020 380" width="100%">
 <defs>
-<marker id="a1_d22" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/></marker>
+<marker id="a1_d21" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/></marker>
 </defs>
-<path d="M150,80 Q340,80 500,190" fill="none" stroke="#95a5a6" stroke-width="2.5" marker-end="url(#a1_d22)"/>
-<path d="M150,190 Q340,190 500,190" fill="none" stroke="#5d7d95" stroke-width="2.5" marker-end="url(#a1_d22)"/>
-<path d="M150,300 Q340,300 500,190" fill="none" stroke="#2c3e50" stroke-width="2.5" marker-end="url(#a1_d22)"/>
+<path d="M150,80 Q340,80 500,190" fill="none" stroke="#95a5a6" stroke-width="2.5" marker-end="url(#a1_d21)"/>
+<path d="M150,190 Q340,190 500,190" fill="none" stroke="#5d7d95" stroke-width="2.5" marker-end="url(#a1_d21)"/>
+<path d="M150,300 Q340,300 500,190" fill="none" stroke="#2c3e50" stroke-width="2.5" marker-end="url(#a1_d21)"/>
 <circle cx="500" cy="190" r="44" fill="#c0392b"/>
 <text x="500" y="197" class="t" fill="#ffffff" text-anchor="middle">汇聚</text>
-<path d="M544,190 Q640,90 850,90" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1_d22)"/>
-<path d="M544,190 Q640,190 850,190" fill="none" stroke="#e74c3c" stroke-width="2.5" marker-end="url(#a1_d22)"/>
-<path d="M544,190 Q640,290 850,290" fill="none" stroke="#a93226" stroke-width="2.5" marker-end="url(#a1_d22)"/>
+<path d="M544,190 Q640,90 850,90" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1_d21)"/>
+<path d="M544,190 Q640,190 850,190" fill="none" stroke="#e74c3c" stroke-width="2.5" marker-end="url(#a1_d21)"/>
+<path d="M544,190 Q640,290 850,290" fill="none" stroke="#a93226" stroke-width="2.5" marker-end="url(#a1_d21)"/>
 <circle cx="880" cy="90"  r="28" fill="#eef1f4"/><text x="880" y="97" class="sm" fill="#1a1a2e" text-anchor="middle">A</text>
 <circle cx="880" cy="190" r="28" fill="#eef1f4"/><text x="880" y="197" class="sm" fill="#1a1a2e" text-anchor="middle">B</text>
 <circle cx="880" cy="290" r="28" fill="#eef1f4"/><text x="880" y="297" class="sm" fill="#1a1a2e" text-anchor="middle">C</text>
