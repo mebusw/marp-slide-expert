@@ -96,4 +96,4 @@ marp deck.marp.md --html --images png -o check
 
 **最省事的做法其实是用 marp 自己当预览器**：新建一个只放一张图的 `.marp.md`，渲染出来就是 1:1 的真实效果——`marp one.marp.md --html -o one.pdf`，改一个字重跑一次。这比手搓 standalone HTML 更快，也不会有 CSS 继承差异。
 
-看全部模板用 [../../../examples/infographic-diagrams.marp.md](../../../examples/infographic-diagrams.marp.md)（每个骨架/隐喻/风格一页，由 `node scripts/build-diagram-deck.mjs` 生成）。
+看全部模板用 [../../../examples/infographic-gallery.marp.md](../../../examples/infographic-gallery.marp.md)（每个骨架/隐喻/风格一页，由 `node scripts/build-gallery.mjs` 生成）。

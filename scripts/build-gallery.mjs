@@ -1,0 +1,650 @@
+#!/usr/bin/env node
+// build-gallery — 从 references 生成 examples/infographic-gallery.marp.md
+//
+// 一个 deck 包含三部分：分栏版式示例、图形骨架示例、隐喻外壳示例、风格示例。
+// 由 references/ 模板生成，幂等可重建。
+//
+// 用法:
+//   node scripts/build-gallery.mjs                 # 只生成 .md
+//   node scripts/build-gallery.mjs --pdf           # 同时导 PDF（需要 marp CLI）
+
+import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const root = join(dirname(fileURLToPath(import.meta.url)), '..');
+const mod = join(root, 'references/infographics-svg');
+const out = join(root, 'examples/infographic-gallery.marp.md');
+
+// ---------- 提取每个 <svg> 块 + 前面最近的 ## 二级标题做变体名 ----------
+
+function extract(file) {
+  const src = readFileSync(file, 'utf8');
+  const items = [];
+  const re = /<svg[\s\S]*?<\/svg>/g;
+  let m;
+  while ((m = re.exec(src))) {
+    const before = src.slice(0, m.index);
+    const heads = [...before.matchAll(/^##\s+(.+)$/gm)];
+    items.push({ name: heads.length ? heads[heads.length - 1][1].trim() : '未命名', svg: m[0] });
+  }
+  return items;
+}
+
+const skeletons = [];
+for (const f of readdirSync(join(mod, 'skeletons')).filter((f) => f.endsWith('.md') && f !== 'INDEX.md').sort()) {
+  for (const item of extract(join(mod, 'skeletons', f))) skeletons.push({ ...item, group: f.replace('.md', '') });
+}
+const metaphors = extract(join(mod, 'metaphor.md')).map((m) => ({ ...m, group: 'metaphor' }));
+
+// 全局唯一 marker id
+let n = 0;
+const uniq = (svg) =>
+  svg.replace(/id="(a\d*[a-z]?)"/g, (_, id) => `id="${id}_d${n}"`)
+     .replace(/url\(#(a\d*[a-z]?)\)/g, (_, id) => `url(#${id}_d${n})`);
+for (const s of [...skeletons, ...metaphors]) { s.svg = uniq(s.svg); n++; }
+
+// ---------- 风格预览 ----------
+// 6 套风格整齐 2 列 grid，每张 480 宽（两列并排需要）
+const STYLE_SVG = `<svg viewBox="0 0 480 300" width="100%">
+<rect x="12" y="12" width="250" height="160" rx="6" fill="var(--s-hero)"/>
+<text x="32" y="62" class="t" fill="var(--s-on-hero)">核心结论</text>
+<text x="32" y="98" class="sm" fill="var(--s-on-hero)" opacity=".85">一句话说清价值</text>
+<text x="32" y="130" class="sm" fill="var(--s-on-hero)" opacity=".7">· 要点一</text>
+<text x="32" y="156" class="sm" fill="var(--s-on-hero)" opacity=".7">· 要点二</text>
+<rect x="272" y="12" width="196" height="76" rx="6" fill="var(--s-accent)"/>
+<text x="290" y="58" class="tb" fill="var(--s-on-accent)">强调项</text>
+<line x1="272" y1="106" x2="468" y2="106" stroke="var(--s-rule)" stroke-width="2"/>
+<rect x="12" y="184" width="146" height="104" rx="6" fill="var(--s-neutral)"/>
+<text x="28" y="244" class="sm" fill="var(--s-ink)">支撑 A</text>
+<rect x="166" y="184" width="146" height="104" rx="6" fill="var(--s-neutral)"/>
+<text x="182" y="244" class="sm" fill="var(--s-ink)">支撑 B</text>
+<rect x="320" y="124" width="148" height="164" rx="6" fill="var(--s-neutral)"/>
+<text x="336" y="216" class="sm" fill="var(--s-ink)">支撑 C</text>
+</svg>`;
+
+// 6 套风格：UPerform deck 默认调色板 = 深蓝 + 粉橙 + 金黄
+const STYLES = [
+  { name: 'UPerform deck 默认', note: '深蓝 + 粉橙 + 金黄。默认选它。', v: {
+    '--s-hero':'#1a1a2e','--s-on-hero':'#ffffff','--s-accent':'#E87461','--s-on-accent':'#ffffff',
+    '--s-neutral':'#eef1f4','--s-ink':'#1a1a2e','--s-rule':'#F0A050' } },
+  { name: 'clean-analytics', note: '青绿主导，数据自信、圆形签名、超大数字', v: {
+    '--s-hero':'#3B9B9B','--s-on-hero':'#ffffff','--s-accent':'#E87461','--s-on-accent':'#ffffff',
+    '--s-neutral':'#E4F3F3','--s-ink':'#1A1A1A','--s-rule':'#4EBDBA' } },
+  { name: 'mckinsey-report', note: '咨询蓝，行动式标题、衬线双字族', v: {
+    '--s-hero':'#1B2838','--s-on-hero':'#ffffff','--s-accent':'#2563EB','--s-on-accent':'#ffffff',
+    '--s-neutral':'#F5F5F5','--s-ink':'#1A1A1A','--s-rule':'#2563EB' } },
+  { name: 'tricon-infographic', note: '红色主调 + 深藏青标题，openclaw 课件主题', v: {
+    '--s-hero':'#2c3e50','--s-on-hero':'#ffffff','--s-accent':'#c0392b','--s-on-accent':'#ffffff',
+    '--s-neutral':'#f5f5f5','--s-ink':'#1a1a2e','--s-rule':'#e74c3c' } },
+  { name: 'technical-schematic', note: '深蓝工程图、琥珀高亮、白底网格', v: {
+    '--s-hero':'#1E3A5F','--s-on-hero':'#ffffff','--s-accent':'#F59E0B','--s-on-accent':'#1a1a2e',
+    '--s-neutral':'#E2E8F0','--s-ink':'#1E3A5F','--s-rule':'#2563EB' } },
+  { name: 'ui-wireframe', note: '灰阶线框、中性克制', v: {
+    '--s-hero':'#374151','--s-on-hero':'#ffffff','--s-accent':'#3B82F6','--s-on-accent':'#ffffff',
+    '--s-neutral':'#E5E5E5','--s-ink':'#374151','--s-rule':'#9CA3AF' } },
+  { name: 'subway-map', note: '多线路色、45°/90° 折线、站点圆点', v: {
+    '--s-hero':'#E03A3E','--s-on-hero':'#ffffff','--s-accent':'#2563EB','--s-on-accent':'#ffffff',
+    '--s-neutral':'#E5E7EB','--s-ink':'#1A1A1A','--s-rule':'#0E9F6E' } },
+];
+
+// ---------- 工具 ----------
+
+const esc = (s) => s.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
+
+const diagramSlide = (title, svg, note) => `<!-- _class: diagram -->
+
+## ${title}
+
+${svg}
+
+<!-- ${note} -->
+`;
+
+const stylePair = (a, b) => `<div class="cols cols-2">
+<div class="col">
+
+### ${esc(a.name)}
+
+<div class="stylewrap" style="${Object.entries(a.v).map(([k, val]) => `${k}:${val}`).join(';')}">
+${STYLE_SVG}
+</div>
+
+</div>
+<div class="col">
+
+### ${esc(b.name)}
+
+<div class="stylewrap" style="${Object.entries(b.v).map(([k, val]) => `${k}:${val}`).join(';')}">
+${STYLE_SVG}
+</div>
+
+</div>
+</div>
+
+<!-- ${esc(a.note)} ／ ${esc(b.note)} -->
+`;
+
+const styleLone = (a) => `<div class="cols cols-2">
+<div class="col">
+
+### ${esc(a.name)}
+
+<div class="stylewrap" style="${Object.entries(a.v).map(([k, val]) => `${k}:${val}`).join(';')}">
+${STYLE_SVG}
+</div>
+
+</div>
+</div>
+
+<!-- ${esc(a.note)} -->
+`;
+
+// ---------- 拼装 deck ----------
+
+const HEAD = `---
+marp: true
+theme: default
+paginate: true
+style: |-
+  section { font-family:'PingFang SC','Microsoft YaHei','Noto Sans CJK SC',sans-serif; font-size:22px; background:#FAFAFA; color:#1a1a2e; }
+  h1 { color:#1a1a2e; font-size:1.9em; border-bottom:3px solid #c0392b; }
+  h2 { color:#2c3e50; font-size:1.3em; margin-bottom:4px; }
+  h3 { color:#c0392b; font-size:1.05em; margin:0 0 6px; }
+  svg { display:block; margin:0 auto; max-width:100%; height:auto; }
+  svg text { font-family:'PingFang SC','Microsoft YaHei','Noto Sans CJK SC',sans-serif; }
+  svg .t   { font-size:26px; font-weight:700; }
+  svg .tb  { font-size:19px; font-weight:700; }
+  svg .qt  { font-size:20px; font-weight:700; }
+  svg .sm  { font-size:15px; }
+  svg .lbl { font-size:15px; fill:#7f8c8d; }
+  /* 分栏版式——分栏不需要 --html，只有内联 SVG 才需要 */
+  .cols { display:grid; align-items:start; }
+  .cols-2 { grid-template-columns:1fr 1fr; gap:24px; }
+  .cols-3 { grid-template-columns:repeat(3,1fr); gap:20px; }
+  .cols-main { grid-template-columns:2fr 1fr; gap:24px; }
+  .split-h { display:grid; grid-template-rows:auto auto; gap:24px; align-items:start; }
+  .cols h3, .split-h h3 { color:#c0392b; font-size:1.05em; margin:0 0 6px; }
+  .cols p, .split-h p   { font-size:0.8em; line-height:1.5; margin:0 0 8px; }
+  .cols ul, .split-h ul { font-size:0.82em; margin:0 0 8px; }
+  .cols table, .split-h table { font-size:0.66em; }
+  .stylewrap { background:#FAFAFA; border-radius:6px; padding:4px; }
+  section.cover footer, section.divider footer, section.diagram footer { display:none; }
+  section.cover { background:linear-gradient(135deg,#1a1a2e 0%,#c0392b 100%); color:white; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; }
+  section.cover h1 { color:white; border-bottom:3px solid rgba(255,255,255,0.4); }
+  section.cover h2 { color:rgba(255,255,255,0.85); }
+  section.divider { background:#2c3e50; color:white; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
+  section.divider h1 { color:#e74c3c; border-bottom:3px solid #e74c3c; font-size:2.4em; }
+  th { background:#c0392b; color:white; padding:8px 12px; }
+  td { padding:7px 12px; border-bottom:1px solid #ddd; }
+  tr:nth-child(even) { background:#f5f5f5; }
+  table { display:table !important; width:100% !important; border-collapse:collapse; font-size:0.82em; }
+  code { background:#2c3e50; color:#2ecc71; padding:3px 8px; border-radius:4px; font-size:0.85em; }
+  footer { position:absolute; left:900px; bottom:25px; }
+footer: UPerform AI & Agile Consulting
+_paginate: skip
+---
+
+<!--
+  渲染命令（含内联 SVG，必须带 --html）：
+  marp examples/infographic-gallery.marp.md --html --pdf --allow-local-files
+
+  注释必须写在 frontmatter 的 --- 之外。
+  放进 frontmatter 会破坏 YAML 解析，导致整个 style 块被静默丢弃。
+
+  本文件由 node scripts/build-gallery.mjs 从 references/infographics-svg/ 生成。
+  改完模板重跑一次即可，不要手改。
+
+  svg-lint-ignore: viewbox-width
+  ③ 风格预览用 480 宽的紧凑 viewBox（两栏并排需要），正文模板统一 1020。
+-->
+`;
+
+const parts = [HEAD];
+
+// ===== 封面 =====
+parts.push(`<!-- _class: cover -->
+
+# marp-slide-expert 图例总览
+
+## 分栏版式 · 图形骨架 · 隐喻外壳 · 风格预览
+
+> 选型时一翻到底，复制时一拿就走
+
+<!-- A 全幅页走 marp 自带的 _class: cover/divider，CSS 已在 style-bootstrap 里。
+     B 单栏 = 默认 C 分栏 = .cols-*  D 混合 = 文字 + bg 图片（见后） -->
+---
+`);
+
+// ===== 第一部分：分栏版式（C 族）=====
+parts.push(`<!-- _class: divider -->
+
+# 页级版式
+
+## 一页的内容块怎么排
+
+<!--
+四族：A 全幅 / B 单栏 / C 分栏 / D 混合
+默认走 B（单栏）。超 15 行再考虑 C，有图再进 D。
+A 全幅用 marp 自带的 _class: cover / divider / 收尾页。
+-->
+---
+`);
+
+parts.push(`## B 单栏：默认解
+
+内容线性、一次读完，就用最朴素的写法。
+
+- 每页最多 15 行
+- 表格最多 4 列、8 行（含表头）
+- 超了就拆页，或把只讲给自己听的内容挪进演讲者备注
+
+<!-- 单栏能解决就别分栏。判断问句：读者会来回看两栏做比较吗？ -->
+`);
+
+parts.push(`## C 分栏 · cols-2
+
+<div class="cols cols-2">
+<div class="col">
+
+### 方案 A：自建
+
+<p>团队已有基础，掌控力最强。</p>
+
+- 周期 9 个月
+- 长期成本高
+- 可控性完全
+
+</div>
+<div class="col">
+
+### 方案 B：采购
+
+<p>上线快，但受限于厂商。</p>
+
+- 周期 2 个月
+- 长期成本中
+- 可控性受限
+
+</div>
+</div>
+
+<!-- 每栏约 7 行预算（扣掉标题那 1 行）。div 前后各留空行。 -->
+`);
+
+parts.push(`## C 分栏 · cols-3
+
+<div class="cols cols-3">
+<div class="col">
+
+### 演进
+
+- 2024 试点
+- 2025 扩面
+- 2026 收敛
+
+</div>
+<div class="col">
+
+### 挑战
+
+- 数据孤岛
+- 组织阻力
+- 预算不足
+
+</div>
+<div class="col">
+
+### 对策
+
+- 建中台
+- 搞对齐
+- 分期投
+
+</div>
+</div>
+
+<!-- 三栏每栏只剩约 5 行预算（15 行是整页的，不是每栏的）。 -->
+`);
+
+parts.push(`## C 分栏 · cols-main（最常用）
+
+<div class="cols cols-main">
+<div class="col">
+
+### 核心结论
+
+<p>把数据中台提到集团级，先统一口径，再谈分析。</p>
+
+- 口径不一致是当前最大损耗
+- 各业务线重复建设
+- 指标无法横向比较
+
+</div>
+<div class="col">
+
+| 维度 | 现状 | 目标 |
+|---|---|---|
+| 覆盖 | 3 团队 | 全公司 |
+| 时延 | 5 天 | 1 天 |
+| 成本 | 高 | 低 |
+
+</div>
+</div>
+
+<!-- 左边 2 份宽放要点，右边 1 份放佐证表。反过来写 1fr 2fr。 -->
+`);
+
+parts.push(`## C 分栏 · split-h
+
+<div class="split-h">
+<div>
+
+**结论**：2026 年完成全量迁移，Q4 之前不停留在试点阶段。
+
+</div>
+<div>
+
+| 阶段 | 时间 | 负责 |
+|---|---|---|
+| 试点 | 2025 Q3 | 平台组 |
+| 扩面 | 2026 Q1 | 各业务线 |
+| 收敛 | 2026 Q4 | PMO |
+
+</div>
+</div>
+
+<!-- 上结论下证据、上现状下目标。 -->
+`);
+
+// ===== 第二部分：D 混合（marp 的图片布局）=====
+parts.push(`<!-- _class: divider -->
+
+# 图片布局
+
+## marp 天然支持 \`![bg ...]\`
+
+<!--
+marp 的图片是背景图，所以一图占一页。要做「左右各半」「上下分区」这种
+多图共存，用 split / vertical 关键字。
+-->
+---
+`);
+
+parts.push(`<!--
+D 混合 = marp 背景图能力。marp 的 \`![bg ...]\` 是 slide 级背景图，
+需要真实图片文件才能演示。读这部分时，注意看注释里的语法说明。
+-->
+<!-- _class: divider -->
+
+# D 混合
+
+## marp 背景图（\`![bg ...]\`）
+
+<!--
+marp 把图片当背景图处理，所以一图占一页。要做"左右各半"、"上下两图叠"、
+"上半文下半图"这种多图共存，用 split / vertical 关键字。
+
+下面三张示例**不会真的渲染图片**（需要 PNG 文件），但展示的是正确语法。
+复制到你的 deck 时，把路径换成你的真实图片即可。
+-->
+---
+`);
+
+parts.push(`## D 混合 · 左右各半：一张图占右半
+
+![bg right vertical](<chapter-01.png>)
+
+### 章节主题
+
+这一页右半放图，左半放文字。要点：
+
+- 文字依然以 markdown 正常渲染
+- 图片占据右半幅（vertical 让窄图正确显示）
+- 内容区读起来是「图陪文」
+
+<!--
+要换成左图右文，把 bg right 换成 bg left。
+背景图需要在 slide 同目录，或用 URL。
+-->
+`);
+
+parts.push(`## D 混合 · 上下两图叠一文
+
+![bg](<shot-1.png>)
+![bg](<shot-2.png>)
+
+### 实施过程
+
+同一页叠两张背景图，下面那张先画、上面那张后画。
+图片是层叠的（不是横向并排），文字叠在最上层。
+
+<!--
+要横向并排多图，把 vertical 去掉即可。
+-->
+`);
+
+parts.push(`## D 混合 · 图文分区：上下两栏
+
+![bg](<full-width-shot.png>)
+
+### 上半区文字
+
+要点放在这里。
+
+![bg](<wide-diagram.png>)
+
+下半区放图，背景图会自动铺满整页剩余区域。
+
+<!-- 这种排版适合「一图配一段短说明」，全文一页。 -->
+`);
+
+// ===== 第三部分：版式 vs 画图 =====
+parts.push(`<!-- _class: divider -->
+
+# 排版式 vs 画图
+
+## 什么时候用哪个
+---
+`);
+
+parts.push(`## 问一句：这一页要表达「内容之间的结构关系」吗？
+
+| | 排版式 | 画图 |
+|---|---|---|
+| 排的是什么 | 一页的内容块 | 一张图内部的节点和连线 |
+| 手段 | CSS grid + 分栏 div | 内联 SVG |
+| 要 \`--html\` 吗 | **不需要** | **需要** |
+| 适合 | 并列内容、并置对比 | 依赖、演进、循环、定位 |
+
+<!--
+排版式 → references/layout-patterns.md
+画图 → references/infographics-svg/
+-->
+
+`);
+
+// ===== 第四部分：图形骨架 =====
+parts.push(`<!-- _class: divider -->
+
+# ① 骨架
+
+## 关系类型决定图形
+
+<!--
+每个骨架的坐标公式在 references/infographics-svg/skeletons/ 下。
+选骨架先问"节点之间是什么关系"，再问"这页要什么情绪"（metaphor）。
+-->
+---
+`);
+
+const SKEL_NOTE = {
+  'linear-sequence': '步距 192、箭头宽 184、尖长 34；文字居中于矩形部分 x_i+75，不是整个外框',
+  'hierarchy-tree': '直角连接器 M 父cx,父底 V 中继y H 子cx V 子顶；可加侧分叉表示助理/秘书',
+  'matrix-quadrant': '两个轴必须独立；四条象限都必须有名字，位置要反映真实数值',
+  'flow-cycle': '环形弧段切于节点圆；漏斗四条斜边共线（母线 s=1.118）；两种画法：正三角 / 倒梯形',
+  'network-hub': '连线落在径向上：起点 R-r_n，终点 r_c。阵营节点 y 必须跟跨阵营主连线 y 共线',
+  lanes: '阶段竖线必须与事件列对齐；同泳道事件加水平连线，先画线再画圆',
+  'structure-block': '没有连线；便当格必须有一个 hero 格，对比矩阵高亮须等于一整列',
+  evidence: '箭头一律向上/向内；Warrant 用菱形（推理≠事实）',
+  'wave-timeline': '整体 y 单调不降，5–7 峰；节点最多 5–6 个；起终点各一节点',
+  'icon-rail': '3–6 项水平对齐；每个图标一色；无连线',
+  'card-row': '3–5 卡水平对齐；图区 60–70%，文字 30–40%；卡间距 20px',
+};
+for (const s of skeletons) {
+  parts.push(diagramSlide(`${s.name}`, s.svg, SKEL_NOTE[s.group] || '见 skeletons 规格文件'));
+}
+
+// ===== 第五部分：隐喻外壳 =====
+parts.push(`<!-- _class: divider -->
+
+# ② 隐喻外壳
+
+## 叙事意图决定语气
+
+<!--
+骨架定了之后换壳。**一页只讲一个隐喻**。
+-->
+---
+`);
+
+const MP_NOTE = {
+  Pyramid: '顶层三角形 + 三层梯形 = 正三角金字塔；强调「收敛到顶点」',
+  Flywheel: '线宽与箭头同步递增（2.5→7）；弧段切于节点圆；markerUnits 必须 userSpaceOnUse',
+  Iceberg: '水上等腰三角，水下 5 边以上多边形；两种画法：规整六边形 / 不规则山形',
+  Onion: '用椭圆不用圆角矩形——同心椭圆，递减；层数 ≤ 4',
+  'Focus / Spotlight': '高亮用 fill-opacity=0.10，不透明色块会挡住内容',
+  'Convergence / Divergence': '控制点在两端连线的垂直平分线上，曲度才对称',
+};
+for (const m of metaphors) {
+  const key = Object.keys(MP_NOTE).find((k) => m.name.includes(k));
+  parts.push(diagramSlide(m.name, m.svg, key ? MP_NOTE[key] : '见 metaphor 速查表'));
+}
+
+// ===== 第六部分：风格 =====
+parts.push(`<!-- _class: divider -->
+
+# ③ 风格
+
+## 配色与字阶
+
+<!--
+同一张图横排对比才看得出差别。**默认选第一个（UPerform deck 默认）**。
+6 套备选风格只在整份 deck 都是那个调性、或用户点名时才启用。
+-->
+---
+`);
+
+for (let i = 0; i < STYLES.length; i += 2) {
+  const a = STYLES[i], b = STYLES[i + 1];
+  parts.push(b ? stylePair(a, b) : styleLone(a));
+}
+
+// ===== 收尾 =====
+parts.push(`<!-- _class: divider -->
+
+# 用法
+
+## 4 步从选型到出图
+---
+`);
+
+parts.push(`## 1. 选题——这份内容能画哪几张图
+
+读文档，扫一遍下面的表，找出内容里出现了哪几种结构：
+
+| 信息结构（15 种） | → 骨架 | 适合 |
+|---|---|---|
+| network 关系网络 | [network-hub](#) | 影响、相互作用 |
+| hierarchy 层次 | [hierarchy-tree](#) | 由…组成、下设、从属 |
+| argument 论证 | [evidence](#) | 主张 + 证据 + 推理 |
+| cycle 循环 | [flow-cycle](#) | 周而复始、反馈回路 |
+| flow 流量 | [flow-cycle](#) 桑基 | X% 流向了… |
+| timeline 时间 | [linear-sequence](#) 箭头串 | 从…到… |
+| parallel-evolution 并行 | [lanes](#) | 与此同时… |
+| two-dimensional 二维 | [matrix-quadrant](#) | 高 X 低 Y |
+| multi-dimensional 多维 | [structure-block](#) 对比矩阵 | 在 X 方面优秀但 Y 不足 |
+| landscape 全景 | [structure-block](#) 便当格 | 主要分为… |
+| concept-decomposition 概念 | [hierarchy-tree](#) 关系树 | 该理论包含… |
+| stakeholder 利益相关方 | [structure-block](#) 或 quadrant | 多方参与 |
+| debate / semantic-opposition 对立 | [structure-block](#) | 支持 vs 反对 |
+| geographic 地理 | [structure-block](#) 便当格 | 多地区对比 |
+
+<!-- 详见 references/infographics-svg/structures.md -->
+`);
+
+parts.push(`## 2. 骨架——选什么图形承载
+
+| 关系 | 判定问句 | 骨架 |
+|---|---|---|
+| Sequence 时序 | A 发生在 B 之后？ | 箭头串 |
+| Hierarchy 层级 | A 包含 B？A 是 B 的上级？ | 关系树 |
+| Matrix 矩阵 | 两个维度交叉分类？ | 2×2 |
+| Growth 演进 | 我们在哪，下一步去哪？ | 阶梯 |
+| Flow 流量 | X 从哪来，流向哪，带多少量？ | 桑基 |
+| Parallel 并行 | 多实体同步推进？ | 泳道 |
+| Network 网络 | 多对多关系？ | 网络图 |
+| Argument 论证 | 主张 + 证据？ | 图尔敏 |
+| 罗列 | 3–6 项并列属性？ | icon-rail |
+| 展示 | 3–5 张图文卡片？ | card-row |
+| 起伏叙事 | 过程曲折但最终成功？ | wave-timeline |
+
+<!-- 详见 references/infographics-svg/skeletons/INDEX.md -->
+`);
+
+parts.push(`## 3. 隐喻——换什么叙事外壳
+
+骨架定了之后问"这页要什么情绪"。同一副骨架换壳，不改路由。
+
+| 隐喻 | 适合叙事 | 改动量 |
+|---|---|---|
+| Staircase 阶梯 | 逐级跃迁、进阶 | 原生 |
+| Pyramid 金字塔 | 战略层 → 执行层收敛 | 小（顶层改三角） |
+| Flywheel 飞轮 | 势能自我积累 | 中（线宽递增） |
+| Cycle 循环 | PDCA、持续改进 | 原生 |
+| Iceberg 冰山 | 显性 vs 隐性成本 | 中（水下 5+ 边） |
+| Funnel 漏斗 | 大量到少量、转化 | 中（四边共线） |
+| Convergence 汇聚 | 多流合一 | 小 |
+| Foundation 基础 | 能力垫底 | 小（方向相反于金字塔） |
+| Onion 洋葱 | 层层包裹 | 小（同心椭圆） |
+| Wave timeline 波浪 | 过程曲折、收官 | 原生 |
+
+<!-- 详见 references/infographics-svg/metaphor.md。一页只讲一个隐喻。 -->
+`);
+
+parts.push(`## 4. 风格——什么配色
+
+默认用 deck 自己的调色板（UPerform = 深蓝 + 粉橙 + 金黄）。
+6 套备选风格只在整份 deck 那个调性、或用户点名时启用。
+
+| 风格 | 主色 | 适合 |
+|---|---|---|
+| UPerform 默认 | 深蓝 + 粉橙 + 金黄 | 默认；商务、技术、教育 |
+| clean-analytics | 青绿 | 数据自信、量化分析 |
+| mckinsey-report | 咨询蓝 | 战略咨询、趋势分析 |
+| tricon-infographic | 红色 + 深藏青 | openclaw 课件、议题图解 |
+| technical-schematic | 深蓝 + 琥珀 | 工程图、系统设计 |
+| ui-wireframe | 灰阶 | 产品原型、界面说明 |
+| subway-map | 多线路色 | 路线图、流程路径 |
+
+<!-- 详见 references/infographics-svg/styles/INDEX.md -->
+
+## 5. 笔法——画之前要知道的
+
+- **viewBox 1020 × (300–540)**：所有模板统一宽度
+- **字号走 class**：\`.t / .tb / .qt / .sm / .lbl\`，不写 font-size 属性
+- **marker id 唯一**：第 N 张图用 \`aN\` 前缀，避免合并导出时串号
+- **每张图限 7 个节点**：超了就拆页、聚合、或降级成表格
+- **lint + 渲染两道关**：\`node scripts/svg-lint.mjs deck.marp.md\` 然后 marp 渲染肉眼过
+<!-- 详见 references/infographics-svg/craft/ -->
+`);
+
+// ----- 写入 -----
+writeFileSync(out, parts.join('\n---\n'));
+console.log(`✓ examples/infographic-gallery.marp.md — ${skeletons.length} 骨架 + ${metaphors.length} 隐喻 + ${STYLES.length} 风格`);
+
+if (process.argv.includes('--pdf')) {
+  execFileSync('marp', [out, '--html', '--pdf', '--allow-local-files'], { stdio: 'inherit' });
+  console.log('✓ examples/infographic-gallery.marp.pdf');
+}

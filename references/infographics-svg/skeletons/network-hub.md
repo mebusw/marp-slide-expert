@@ -102,29 +102,32 @@ Hub & Spoke 的隐含假设是「外围节点之间互不相干，全部只和�
 ### 坐标公式（3 阵营布局）
 
 ```
-阵营 A 中心 (250, 140)   成员散布 ±80
-阵营 B 中心 (770, 140)   成员散布 ±80
-阵营 C 中心 (510, 350)   成员散布 ±80
+阵营 A 中心 (250, 200)   成员散布 ±50     ← 阵营节点 y 跟跨阵营红线 y 共线
+阵营 B 中心 (770, 200)   成员散布 ±50
+阵营 C 中心 (510, 350)   成员散布 ±50
 节点 r = 34
-阵营间连线：直线
+跨阵营红线 y = 200（贯穿 A、B 中心）
 阵营内连线：浅灰、细、无箭头
 ```
 
+**阵营节点必须和跨阵营红线共线。** A、B 在 y=200，红线也走 y=200——这样节点的边缘正好落在红线上，**节点本身成为红线的视觉延伸**，而不是飘在上面让红线穿空。这是关系网最容易画错的一处：节点和主连线 y 错开，整张图读成「三个分散的阵营」而不是「一个紧密的网」。
+
 ```html
 <svg viewBox="0 0 1020 460" width="100%">
-<line x1="300" y1="170" x2="700" y2="170" stroke="#c0392b" stroke-width="2.5"/>
-<line x1="300" y1="200" x2="480" y2="330" stroke="#7f8c8d" stroke-width="1.5"/>
-<line x1="700" y1="200" x2="540" y2="330" stroke="#7f8c8d" stroke-width="1.5"/>
-<circle cx="230" cy="120" r="34" fill="#2c3e50"/><text x="230" y="127" class="sm" fill="#ffffff" text-anchor="middle">A1</text>
-<circle cx="320" cy="120" r="34" fill="#2c3e50"/><text x="320" y="127" class="sm" fill="#ffffff" text-anchor="middle">A2</text>
-<circle cx="700" cy="120" r="34" fill="#c0392b"/><text x="700" y="127" class="sm" fill="#ffffff" text-anchor="middle">B1</text>
-<circle cx="790" cy="120" r="34" fill="#c0392b"/><text x="790" y="127" class="sm" fill="#ffffff" text-anchor="middle">B2</text>
+<line x1="294" y1="200" x2="726" y2="200" stroke="#c0392b" stroke-width="2.5"/>
+<line x1="300" y1="240" x2="480" y2="350" stroke="#7f8c8d" stroke-width="1.5"/>
+<line x1="700" y1="240" x2="540" y2="350" stroke="#7f8c8d" stroke-width="1.5"/>
+<circle cx="230" cy="200" r="34" fill="#2c3e50"/><text x="230" y="207" class="sm" fill="#ffffff" text-anchor="middle">A1</text>
+<circle cx="320" cy="200" r="34" fill="#2c3e50"/><text x="320" y="207" class="sm" fill="#ffffff" text-anchor="middle">A2</text>
+<circle cx="700" cy="200" r="34" fill="#c0392b"/><text x="700" y="207" class="sm" fill="#ffffff" text-anchor="middle">B1</text>
+<circle cx="790" cy="200" r="34" fill="#c0392b"/><text x="790" y="207" class="sm" fill="#ffffff" text-anchor="middle">B2</text>
 <circle cx="510" cy="370" r="34" fill="#7f8c8d"/><text x="510" y="377" class="sm" fill="#ffffff" text-anchor="middle">C1</text>
 </svg>
 ```
 
 ### 硬规则
 
+- **阵营节点 y 必须跟跨阵营主连线 y 共线。** 主连线要的就是把阵营串起来，节点飘了就成了三条断线。
 - **节点数 ≤ 7。** 关系网最容易失控，超过 7 个节点线就开始糊。
 - **有向关系用箭头，无向关系不带箭头。** 混用前先确定这张图要不要表达方向。
 - **交叉 ≤ 3 处。** 超过说明布局错了，重排节点。

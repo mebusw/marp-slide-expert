@@ -1,132 +1,100 @@
 # Marp Slide Expert
 
-[English](README.md)
+> [English](README.md) · 56 页图例：[examples/infographic-gallery.marp.md](examples/infographic-gallery.marp.md)
 
-用于生成能通过 `marp --pdf --allow-local-files` 干净渲染的 Marp 幻灯片的 Agent Skill。它记录了那些会**静默**破坏 Marp 渲染的坑，并规定了两条硬规则：每页的密度上限，以及演讲者备注的写法。
+生成能通过 `marp --pdf --allow-local-files` 干净渲染的 Marp 幻灯片。一个 skill 解决两件事：
 
-## 两条最重要的规则
+1. **页级版式** — 封面 / 分隔 / 单栏 / 多栏分栏 / 图片排布
+2. **内联 SVG 信息图** — 16 个骨架、6 个叙事外壳、7 套配色，构成一个四层模块
 
-### 1. 每页最多 15 行，注释不计入
+那些会**静默**破坏 Marp 渲染的坑，你不用再从翻车的 PDF 里学到——skill 已经记下来了。
 
-每页正文最多 **15 行**。HTML 注释不计入 —— 它根本不渲染，所以不占行数。
+## 为什么用这个 skill
 
-| 元素 | 行数计算 |
-|---|---|
-| 段落 | 每换行 1 行（中文约 38 字/行，英文约 75 字符/行） |
-| 项目符号 / 编号列表 | 每条 1 行，换行再加 1 行 |
-| 表格 | 每行 1 行，**表头也算 1 行** |
-| 代码块 | 每行代码 1 行 |
-| 提示框（`>` 引用块） | 框内每换行 1 行 |
-| 标题 | 占 1 行 |
-| 演讲者备注 `<!-- -->` | **0 行** |
+- **Marp 默认主题几处必坏的坑** —— 表格半宽、没有 CJK 字体、内容溢出底部。skill 自带一份能用的配色和 CSS，全部修好
+- **内联 SVG 跟着文件走** —— PNG 改一个数字要重画；内联 SVG 改一处十六进制值就够。skill 自带 16 套模板和坐标公式，不用边画边算
+- **不靠肉眼赌** —— skill 自带 SVG lint（6 项确定性检查），渲染命令写在卡片里。交付前两道自动关卡
 
-15 是**整页总预算**，不是每种元素各给 15 行。图片不占行数，但会吃掉纵向空间，所以配背景图的页正文应控制在 8 行以内。
-
-派生上限：代码块 ≤ 10 行；表格 ≤ 8 行且 ≤ 4 列；列表 ≤ 10 条。**绝不要**把一条 bullet 或一行表格从中间切断分到两页。
-
-### 2. 演讲者备注写在 HTML 注释里
-
-只给演讲者看、不给观众看的内容，一律放进 `<!-- ... -->`：
-
-```markdown
-## 三种部署模式
-
-- 公有云：最快上线
-- 私有化：合规优先
-- 混合：成本最优
-
-<!--
-演讲者备注：混合模式是去年新增，老客户问得最多。
-案例：某银行走私有化，合同 800 万。
--->
-```
-
-渲染出的 HTML、PDF、PPTX 里都看不到它，只有 `.md` 源文件里有。它占用 0 行。
-
-三个陷阱：
-
-- **注释里绝不能写 `---`。** 它依然会被解析成分页符，把这一页切成两页。
-- Marpit 指令注释（`<!-- _class: cover -->`、`<!-- _paginate: -->`）也用 `<!-- -->`，但以 `_` 开头所以仍然生效。演讲者备注**不要**以 `_` 开头。
-- 一个 slide 放一个注释块，位置在该页内容之后、`---` 分页符之前。
-
-**某页超过 15 行时，先考虑加备注，再考虑拆页。** 加备注是零成本，拆页要付出观众注意力的代价。
-
-## 版式速查
-
-| 场景 | 写法 |
-|---|---|
-| 封面 | `<!-- _class: cover -->` + `# 标题` + `## 副标题` |
-| 章节分隔 | `<!-- _class: divider -->` + `# 章节名` |
-| 图 + 文 | `![bg left contain opacity:.9](<路径>)` —— 图在左，文在右 |
-| 多图无文案 | `![bg](<a>)` `![bg](<b>)` —— 默认横排 |
-| 文 + 2 图 | `![bg right vertical](<a>)` + `![bg](<b>)` |
-| 竖版图 | 每张都加 `vertical` |
-| 咨询关系图 | `<!-- _class: diagram -->` + 内联 `<svg>` —— 需要 `--html` |
-
-所有图片都必须是 `![bg ...]` 背景图 —— Marp 不支持行内图片尺寸。路径含空格或非 ASCII 字符时必须用 `<...>` 包起来，否则 Marp 会在第一个空格处截断 URL，把路径当正文渲染出来。
-
-## Smart Drawing（内联 SVG 画关系图）
-
-咨询顾问那种阶梯、箭头串、2×2 矩阵、价值树、闭环图，直接以**内联 SVG 写在 `.md` 里**，而不是做成图片文件。PDF 里是矢量不糊，文字可搜索，改一个颜色只动一个十六进制值。
+## 安装
 
 ```bash
-marp deck.marp.md --html --pdf --allow-local-files   # --html 是必须的
+# 1. 安装 marp CLI（用于 PDF 导出）
+npm install -g @marp-team/marp-cli
+# 如果 npm -g 失败，降级为：
+npx -y @marp-team/marp-cli --version
 ```
 
-不加 `--html`，Marp 会转义这段标记，图形渲染成一整页肉眼可见的源码。
+skill 由 Agent Skills 消费。把它放到 `~/.claude/skills/marp-slide-expert/`，需要做 marp 的 Claude session 会自动加载。
 
-四条会**静默**破坏渲染的规则：
+## 快速开始
 
-- **SVG 内部不能有空行** —— markdown 在第一个空行处切断 HTML 块，图形直接消失且不报错。
-- **每张图的 `marker` id 必须唯一** —— 导出成单个合并 HTML 时所有 SVG 共享一个 DOM，重复 id 会让所有箭头都取到第一个定义。
-- **SVG 内部不能写 `---`** —— 依然会被解析成分页符。
-- **字号走 CSS class，不写 `font-size` 属性** —— `svg .t / .tb / .sm` 定义在 style 块里，改一次全篇图形同步缩放。
+```markdown
+---
+marp: true
+theme: default
+paginate: true
+style: |-
+  /* 从 references/style-bootstrap.md 整段粘过来 */
+---
 
-箭头要画成 **5 点 path（矩形 + 右侧 34px 三角尖）**，文字居中于**矩形部分**而不是整个外框。做成 6 点空心 `>` 形，左半边是镂空的白字会掉进洞里。
+<!-- _class: cover -->
 
-然后把每一页都渲染成 PNG 亲眼看 —— SVG 的几何关系没法靠读源码判断。
+# 我的 deck 标题
 
-交付前跑两道自动关卡：`node scripts/svg-lint.mjs deck.marp.md` 抓**必然错**的（空行、`---`、id 冲突、坐标越界），渲染 PNG 抓**看起来错**的（重叠、错位、留白）。两步都要跑。
+## 副标题
 
-详见 [references/infographics-svg/](references/infographics-svg/INDEX.md) —— 四层模块（structures 选题 / skeletons 体裁 / metaphor 语气 / styles 配色，外加共用的 craft 笔法层）。全部模板逐页可翻：[examples/infographic-diagrams.marp.md](examples/infographic-diagrams.marp.md)。
+---
+
+## 第一页
+
+- 要点 1
+- 要点 2
+- 要点 3
+```
+
+导出 PDF：
+
+```bash
+marp deck.marp.md --pdf --allow-local-files
+```
+
+如果用了内联 SVG：
+
+```bash
+marp deck.marp.md --html --pdf --allow-local-files
+```
+
+## 两条原则
+
+**每页最多 15 行，注释不计入。** 一页显示 15 行可见内容就算满了。HTML 注释不渲染也不占行——演讲者备注就该这么藏。
+
+**页级版式 vs 图级版式。** 不同问题用不同工具：
+
+- 这一页内容很多？ → 分栏 / 分区（`<div class="cols cols-2">`）
+- 这一页要表达「节点之间的关系」？ → 内联 SVG
+
+同一份 deck 两类都用，不冲突。
+
+## 里面有什么
+
+| | |
+|---|---|
+| `references/infographics-svg/` | 16 个骨架模板（阶梯、箭头串、2×2、价值树、桑基、漏斗、泳道、便当格、并列圆圈、图文卡片组、起伏波浪大事记……）+ 6 个叙事外壳（金字塔、飞轮、冰山、漏斗、洋葱、聚焦）+ 7 套配色 |
+| `references/layout-patterns.md` | 页级版式菜谱（封面、分隔、内容、分栏、分区、图片叠加） |
+| `references/style-bootstrap.md` | UPerform / openclaw 配色 —— 整段粘进 frontmatter 即可 |
+| `examples/infographic-gallery.marp.md` | 56 页样例 deck，每个模板都用上 —— 起点就在这 |
+| `scripts/svg-lint.mjs` | 6 项确定性 SVG 检查（空行、`---`、id 冲突、坐标越界）。每次渲染前必跑 |
+| `scripts/build-gallery.mjs` | 从 references/ 重新生成样例 deck。改了模板重跑就行，不要手改 deck |
 
 ## 工作流程
 
-1. 读源 markdown，识别封面、分隔页（H1/H2）、内容页（H3+）。
-2. 准备图片素材（下载、压缩到 ≤ 100 KB、按章节前缀重命名）。
-3. 生成幻灯片，控制每页不超过 15 行。
-4. 渲染前先把每页的行数数一遍。
-5. `marp deck.marp.md --pdf --allow-local-files` 渲染，检查前 5 页以及中段、尾段各抽样几页。
-6. 迭代修正溢出和别扭的版式。
+1. 把 `style:` 块从 `references/style-bootstrap.md` 整段粘进 frontmatter
+2. 写幻灯片。每页不超过 15 行。内容多用分栏/分区，要表达结构关系就用内联 SVG
+3. 如果用了 SVG，跑 `node scripts/svg-lint.mjs deck.marp.md`
+4. `marp deck.marp.md --pdf --allow-local-files` 渲染（用了 SVG 加 `--html`）
+5. 打开 PDF 逐页看。**不要相信你的 SVG 源码**——渲出来亲眼读
+6. 迭代
 
-## 文件说明
+## 维护
 
-| 路径 | 内容 |
-|---|---|
-| `SKILL.md` | 入口 —— 硬规则、15 行上限、演讲者备注、CSS 引导、工作流、故障排查 |
-| `references/slide-density.md` | 完整的行数计算规则、拆分策略、表格 / 代码块 / 列表处理 |
-| `references/image-syntax.md` | `![bg ...]` 语法、横竖排判断、路径转义、反面案例 |
-| `references/infographics-svg/` | 信息图与关系图模块 —— `structures`（画什么）→ `skeletons`（用什么形状）→ `metaphor`（叙事外壳）→ `styles`（配色），外加共用的 `craft/` 笔法层（画布、连线、排版、marp 兼容、QA） |
-| `references/layout-patterns.md` | **页级版式** —— 封面、分隔页、内容页、**分栏 / 分区**、多图页 |
-| `references/style-bootstrap.md` | 优普丰 / openclaw 配色，可直接粘进 frontmatter |
-| `references/asset-prep.md` | 图片素材的下载、压缩、命名 |
-| `examples/infographic-diagrams.marp.md` | 全部模板逐页陈列 —— 13 个骨架、6 个隐喻外壳、7 套风格，由 `scripts/build-diagram-deck.mjs` 生成 |
-| `examples/infographic-columns.marp.md` | 已验证的 10 页**页级分栏版式**样例 |
-| `scripts/svg-lint.mjs` | SVG 6 项确定性检查 —— 每次交付前必跑 |
-| `scripts/build-diagram-deck.mjs` | 从 `references/` 重新生成图形 deck，两者不会漂移（`--pdf` 一并渲染 PDF） |
-| `agents/openai.yaml` | OpenAI 兼容的 agent 元信息 |
-
-## 常见问题
-
-| 现象 | 原因 |
-|---|---|
-| 图片渲染成了 markdown 文字 | 路径里的空格没转义 —— 用 `<...>` 包起来 |
-| 两张图叠在一起很怪 | 竖版图漏了 `vertical` |
-| 底部内容被截断 | 该页超过 15 行 |
-| 表格右边被切掉 | 超过 4 列 |
-| 演讲者备注出现在 PDF 里 | 没放在 HTML 注释里 |
-| 一页变成两页、出现空白页 | 注释里写了 `---` |
-| 整页显示 SVG 源码 | 渲染命令漏了 `--html` |
-| Obsidian 里显示正常，导 PDF 却变源码 | Obsidian 内置导出器会拍平 inline HTML —— 改用 Marp CLI `--html --pdf`，或装 Enhanced PDF Export 插件 |
-| 图形整个消失 | SVG 内部有空行，HTML 块被切断 |
-| 表格只有半宽 | 漏了 `display: table !important` —— marp default 主题给 `table` 设了 `display: block` |
+属于 [mebusw/skills](https://github.com/mebusw/skills) 集合。在父仓库提 issue。

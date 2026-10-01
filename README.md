@@ -1,132 +1,100 @@
 # Marp Slide Expert
 
-[中文文档](README.zh-CN.md)
+> [中文文档](README.zh-CN.md) · 56-page showcase: [examples/infographic-gallery.marp.md](examples/infographic-gallery.marp.md)
 
-An Agent Skill for building Marp slide decks that render cleanly through `marp --pdf --allow-local-files`. It captures the pitfalls that break Marp rendering silently, plus a strict per-slide density budget and a convention for speaker notes.
+Build marp slide decks that render cleanly through `marp --pdf --allow-local-files`. Two things in one skill:
 
-## The two rules that matter most
+1. **Page-level layout** — cover / divider / single-column / multi-column / image splits
+2. **Inline SVG infographics** — 16 skeletons, 6 narrative shells, 7 palettes, all wired into a four-layer module
 
-### 1. 15 rendered lines per slide, comments excluded
+The pitfalls that silently break marp rendering are captured once in the skill so you don't have to learn them from a bad PDF.
 
-Every slide shows at most **15 lines** of content. HTML comments are excluded — they never render, so they never count.
+## Why
 
-| Element | Lines |
-|---|---|
-| Paragraph | 1 per wrapped line (≈38 CJK chars or ≈75 Latin chars each) |
-| Bullet / numbered item | 1 per item, +1 if it wraps |
-| Table | 1 per row, **header row included** |
-| Code block | 1 per code line |
-| Callout box (`>`) | 1 per wrapped line inside the box |
-| Heading | 1 |
-| Speaker note `<!-- -->` | **0** |
+- **Marpslides look professional out of the box** — but the default theme is broken in obvious ways (tables half-width, no language fonts, content cut off the bottom). The skill ships a working palette and CSS that fixes all of it.
+- **Inline SVG diagrams travel with the file** — a PNG has to be redrawn to change one number; an inline SVG changes with one hex edit. The skill ships 16 templates with coordinate formulas so you're not guessing.
+- **One-shot reviews are inadequate** — the skill ships an SVG linter (6 deterministic checks) and tells you the exact render command. Two automated gates before ship.
 
-The 15 is a **total budget per slide**, not an allowance per element. Images don't count as lines but they do consume vertical space, so a slide with a background image should stay under 8 body lines.
-
-Corollary limits: code ≤ 10 lines, tables ≤ 8 rows and ≤ 4 columns, lists ≤ 10 items. Never split a bullet or a table row across slides.
-
-### 2. Speaker notes live in HTML comments
-
-Content meant for the speaker, not the audience, goes inside `<!-- ... -->`:
-
-```markdown
-## Three deployment modes
-
-- Public cloud: fastest to launch
-- On-premise: compliance first
-- Hybrid: best cost
-
-<!--
-Speaker notes: Hybrid is the newest option; long-time customers ask about it most.
-Case: a bank went on-premise, 8M contract.
--->
-```
-
-It never appears in the rendered HTML, PDF, or PPTX — only in the `.md` source. It costs zero lines.
-
-Three traps:
-
-- **Never write `---` inside a note.** It is still parsed as a page break and splits the slide.
-- Marpit directives (`<!-- _class: cover -->`, `<!-- _paginate: -->`) also use `<!-- -->` but start with `_` and remain active. Speaker notes must not start with `_`.
-- One note block per slide, placed after the slide's content and before the `---` separator.
-
-**When a slide runs over 15 lines, reach for a note before you reach for a new slide.** A note is free; an extra slide costs the audience's attention.
-
-## Layout quick reference
-
-| Scenario | Pattern |
-|---|---|
-| Cover | `<!-- _class: cover -->` + `# Title` + `## Subtitle` |
-| Section break | `<!-- _class: divider -->` + `# Section Name` |
-| Image + text | `![bg left contain opacity:.9](<path>)` — image left, text right |
-| Multiple images | `![bg](<a>)` `![bg](<b>)` — horizontal row by default |
-| Text + 2 images | `![bg right vertical](<a>)` + `![bg](<b>)` |
-| Portrait images | Add `vertical` to each |
-| Smart drawing / 关系图 | `<!-- _class: diagram -->` + inline `<svg>` — needs `--html` |
-
-Every image must be a `![bg ...]` background — Marp has no inline image sizing. Paths containing spaces or non-ASCII characters must be wrapped in `<...>`, or Marp truncates the URL at the first space and renders the path as text.
-
-## Smart drawing (inline SVG)
-
-Consulting diagrams — staircase, arrow chain, 2×2 matrix, value tree, closed loop — are written as inline SVG in the `.md`, not as image files. They stay vector in the PDF, their text stays searchable, and a colour change is one hex value.
+## Install
 
 ```bash
-marp deck.marp.md --html --pdf --allow-local-files   # --html is required
+# 1. Install marp CLI (for PDF export)
+npm install -g @marp-team/marp-cli
+# If npm -g fails, fall back to:
+npx -y @marp-team/marp-cli --version
 ```
 
-Without `--html` Marp escapes the markup and the diagram renders as a page of visible source code.
+This skill is consumed by Agent Skills. Place it under `~/.claude/skills/marp-slide-expert/`, then any Claude session that needs marp authoring picks it up automatically.
 
-Four rules that break rendering silently:
+## Quick start
 
-- **No blank lines inside the SVG block** — markdown cuts the HTML block there and the diagram disappears with no error.
-- **Unique `marker` ids per diagram** — a merged single-HTML export shares one DOM, so duplicates make every arrowhead resolve to the first definition.
-- **No `---` inside the SVG** — still a page break.
-- **Font sizes via CSS class, not a `font-size` attribute** — `svg .t / .tb / .sm` are defined in the style block, so one edit rescales every diagram.
+```markdown
+---
+marp: true
+theme: default
+paginate: true
+style: |-
+  /* paste from references/style-bootstrap.md */
+---
 
-Draw a **5-point arrow path (rectangle + 34px right tip)** and centre the text on the rectangle, not the full width. A hollow 6-point chevron leaves a hole on its left half and the text vanishes into it.
+<!-- _class: cover -->
 
-Then render every page to PNG and look at it — SVG geometry is not verifiable from the source.
+# My deck title
 
-Two automated gates before shipping: `node scripts/svg-lint.mjs deck.marp.md` catches what is certainly wrong (blank lines, `---`, duplicate ids, out-of-viewBox elements), and rendering to PNG catches what merely looks wrong. Run both.
+## Subtitle goes here
 
-Details: [references/infographics-svg/](references/infographics-svg/INDEX.md) — a four-layer module (structures / skeletons / metaphor / styles, plus a shared craft layer). Every template, browsable: [examples/infographic-diagrams.marp.md](examples/infographic-diagrams.marp.md).
+---
+
+## First slide
+
+- point 1
+- point 2
+- point 3
+```
+
+Render to PDF:
+
+```bash
+marp deck.marp.md --pdf --allow-local-files
+```
+
+For decks with inline SVG diagrams:
+
+```bash
+marp deck.marp.md --html --pdf --allow-local-files
+```
+
+## Two principles
+
+**15 lines per slide, comments free.** A slide is full when it hits ~15 lines of visible content. HTML comments never render, so they don't count — they're how you stash speaker notes without adding slides.
+
+**Page layout vs diagram layout.** Different problem, different tool:
+
+- One page is content-heavy? → column / split layout (`<div class="cols cols-2">`)
+- One page needs to express structural relationships? → inline SVG diagram
+
+Use both on the same deck; they don't compete.
+
+## What's inside
+
+| | |
+|---|---|
+| `references/infographics-svg/` | 16 skeleton templates (staircase, arrow chain, 2×2, value tree, sankey, funnel, swimlanes, bento, icon-rail, card-row, wave-timeline, …) + 6 narrative shells (pyramid, flywheel, iceberg, funnel, onion, focus) + 7 palettes |
+| `references/layout-patterns.md` | Page-level layout recipes (cover, divider, content, columns, splits, image overlays) |
+| `references/style-bootstrap.md` | The UPerform / openclaw palette — paste it into frontmatter and you're done |
+| `examples/infographic-gallery.marp.md` | A 56-page deck showing every template in use — start from here |
+| `scripts/svg-lint.mjs` | 6 deterministic SVG checks (blank lines, `---`, duplicate ids, out-of-viewBox). Run before every render |
+| `scripts/build-gallery.mjs` | Regenerates the example deck from the references. Run when you add a template, never hand-edit the example |
 
 ## Workflow
 
-1. Read the source markdown; identify cover, dividers, and content sections.
-2. Prep image assets (download, compress to ≤ 100 KB, rename with a chapter prefix).
-3. Generate slides, splitting so no slide exceeds 15 rendered lines.
-4. Count the lines on every slide before rendering.
-5. Render with `marp deck.marp.md --pdf --allow-local-files` and inspect the first 5 pages plus a sample from the middle and end.
-6. Iterate on overflow and awkward layout.
+1. Copy the `style:` block from `references/style-bootstrap.md` into your frontmatter.
+2. Write slides. Stay under 15 lines per slide. Use columns / splits when one slide is content-heavy. Use inline SVG when one slide needs to show structure.
+3. Run `node scripts/svg-lint.mjs deck.marp.md` if you used any SVG.
+4. Render with `marp deck.marp.md --pdf --allow-local-files` (add `--html` if you used inline SVG).
+5. Open the PDF and look at every page. Don't trust your SVG source — render and read.
+6. Iterate.
 
-## Files
+## License & maintenance
 
-| Path | Contents |
-|---|---|
-| `SKILL.md` | Entry point — hard rules, 15-line cap, speaker notes, CSS bootstrap, workflow, troubleshooting |
-| `references/slide-density.md` | Full line-counting rules, splitting heuristics, tables, code blocks, lists |
-| `references/image-syntax.md` | `![bg ...]` syntax, orientation rules, path escaping, anti-patterns |
-| `references/infographics-svg/` | Infographic & diagram module — `structures` (what to draw) → `skeletons` (what shape) → `metaphor` (narrative shell) → `styles` (palette), with a shared `craft/` layer (canvas, connectors, typography, marp compat, QA) |
-| `references/layout-patterns.md` | Page-level slide layouts — cover, divider, content, **column/split layouts**, multi-image |
-| `references/style-bootstrap.md` | The UPerform / openclaw CSS palette, ready to paste into frontmatter |
-| `references/asset-prep.md` | Downloading, compressing, and naming image assets |
-| `examples/infographic-diagrams.marp.md` | Every template as a slide — 13 skeletons, 6 metaphor shells, 7 style variants. Generated by `scripts/build-diagram-deck.mjs` |
-| `examples/infographic-columns.marp.md` | Verified 10-page deck of page-level column layouts |
-| `scripts/svg-lint.mjs` | 6 deterministic SVG checks — run before every ship |
-| `scripts/build-diagram-deck.mjs` | Regenerates the diagram deck from `references/`, so the two never drift (`--pdf` also renders the PDF) |
-| `agents/openai.yaml` | OpenAI-compatible agent metadata |
-
-## Common failures
-
-| Symptom | Cause |
-|---|---|
-| Image renders as markdown text | Path has unescaped spaces — wrap in `<...>` |
-| Two images stack oddly | Missing `vertical` for portrait images |
-| Content cut off at the bottom | Slide has > 15 rendered lines |
-| Table truncated on the right | More than 4 columns |
-| Speaker note visible in the PDF | Not inside an HTML comment |
-| One slide became two | A `---` inside an HTML comment |
-| Whole slide shows SVG source | Missing `--html` at render time |
-| SVG renders in Obsidian but exports to PDF as source | Obsidian's built-in exporter flattens inline HTML — use Marp CLI `--html --pdf`, or the Enhanced PDF Export plugin |
-| SVG diagram vanished | A blank line inside the SVG block |
-| Table renders at half width | Dropped the `display: table !important` rule — marp's default theme sets `table { display: block }` |
+Part of the [mebusw/skills](https://github.com/mebusw/skills) collection. Report issues at the parent repo.

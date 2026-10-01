@@ -41,6 +41,9 @@
 | [lanes](lanes.md) | 多个实体在同一时间轴上并行推进 | 只有一条线在走（用 linear-sequence） |
 | [structure-block](structure-block.md) | 框架分层、并列模块、对比表格 | 需要表达关系（框和框之间没有关系线） |
 | [evidence](evidence.md) | 主张 + 证据 + 推理的论证结构 | 只是罗列事实（用 structure-block） |
+| [wave-timeline](wave-timeline.md) | 起伏波浪 + 整体向上推进，过程曲折抵达 | 时间点无波折（用 lanes） |
+| [icon-rail](icon-rail.md) | 3–6 项**并列**的属性/方面，水平对齐 | 节点之间有顺序（用 linear-sequence） |
+| [card-row](card-row.md) | 3–5 张**图文卡片**水平对齐，每张上半图下半文 | 内容是数字对比（用 structure-block） |
 
 ## 第三步：换叙事外壳
 

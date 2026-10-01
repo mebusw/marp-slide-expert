@@ -70,7 +70,7 @@
 
 | 文件 | 内容 |
 |---|---|
-| [../../examples/infographic-diagrams.marp.md](../../examples/infographic-diagrams.marp.md) | **图形与风格总览**——每个骨架、每个隐喻、每套风格一页，选型时先翻这个 |
-| [../../examples/infographic-columns.marp.md](../../examples/infographic-columns.marp.md) | 页级分栏版式（属另一个模块，但常和图一起用） |
+| [../../examples/infographic-gallery.marp.md](../../examples/infographic-gallery.marp.md) | **图形与风格总览**——每个骨架、每个隐喻、每套风格一页，选型时先翻这个 |
+| [../../examples/infographic-gallery.marp.md](../../examples/infographic-gallery.marp.md) | 页级分栏版式（属另一个模块，但常和图一起用） |
 
-> 图形 deck 由 `node scripts/build-diagram-deck.mjs` 从本目录生成。改完模板重跑一次即可，不要手改。
+> 图形 deck 由 `node scripts/build-gallery.mjs` 从本目录生成。改完模板重跑一次即可，不要手改。
